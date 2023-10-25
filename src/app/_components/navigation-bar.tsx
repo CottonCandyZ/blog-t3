@@ -35,24 +35,24 @@ function ListItem({
   current?: boolean;
 }) {
   return current ? (
-    <li className="inline-block">
+    <li>
       <Link
         href={href}
         className="pointer-events-none relative z-0 flex 
-    items-center pl-3 pr-3 before:absolute before:bottom-0 before:left-0 before:right-0 
-    before:-z-10 before:h-full before:rounded-xl before:bg-red-200"
+    items-center px-3 before:absolute before:bottom-0 before:left-0 before:right-0 
+    before:-z-10 before:h-full before:rounded-xl before:bg-red-400 text-white"
       >
         <Icon className="mr-1 text-[1em]"></Icon>
         {content}
       </Link>
     </li>
   ) : (
-    <li className="inline-block">
+    <li>
       <Link
         href={href}
         className="group relative z-0 flex 
         items-center before:absolute before:bottom-0 before:left-0 before:right-0 before:-z-10 before:h-0.5 before:rounded-xl 
-      before:bg-red-200 before:transition-all before:duration-150 hover:pl-3 hover:pr-3 hover:before:h-full"
+      before:bg-red-400 before:transition-all before:duration-150 hover:px-3 hover:before:h-full hover:text-white"
       >
         <Icon className="mr-0 text-[0px] 
         group-hover:mr-1 group-hover:animate-backshake group-hover:text-[1em] group-hover:transition-all
