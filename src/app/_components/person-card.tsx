@@ -1,21 +1,29 @@
 import Image from "next/image";
 import NavigationBar from "./navigation-bar";
+import OuterLinks from "./outer-links";
+import { CONFIG } from "~/config/base";
 
 export default function InfoCard() {
+  const card_info = CONFIG.card_info;
   return (
     <>
-      <div className="h-[500px] w-96 flex-col items-center justify-center rounded-3xl  bg-white">
-        <div className="mb-5 mt-5 text-lg font-normal text-red-700">
-          <NavigationBar />
+      <div className="mx-auto flex flex-col items-center justify-center space-y-5 rounded-3xl bg-white px-2 py-5 text-red-700">
+        <NavigationBar className="w-80 text-lg" />
+        <Image
+          className="h-52 w-52 rounded-b-full"
+          src="/images/avatar.jpg"
+          width={250}
+          height={250}
+          alt="Avatar of the author"
+        />
+        <div className="flex flex-col items-center">
+          <div className="flex items-baseline space-x-2">
+            <h1 className="text-2xl">{card_info.name}</h1>
+            <h2 className="">{card_info.at}</h2>
+          </div>
+          <h2>{card_info.description}</h2>
         </div>
-        <div className="flex justify-center mb-10 mt-10">
-          <Image
-            className="h-52 w-52 rounded-b-full"
-            src="/images/avatar.jpg"
-            width={250}
-            height={250}
-            alt="Avatar of the author" />
-        </div>
+        <OuterLinks />
       </div>
     </>
   );
