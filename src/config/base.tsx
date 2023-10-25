@@ -1,4 +1,4 @@
-import { HomeIcon, ArticleIcon, LinkIcon, AboutIcon } from "~/app/icons";
+import { HomeIcon, ArticleIcon, LinkIcon, AboutIcon } from "~/config/icons";
 
 export const CONFIG = {
   card_router: [
