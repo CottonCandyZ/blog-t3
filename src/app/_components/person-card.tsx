@@ -7,7 +7,7 @@ export default function InfoCard() {
   const card_info = CONFIG.card_info;
   return (
     <>
-      <div className="mx-auto flex flex-col items-center justify-center space-y-5 rounded-3xl bg-white px-2 py-5 text-red-700">
+      <div className="mx-auto flex flex-col items-center justify-center space-y-5 rounded-3xl bg-white px-2 py-5 text-primary">
         <NavigationBar className="w-80 text-lg" />
         <Image
           className="h-52 w-52 rounded-b-full"

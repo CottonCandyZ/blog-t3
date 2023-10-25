@@ -16,9 +16,22 @@ export default {
         },
       },
       animation: {
-        'backshake': 'backshake 0.5s linear',
+        backshake: "backshake 0.5s linear",
       },
+      colors: {
+        'primary': "rgb(var(--color-primary) / <alpha-value>)",
+        'primary-dark': "rgb(var(--color-primary-dark) / <alpha-value>)",
+        'primary-medium': "rgb(var(--color-primary-medium) / <alpha-value>)",
+        'primary-light': "rgb(var(--color-primary-light) / <alpha-value>)",
+        'primary-extralight': "rgb(var(--color-primary-extralight) / <alpha-value>)",
+      },
+      
     },
   },
+  safelist: [
+    {
+      pattern: /theme-/,
+    }
+  ],
   plugins: [],
 } satisfies Config;
