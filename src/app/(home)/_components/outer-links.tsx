@@ -24,7 +24,7 @@ function ListItem({
 }) {
   return (
     <li>
-      <a href={href}
+      <a href={href} target="_blank"
         after-content={content}
         className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2
       border-primary-light after:absolute after:-bottom-2 after:rounded-2xl

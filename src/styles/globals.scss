@@ -18,7 +18,7 @@ $themeColorList: (
 }
 
 @mixin theme-primary-map($primary-color) {
-  --color-primary-dark: #{getColorValue(mix($primary-color, black, 30%))};
+  --color-primary-dark: #{getColorValue(mix($primary-color, black, 40%))};
   --color-primary: #{getColorValue($primary-color)};
   --color-primary-medium: #{getColorValue(mix($primary-color, white, 70%))};
   --color-primary-light: #{getColorValue(mix($primary-color, white, 35%))};

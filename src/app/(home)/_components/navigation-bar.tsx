@@ -52,7 +52,8 @@ function ListItem({
         href={href}
         className="group relative z-0 flex 
         items-center before:absolute before:bottom-0 before:left-0 before:right-0 before:-z-10 before:h-0.5 before:rounded-xl 
-      before:bg-primary-medium before:transition-all before:duration-150 hover:px-3 hover:before:h-full hover:text-white"
+      before:bg-primary-light before:transition-all before:duration-150 hover:px-3 hover:before:h-full hover:text-white
+      hover:before:bg-primary-medium"
       >
         <Icon className="mr-0 text-[0px] 
         group-hover:mr-1 group-hover:animate-backshake group-hover:text-[1em] group-hover:transition-all
