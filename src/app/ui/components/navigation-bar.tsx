@@ -46,7 +46,7 @@ function ListItem({
           {
             [`pointer-events-none px-3 text-white before:h-full`]:
               current === true,
-            [`group before:h-0.5 before:bg-primary-light before:transition-all before:duration-150 hover:px-3 hover:text-white
+            [`group before:h-0.5 before:bg-primary-light before:transition-all before:duration-200 hover:px-3 hover:text-white
             hover:before:h-full hover:before:bg-primary-medium`]:
               current == false,
           },
@@ -57,7 +57,7 @@ function ListItem({
             [`mr-1 text-[1em]`]: current === true,
             [`mr-0 text-[0px] 
           group-hover:mr-1 group-hover:animate-backshake group-hover:text-[1em] 
-          group-hover:transition-all group-hover:duration-150`]:
+          group-hover:transition-all group-hover:duration-200`]:
               current === false,
           })}
         ></Icon>
