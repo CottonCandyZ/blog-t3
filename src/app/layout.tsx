@@ -1,9 +1,10 @@
 import "~/styles/globals.scss";
-import { Noto_Sans_SC } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import { headers } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 
-const nsc = Noto_Sans_SC({
+const ns = Noto_Sans({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["cyrillic", "latin"],
 });
 
@@ -15,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${nsc.className} theme-${themeNumber}`}>
+      <body className={`${ns.className} antialiased theme-${themeNumber}`}>
         <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
       </body>
     </html>
