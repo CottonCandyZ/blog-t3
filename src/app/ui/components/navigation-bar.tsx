@@ -46,7 +46,7 @@ function ListItem({
           {
             [`pointer-events-none px-3 text-white before:h-full`]:
               current === true,
-            [`group before:bg-primary-light before:transition-all before:duration-150 hover:px-3 hover:text-white
+            [`group before:h-0.5 before:bg-primary-light before:transition-all before:duration-150 hover:px-3 hover:text-white
             hover:before:h-full hover:before:bg-primary-medium`]:
               current == false,
           },
