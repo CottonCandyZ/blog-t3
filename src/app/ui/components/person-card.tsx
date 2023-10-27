@@ -16,7 +16,6 @@ export default function InfoCard({ home }: { home: boolean }) {
         height={250}
         alt="Avatar of the author"
       />
-      
       <div className="flex flex-col items-center">
         <div className="flex items-baseline space-x-2">
           <h1 className="text-2xl">{card_info.name}</h1>
@@ -27,12 +26,9 @@ export default function InfoCard({ home }: { home: boolean }) {
 
       <OuterLinks />
     </div>
-  ) : 
-  
-  
-  (
+  ) : (
     <div className="flex w-min items-center rounded-3xl bg-white px-2 py-3 text-primary shadow-2xl">
-      <div className="ml-2 flex h-20 w-20 marker:items-center justify-center">
+      <div className="ml-2 flex h-20 w-20 justify-center marker:items-center">
         <Image
           className="rounded-b-full"
           src="/images/avatar.jpg"
