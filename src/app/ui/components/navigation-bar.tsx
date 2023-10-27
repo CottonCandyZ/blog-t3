@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 import { CONFIG } from "~/config/base";
 import clsx from "clsx";
 
-export default function NavigationBar({ className }: { className?: string }) {
+export default function NavigationBar() {
   const pathname = usePathname();
   const router_content = CONFIG.card_router;
   return (
-    <nav className={className}>
+    <nav>
       <ul className="flex justify-center gap-4">
         {router_content.map((item, index) => (
           <ListItem
