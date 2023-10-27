@@ -19,11 +19,11 @@ export const CONFIG = {
   outer_link: [
     {
       name: "GitHub",
-      herf: "https://github.com/CottonCandyZ",
+      href: "https://github.com/CottonCandyZ",
       icon: GithubIcon,
     },
-    { name: "Twitter", herf: "https://twitter.com/cotton_candyZG", icon: TwitterIcon },
-    { name: "Bangumi", herf: "https://bgm.tv/user/cotton_candyz", icon: BgmIcon},
+    { name: "Twitter", href: "https://twitter.com/cotton_candyZG", icon: TwitterIcon },
+    { name: "Bangumi", href: "https://bgm.tv/user/cotton_candyz", icon: BgmIcon},
 
   ],
 };
