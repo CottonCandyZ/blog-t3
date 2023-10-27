@@ -1,12 +1,11 @@
 import "~/styles/globals.scss";
-// import { Inter } from "next/font/google";
+import { Noto_Sans_SC } from "next/font/google";
 import { headers } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 
-// const inter = Inter({
-//   subsets: ["latin"],
-//   variable: "--font-sans",
-// });
+const nsc = Noto_Sans_SC({
+  subsets: ["cyrillic", "latin"],
+});
 
 const themeNumber = Math.floor(Math.random() * 8) + 1;
 export default function RootLayout({
@@ -16,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans theme-${themeNumber}`}>
+      <body className={`${nsc.className} theme-${themeNumber}`}>
         <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
       </body>
     </html>
