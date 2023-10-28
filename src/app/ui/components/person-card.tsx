@@ -7,7 +7,7 @@ import { CONFIG } from "~/config/base";
 export default function InfoCard({ home }: { home: boolean }) {
   const card_info = CONFIG.card_info;
   return home ? (
-    <div className="flex h-min flex-col items-center gap-4 rounded-3xl bg-white px-2 py-5 text-primary shadow-2xl">
+    <div className="flex h-min flex-col items-center gap-4 rounded-3xl bg-white px-2 py-5 text-primary-medium shadow-2xl">
       <div className="w-80 text-lg font-semibold">
         <NavigationBar />
       </div>
@@ -29,7 +29,7 @@ export default function InfoCard({ home }: { home: boolean }) {
       <OuterLinks />
     </div>
   ) : (
-    <div className="flex w-min items-center rounded-3xl bg-white px-2 py-3 text-primary shadow-2xl">
+    <div className="flex w-min items-center rounded-3xl bg-white px-2 py-3 text-primary-medium shadow-2xl">
       <div className="ml-2 flex h-20 w-20 justify-center marker:items-center">
         <Image
           className="rounded-b-full"
