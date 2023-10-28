@@ -32,14 +32,14 @@ function ListItem({
         target="_blank"
         after-content={content}
         className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2
-      border-primary-light after:absolute after:-bottom-2 after:rounded-2xl
-      after:bg-primary-medium after:p-1.5 after:text-xs
-      after:text-white after:opacity-0 after:transition after:duration-300
+      border-primary-light transition-all duration-500 after:absolute
+      after:-bottom-5 after:rounded-2xl after:bg-primary-medium after:px-1.5
+      after:py-1 after:text-xs after:text-white after:opacity-0
+      after:transition after:duration-500
       after:content-[attr(after-content)] hover:bg-primary-medium
-      hover:transition-all hover:duration-500
-      hover:after:translate-y-8 hover:after:opacity-100"
+      hover:after:translate-y-4 hover:after:opacity-100"
       >
-        <Icon className="h-6 w-6 group-hover:text-white group-hover:transition-all group-hover:duration-700" />
+        <Icon className="h-6 w-6 transition-all duration-500 ease-out group-hover:text-white" />
       </a>
     </li>
   );

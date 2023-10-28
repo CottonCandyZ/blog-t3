@@ -41,23 +41,22 @@ function ListItem({
         href={href}
         className={clsx(
           `relative z-0 flex items-center
-          before:absolute before:bottom-0 before:left-0 before:right-0 before:-z-10
-           before:rounded-xl before:bg-primary-medium`,
+          leading-8 transition-all duration-300 before:absolute before:bottom-0
+           before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-medium`,
           {
             [`pointer-events-none px-3 text-white before:h-full`]:
               current === true,
-            [`group before:h-0.5 before:bg-primary-light before:transition-all before:duration-200 hover:px-3 hover:text-white
+            [`group before:h-1 before:bg-primary-light before:transition-all before:duration-300 hover:px-3 hover:text-white
             hover:before:h-full hover:before:bg-primary-medium`]:
               current == false,
           },
         )}
       >
         <Icon
-          className={clsx({
-            [`mr-1 text-[1em]`]: current === true,
+          className={clsx(`text-white`, {
+            [`mr-1 text-[1em] `]: current === true,
             [`mr-0 text-[0px] 
-          group-hover:mr-1 group-hover:animate-backshake group-hover:text-[1em] 
-          group-hover:transition-all group-hover:duration-200`]:
+          transition-all duration-300 group-hover:mr-1 group-hover:animate-backshake group-hover:text-[1em]`]:
               current === false,
           })}
         ></Icon>
