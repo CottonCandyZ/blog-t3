@@ -14,9 +14,14 @@ export default {
           "25%, 75%": { transform: "rotate(-8deg)" },
           "100%": { transform: "rotate(0deg)" },
         },
+        show: {
+          "0%": { width: "0%"},
+          "100%": { width: "100%"},
+        },
       },
       animation: {
         backshake: "backshake 0.5s linear",
+        show: "show 1s ease-in-out",
       },
       colors: {
         'primary': "rgb(var(--color-primary) / <alpha-value>)",
