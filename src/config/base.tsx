@@ -9,7 +9,7 @@ import {
 } from "~/config/icons";
 
 export const CONFIG = {
-  card_info: {name: "棉花糖", at: "@ccz", description: "👋"},
+  card_info: { name: "棉花糖", at: "@ccz", description: "👋" },
   card_router: [
     { name: "我", href: "/", icon: HomeIcon },
     { name: "文章", href: "/article", icon: ArticleIcon },
@@ -19,11 +19,18 @@ export const CONFIG = {
   outer_link: [
     {
       name: "GitHub",
-      herf: "https://github.com/CottonCandyZ",
+      href: "https://github.com/CottonCandyZ",
       icon: GithubIcon,
     },
-    { name: "Twitter", herf: "https://twitter.com/cotton_candyZG", icon: TwitterIcon },
-    { name: "Bangumi", herf: "https://bgm.tv/user/cotton_candyz", icon: BgmIcon},
-
+    {
+      name: "Twitter",
+      href: "https://twitter.com/cotton_candyZG",
+      icon: TwitterIcon,
+    },
+    {
+      name: "Bangumi",
+      href: "https://bgm.tv/user/cotton_candyz",
+      icon: BgmIcon,
+    },
   ],
 };

@@ -1,46 +1,51 @@
 import Link from "next/link";
-import {getSortedPostsData} from '~/lib/posts';
+import { getSortedPostsData } from "~/lib/posts";
 export const metadata = {
   title: "文章",
   description: "文章",
   // icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function ArticleList() {
+export default function Page() {
   const allPostsData = getSortedPostsData();
   return (
-    <div className="flex flex-col space-y-2 rounded-2xl bg-white p-2 w-full shadow-2xl mr-auto">
-      {
-        allPostsData.map(({id, date, title}) => 
-          <ArticleBox key={id} herf={`/article/${id}`} title={title} date={date}/>
-        )
-      }
+    <div className="mr-auto flex w-full flex-col space-y-2 rounded-2xl bg-white p-2 shadow-2xl">
+      {allPostsData.map(({ id, date, title }) => (
+        <ArticleBox
+          key={id}
+          href={`/article/${id}`}
+          title={title}
+          date={date}
+        />
+      ))}
     </div>
   );
 }
 
 function ArticleBox({
-  herf,
+  href,
   title,
   abstract,
   date,
 }: {
-  herf: string;
+  href: string;
   title: string;
   abstract?: string;
   date: string;
 }) {
   return (
     <Link
-      href={herf}
-      className="hover:bg-primary-medium group rounded-xl hover:transition-all hover:duration-700"
+      href={href}
+      className="group rounded-xl hover:bg-primary-medium hover:transition-all hover:duration-700"
     >
-      <div className="border-primary-light rounded-xl border-2 p-2">
+      <div className="rounded-xl border-2 border-primary-light p-2">
         <h1 className="text-2xl font-medium text-primary group-hover:text-white group-hover:transition-all group-hover:duration-700">
           {title}
         </h1>
-        <h2 className="text-primary-medium line-clamp-3 group-hover:text-white group-hover:transition-all group-hover:duration-700">{date}</h2>
-        <p className="text-primary-medium line-clamp-3 group-hover:text-white group-hover:transition-all group-hover:duration-700">
+        <h2 className="line-clamp-3 text-primary-medium group-hover:text-white group-hover:transition-all group-hover:duration-700">
+          {date}
+        </h2>
+        <p className="line-clamp-3 text-primary-medium group-hover:text-white group-hover:transition-all group-hover:duration-700">
           {abstract}
         </p>
       </div>
