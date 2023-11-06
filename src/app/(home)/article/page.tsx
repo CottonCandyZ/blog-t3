@@ -9,7 +9,7 @@ export const metadata = {
 export default function Page() {
   const allPostsData = getSortedPostsData();
   return (
-    <div className="mr-auto flex w-full flex-col space-y-2 rounded-2xl bg-white p-2 shadow-2xl">
+    <div className="flex w-full flex-col space-y-2 rounded-2xl bg-white p-2 shadow-2xl">
       {allPostsData.map(({ id, date, title }) => (
         <ArticleBox
           key={id}

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import NavigationBar from "~/app/ui/components/navigation-bar";
+import NavigationBar from "~/components/navigation-bar";
 import OuterLinks from "./outer-links";
 import { CONFIG } from "~/config/base";
 
