@@ -7,7 +7,7 @@ import { CONFIG } from "~/config/base";
 export default function InfoCard({ home }: { home: boolean }) {
   const card_info = CONFIG.card_info;
   return home ? (
-    <div className="flex h-min flex-col items-center gap-4 rounded-3xl bg-white px-2 py-6 text-primary-medium shadow-2xl">
+    <div className="flex h-min w-min flex-col items-center gap-4 rounded-3xl bg-white px-2 py-6 text-primary-medium shadow-2xl">
       <div className="w-[21rem] text-xl font-medium">
         <NavigationBar />
       </div>
