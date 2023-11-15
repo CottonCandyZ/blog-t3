@@ -29,8 +29,8 @@ export default function InfoCard({ home }: { home: boolean }) {
       <OuterLinks />
     </div>
   ) : (
-    <div className="flex w-min items-center rounded-3xl bg-white px-2 py-3 text-primary-medium shadow-2xl">
-      <div className="ml-2 flex h-20 w-20 justify-center marker:items-center">
+    <div className="flex w-full items-center justify-between rounded-3xl bg-white px-2 py-3 text-primary-medium shadow-2xl sm:w-min">
+      <div className="ml-2 flex h-20 w-20 shrink-0 justify-center marker:items-center">
         <Image
           className="rounded-b-full"
           src="/images/avatar.jpg"
@@ -40,8 +40,8 @@ export default function InfoCard({ home }: { home: boolean }) {
         />
       </div>
 
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-64 text-base font-medium sm:w-72 sm:text-xl">
+      <div className="flex shrink-0 flex-col items-center gap-3">
+        <div className="w-72 text-lg font-medium sm:w-72 sm:text-xl">
           <NavigationBar />
         </div>
         <h2>balabala</h2>
