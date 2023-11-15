@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <div className="my-5">
+    <div className="mt-auto py-5">
       <span className="font-semibold text-white">
         Build with{" "}
         <a href="https://nextjs.org" className="text-primary-medium">
