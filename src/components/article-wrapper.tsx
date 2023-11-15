@@ -8,7 +8,9 @@ export default function ArticleWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const isList = usePathname() === "/article";
+  const pathName = usePathname();
+  const isList =
+    pathName === "/article" || pathName == "/about" || pathName == "/link";
   return (
     <div
       className={clsx(
