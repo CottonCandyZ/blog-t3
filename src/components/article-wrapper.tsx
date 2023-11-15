@@ -8,11 +8,13 @@ export default function ArticleWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const isList = usePathname() === "/article";
+  const pathName = usePathname();
+  const isList =
+    pathName === "/article" || pathName == "/about" || pathName == "/link";
   return (
     <div
       className={clsx(
-        `mt-10 flex min-h-[calc(100vh-110px)] w-full flex-col 
+        `mt-10 flex min-h-[calc(100vh-140px)] w-full flex-col 
      items-center gap-4 px-2 transition-all duration-500 sm:items-start`,
         {
           [`max-w-4xl`]: isList,

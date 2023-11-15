@@ -33,4 +33,5 @@ export const CONFIG = {
       icon: BgmIcon,
     },
   ],
+  footer_info: { name: "CottonCandyZ" },
 };
