@@ -4,7 +4,7 @@ export default function MainWrapper({
   children: React.ReactNode;
 }) {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-primary-light">
+    <main className="flex min-h-[100dvh] flex-col items-center bg-primary-light">
       {children}
     </main>
   );
