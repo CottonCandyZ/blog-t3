@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="flex min-h-[calc(100dvh-100px)] items-center">
+    <div className="mt-auto flex items-center">
       <InfoCard home={true} />
     </div>
   );

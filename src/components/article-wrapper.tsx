@@ -14,7 +14,7 @@ export default function ArticleWrapper({
   return (
     <div
       className={clsx(
-        `mt-10 flex min-h-[calc(100dvh-140px)] w-full flex-col 
+        `mt-10 flex  w-full flex-col 
      items-center gap-4 px-2 transition-all duration-500 sm:items-start`,
         {
           [`max-w-4xl`]: isList,
