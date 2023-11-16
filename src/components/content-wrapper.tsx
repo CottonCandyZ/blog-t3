@@ -3,14 +3,14 @@ import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import InfoCard from "~/components/person-card";
 
-export default function ArticleWrapper({
+export default function ContentWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathName = usePathname();
   const isList =
-    pathName === "/article" || pathName == "/about" || pathName == "/link";
+    pathName === "/posts" || pathName == "/about" || pathName == "/link";
   return (
     <div
       className={clsx(
