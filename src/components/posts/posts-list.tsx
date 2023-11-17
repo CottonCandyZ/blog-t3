@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import Link from "next/link";
-import { type PostsFrontmatter } from "~/components/posts/type";
+import type { PostFrontmatter } from "~/components/posts/type";
 
 export type PostListProps = {
   slug: string;
   abstract?: string;
-  frontmatter: PostsFrontmatter;
+  frontmatter: PostFrontmatter;
 }[];
 
 export default function PostsList({ props }: { props: PostListProps }) {

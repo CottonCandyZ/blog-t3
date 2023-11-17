@@ -2,9 +2,10 @@ import glob from "fast-glob";
 import fs from "fs/promises";
 import matter from "gray-matter";
 import path from "path";
-import { type PostsFrontmatter } from "~/components/posts/type";
+import type { PostFrontmatter } from "~/components/posts/type";
+import { bundleMDX } from "mdx-bundler";
 import dayjs from "dayjs";
-const cache = new Map<string, string[] | PostsFrontmatter>();
+const cache = new Map<string, string[] | PostFrontmatter>();
 
 export async function getPostsListInfo() {
   const postsPathName = await getAllPostsPathName();
@@ -27,7 +28,15 @@ export async function getPostsListInfo() {
     });
 }
 
-export async function getAllPostsPathName() {
+export async function getPostContent(slug: string) {
+  const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
+    file: path.join(process.cwd(), `posts/${slug}.mdx`),
+    cwd: path.join(process.cwd(), "./posts"),
+  });
+  return { code, frontmatter };
+}
+
+async function getAllPostsPathName() {
   const cacheKey = "posts";
   const postsPathName: string[] =
     (cache.get(cacheKey) as string[]) ?? (await glob("posts/**/*.mdx"));
@@ -35,22 +44,20 @@ export async function getAllPostsPathName() {
   return postsPathName;
 }
 
-export function getPostSlug(postPathName: string) {
+function getPostSlug(postPathName: string) {
   return postPathName.replace(/^posts\/|\.mdx$/g, "");
 }
 
-export async function getPostFrontmatter(
-  slug: string,
-): Promise<PostsFrontmatter> {
+async function getPostFrontmatter(slug: string): Promise<PostFrontmatter> {
   const cacheKey = `post:frontmatter:${slug}`;
   if (cache.has(cacheKey)) {
-    return cache.get(cacheKey) as PostsFrontmatter;
+    return cache.get(cacheKey) as PostFrontmatter;
   }
   const rawMdx = await fs.readFile(
     path.join(process.cwd(), `posts/${slug}.mdx`),
     "utf8",
   );
-  const frontmatter = matter(rawMdx).data as PostsFrontmatter;
+  const frontmatter = matter(rawMdx).data as PostFrontmatter;
   cache.set(cacheKey, frontmatter);
   return frontmatter;
 }

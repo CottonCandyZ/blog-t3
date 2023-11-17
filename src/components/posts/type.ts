@@ -1,4 +1,4 @@
-export type PostsFrontmatter = {
+export type PostFrontmatter = {
   title: string;
   date: string;
   updateOn?: string;
