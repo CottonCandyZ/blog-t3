@@ -16,35 +16,40 @@ export default function InfoCard({ home }: { home: boolean }) {
         src="/images/avatar.jpg"
         width={250}
         height={250}
+        priority={true}
         alt="Avatar of the author"
       />
       <div className="flex flex-col items-center">
         <div className="flex items-baseline space-x-2">
           <h1 className="text-2xl font-semibold">{card_info.name}</h1>
-          <h2 className="text-primary-light">{card_info.at}</h2>
         </div>
-        <h2>{card_info.description}</h2>
+        <h2 className="text-base font-medium">{card_info.description}</h2>
       </div>
 
       <OuterLinks />
     </div>
   ) : (
-    <div className="flex w-full items-center justify-between rounded-3xl bg-white px-2 py-3 text-primary-medium shadow-2xl sm:w-min">
-      <div className="ml-2 flex h-20 w-20 shrink-0 justify-center marker:items-center">
+    <div
+      className={`sm:gap-2 flex w-min items-center justify-between 
+    rounded-3xl bg-white py-5 text-primary-medium 
+    shadow-2xl sm:px-3`}
+    >
+      <div className="ml-2 flex h-16 w-16 shrink-0 justify-center marker:items-center sm:h-20 sm:w-20 sm:ml-4">
         <Image
           className="rounded-b-full"
           src="/images/avatar.jpg"
           width={250}
           height={250}
+          priority={true}
           alt="Avatar of the author"
         />
       </div>
 
       <div className="flex shrink-0 flex-col items-center gap-3">
-        <div className="w-72 text-lg font-medium sm:w-72 sm:text-xl">
+        <div className="w-[17.7rem] text-lg font-medium sm:w-72 sm:text-xl">
           <NavigationBar />
         </div>
-        <h2>balabala</h2>
+        <h2 className="text-base font-medium">{card_info.description}</h2>
       </div>
     </div>
   );

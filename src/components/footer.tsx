@@ -13,7 +13,7 @@ export default function Footer() {
           Vercel
         </a>
       </span>
-      <span className=" font-extralight text-white">
+      <span className="font-normal text-white">
         &copy;{new Date().getFullYear()}&nbsp;{CONFIG.footer_info.name}
       </span>
     </div>

@@ -1,72 +1,81 @@
-import fs from 'fs';
+import glob from "fast-glob";
+import fs from "fs/promises";
+import remarkGfm from "remark-gfm";
+import matter from "gray-matter";
 import path from "path";
-import matter from 'gray-matter';
-import Markdown from 'react-markdown';
+import type { PostFrontmatter } from "~/components/posts";
+import { bundleMDX } from "mdx-bundler";
+import dayjs from "dayjs";
 
-const postsDirectory = path.join(process.cwd(), 'posts');
+const cache = new Map<string, string[] | PostFrontmatter>();
 
-export function getSortedPostsData() {
-  // Get file names under /posts
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames.map((fileName) => {
-    // Remove ".md" from file name to get id
-    const id = fileName.replace(/\.md$/, '');
-
-    // Read markdown file as string
-    const fullPath = path.join(postsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf-8');
-
-    // Use gray-matter to parse the post metadata section
-    const matterResult = matter(fileContents);
-
-    return {
-      id,
-      ...(matterResult.data as {
-        date: string;
-        title: string;
-      })
-    };
-  });
-
-  return allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-}
-
-export function getAllPostIds() {
-  const fileNames = fs.readdirSync(postsDirectory);
-
-  return fileNames.map((fileName) => {
-    return {
-      params: {
-        id: fileName.replace(/\.md$/, ''),
-      },
-    };
-  });
-}
-
-export function getPostData(id: string) {
-  const fullPath = path.join(postsDirectory, `${id}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-  // Use gray-matter to parse the post metadata section
-  const matterResult = matter(fileContents);
-
-  // Use remark to convert markdown into HTML string
-
-  const content = <Markdown>{matterResult.content}</Markdown>
-
-  // Combine the data with the id
-  return {
-    id,
-    content,
-    ...(matterResult.data as {
-      date: string;
-      title: string;
+export async function getPostsListInfo() {
+  const postsPathName = await getAllPostsPathName();
+  const allPostsListInfo = await Promise.all(
+    postsPathName.map(async (postPathName) => {
+      const slug = getPostSlug(postPathName);
+      const frontmatter = await getPostFrontmatter(slug);
+      return {
+        slug,
+        frontmatter,
+      };
     }),
+  );
+  return allPostsListInfo
+    .filter(({ frontmatter }) => !frontmatter.draft)
+    .sort((a, b) => {
+      const dayA = dayjs(a.frontmatter.date).valueOf();
+      const dayB = dayjs(b.frontmatter.date).valueOf();
+      return dayA - dayB;
+    });
+}
+
+export async function getPostContent(slug: string) {
+  const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
+    file: path.join(process.cwd(), `posts/${slug}.mdx`),
+    cwd: path.join(process.cwd(), "./posts"),
+    mdxOptions(options) {
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
+      return options;
+    },
+  });
+  return { code, frontmatter };
+}
+
+/**
+ * Get all posts path name under posts folder and subfolder. 
+ * Including the file with `.mdx` suffix.
+ * Path name default contain the create date and title.
+ * @returns Posts path name.
+ */
+async function getAllPostsPathName() {
+  const cacheKey = "posts";
+  const postsPathName: string[] =
+    (cache.get(cacheKey) as string[]) ?? (await glob("posts/**/*.mdx"));
+  cache.set(cacheKey, postsPathName);
+  return postsPathName;
+}
+
+
+/**
+ * Remove `.mdx` suffix to get slug name.
+ * @param postPathName Post path name.
+ * @returns Post paths name with mdx suffix removed.
+ */
+function getPostSlug(postPathName: string) {
+  return postPathName.replace(/^posts\/|\.mdx$/g, "");
+}
+
+async function getPostFrontmatter(slug: string): Promise<PostFrontmatter> {
+  const cacheKey = `post:frontmatter:${slug}`;
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey) as PostFrontmatter;
   }
+  const rawMdx = await fs.readFile(
+    path.join(process.cwd(), `posts/${slug}.mdx`),
+    "utf8",
+  );
+  const frontmatter = matter(rawMdx).data as PostFrontmatter;
+  cache.set(cacheKey, frontmatter);
+  return frontmatter;
 }

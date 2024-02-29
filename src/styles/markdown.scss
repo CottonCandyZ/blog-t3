@@ -1,0 +1,44 @@
+.markdown-body {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply mb-4 font-bold;
+  }
+  h1 {
+    @apply mt-4 text-3xl;
+  }
+  h2 {
+    @apply mt-4 text-2xl;
+  }
+  h3 {
+    @apply mt-4 text-xl;
+  }
+  h4 {
+    @apply mt-2 text-lg;
+  }
+  h5 {
+    @apply mt-2 text-base;
+  }
+  h6 {
+    @apply mt-1 text-sm;
+  }
+  p {
+    @apply my-4;
+  }
+  blockquote {
+    @apply relative my-12 px-8
+    before:absolute before:bg-primary-light before:left-0 before:h-full before:w-1.5 before:rounded-md;
+    p {
+      @apply font-medium text-primary;
+    }
+  }
+  em {
+    @apply font-bold not-italic;
+  }
+  strong {
+    @apply font-bold text-primary-medium;
+  }
+}
