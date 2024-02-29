@@ -6,10 +6,10 @@ import {
   GithubIcon,
   TwitterIcon,
   BgmIcon,
-} from "~/config/icons";
+} from "~/components/icons";
 
 export const CONFIG = {
-  card_info: { name: "棉花糖", at: "@ccz", description: "👋" },
+  card_info: { name: "棉花糖", description: "一只全新的前端仔" },
   card_router: [
     { name: "我", href: "/", icon: HomeIcon },
     { name: "文章", href: "/posts", icon: ArticleIcon },
