@@ -34,10 +34,12 @@ export async function getPostContent(slug: string) {
   const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
     file: path.join(process.cwd(), `posts/${slug}.mdx`),
     cwd: path.join(process.cwd(), "./posts"),
+    /* eslint-disable */
     mdxOptions(options) {
       options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
       return options;
     },
+    /* eslint-enable */
   });
   return { code, frontmatter };
 }
