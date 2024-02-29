@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import Link from "next/link";
-import type { PostFrontmatter } from "~/components/posts/type";
+import type { PostFrontmatter } from "~/components/posts";
 
 export type PostListProps = {
   slug: string;
