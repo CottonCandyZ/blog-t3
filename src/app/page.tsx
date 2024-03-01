@@ -1,9 +1,9 @@
 import InfoCard from "~/components/person-card";
 
 export const metadata = {
-  title: "我的",
-  // description: "我的小屋",
-  // icons: [{ rel: "icon", url: "/favicon.ico" }],
+  title: "棉花糖",
+  description: "棉花糖的 Blog",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 export default function Page() {

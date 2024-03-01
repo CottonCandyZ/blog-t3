@@ -1,44 +1,72 @@
 .markdown-body {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  @apply break-words text-base text-primary-dark;
+  
+  // Heading
+  .mdx-h1,
+  .mdx-h2,
+  .mdx-h3,
+  .mdx-h4,
+  .mdx-h5,
+  .mdx-h6 {
     @apply mb-4 font-bold;
   }
-  h1 {
+  .mdx-h1 {
     @apply mt-4 text-3xl;
   }
-  h2 {
+  .mdx-h2 {
     @apply mt-4 text-2xl;
   }
-  h3 {
+  .mdx-h3 {
     @apply mt-4 text-xl;
   }
-  h4 {
+  .mdx-h4 {
     @apply mt-2 text-lg;
   }
-  h5 {
+  .mdx-h5 {
     @apply mt-2 text-base;
   }
-  h6 {
+  .mdx-h6 {
     @apply mt-1 text-sm;
   }
-  p {
+
+  // Paragraph
+  .mdx-p {
     @apply my-4;
   }
-  blockquote {
+
+  // Blockquote
+  .mdx-blockquote {
     @apply relative my-12 px-8
-    before:absolute before:bg-primary-light before:left-0 before:h-full before:w-1.5 before:rounded-md;
+    before:absolute before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-light;
     p {
       @apply font-medium text-primary;
     }
   }
-  em {
+
+  // Table
+  .mdx-table {
+    @apply w-full my-8 text-left border-collapse;
+    .mdx-thead, .mdx-tbody .mdx-tr:not(:last-child) {
+      @apply border-b border-primary-dark;
+    }
+    .mdx-th {
+      @apply p-2.5 whitespace-nowrap;
+    }
+    .mdx-td {
+      @apply p-2.5;
+    }
+  }
+
+
+  // Emphasis
+  .mdx-em {
     @apply font-bold not-italic;
   }
+  
+  // Strong
   strong {
     @apply font-bold text-primary-medium;
   }
+
+  //
 }

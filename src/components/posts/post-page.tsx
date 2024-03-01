@@ -1,7 +1,7 @@
-import PostContent from "~/components/posts/post-content";
+import PostContent from "~/components/posts/mdx-component";
 import type { PostFrontmatter } from "~/components/posts";
 
-type postPageProps = {
+interface postPageProps {
   code: string;
   frontmatter: PostFrontmatter;
 };
@@ -9,8 +9,8 @@ type postPageProps = {
 export default function PostPage({ props }: { props: postPageProps }) {
   const { code, frontmatter } = props;
   return (
-    <div className="flex w-full items-start gap-2">
-      <div className="w-full rounded-2xl bg-white p-8 shadow-2xl xl:shrink-0 xl:basis-[48rem]">
+    <div className="flex w-full items-start gap-4">
+      <div className="w-full rounded-2xl bg-white p-8 shadow-2xl xl:shrink-0 xl:basis-[54rem]">
         <h1 className="mb-5 text-4xl font-bold text-primary">
           {frontmatter.title}
         </h1>
