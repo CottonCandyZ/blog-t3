@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@mdx-js/esbuild':
+    specifier: ^3.0.1
+    version: 3.0.1(esbuild@0.19.5)
   '@prisma/client':
     specifier: ^5.1.1
     version: 5.4.2(prisma@5.4.2)
@@ -449,8 +452,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@mdx-js/esbuild@3.0.0(esbuild@0.19.5):
-    resolution: {integrity: sha512-hQaYb1jI0tojPlvHi+dwOKLHQxl9oczY8zZfat8ANfYZ9zgPGJXUU+SMBruZnd4ij34/l9BQPHEwTxTUQ7s9hw==}
+  /@mdx-js/esbuild@3.0.1(esbuild@0.19.5):
+    resolution: {integrity: sha512-+KZbCKcRjFtRD6qzD+c70Vq/VPVt5LHFsOshNcsdcONkaLTCSjmM7/uj71i3BcP+170f+P4DwVEMtqR/k0t5aw==}
     peerDependencies:
       esbuild: '>=0.14.0'
     dependencies:
@@ -2978,7 +2981,7 @@ packages:
       '@babel/runtime': 7.23.2
       '@esbuild-plugins/node-resolve': 0.2.2(esbuild@0.19.5)
       '@fal-works/esbuild-plugin-global-externals': 2.1.2
-      '@mdx-js/esbuild': 3.0.0(esbuild@0.19.5)
+      '@mdx-js/esbuild': 3.0.1(esbuild@0.19.5)
       esbuild: 0.19.5
       gray-matter: 4.0.3
       remark-frontmatter: 5.0.0

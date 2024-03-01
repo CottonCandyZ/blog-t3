@@ -6,9 +6,14 @@ import path from "path";
 import type { PostFrontmatter } from "~/components/posts";
 import { bundleMDX } from "mdx-bundler";
 import dayjs from "dayjs";
+import type { Options } from "@mdx-js/esbuild/lib"
 
 const cache = new Map<string, string[] | PostFrontmatter>();
 
+/**
+ * Get sorted and filtered posts info.
+ * @returns Sorted by day and filtered `slug` and `frontmatter`.
+ */
 export async function getPostsListInfo() {
   const postsPathName = await getAllPostsPathName();
   const allPostsListInfo = await Promise.all(
@@ -30,16 +35,22 @@ export async function getPostsListInfo() {
     });
 }
 
+/**
+ * Parse the post content by slug.
+ * @param slug Post path name without `.mdx` suffix.
+ * @returns `code` and `frontmatter` parsed by `bundleMDX`.
+ */
 export async function getPostContent(slug: string) {
   const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
     file: path.join(process.cwd(), `posts/${slug}.mdx`),
     cwd: path.join(process.cwd(), "./posts"),
-    /* eslint-disable */
     mdxOptions(options) {
-      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
-      return options;
+      // Fix: bundle-MDX type error
+      const typedOptions = options as Options;
+      typedOptions.remarkPlugins = [...(typedOptions.remarkPlugins ?? []), remarkGfm];
+
+      return typedOptions;
     },
-    /* eslint-enable */
   });
   return { code, frontmatter };
 }
@@ -68,6 +79,11 @@ function getPostSlug(postPathName: string) {
   return postPathName.replace(/^posts\/|\.mdx$/g, "");
 }
 
+/**
+ * Extract frontmatter info.
+ * @param slug Post path name without `.mdx` suffix.
+ * @returns `PostFrontmatter`.
+ */
 async function getPostFrontmatter(slug: string): Promise<PostFrontmatter> {
   const cacheKey = `post:frontmatter:${slug}`;
   if (cache.has(cacheKey)) {
