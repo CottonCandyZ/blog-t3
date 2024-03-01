@@ -57,16 +57,18 @@
     }
   }
 
-
   // Emphasis
   .mdx-em {
     @apply font-bold not-italic;
   }
   
   // Strong
-  strong {
+  .mdx-strong {
     @apply font-bold text-primary-medium;
   }
 
-  //
+  //Image
+  .mdx-image {
+    @applay my-6;
+  }
 }

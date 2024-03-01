@@ -7,6 +7,7 @@ import type { PostFrontmatter } from "~/components/posts";
 import { bundleMDX } from "mdx-bundler";
 import dayjs from "dayjs";
 import type { Options } from "@mdx-js/esbuild/lib"
+import remarkUnwrapImages from "remark-unwrap-images";
 
 const cache = new Map<string, string[] | PostFrontmatter>();
 
@@ -47,7 +48,10 @@ export async function getPostContent(slug: string) {
     mdxOptions(options) {
       // Fix: bundle-MDX type error
       const typedOptions = options as Options;
-      typedOptions.remarkPlugins = [...(typedOptions.remarkPlugins ?? []), remarkGfm];
+      typedOptions.remarkPlugins = [...(typedOptions.remarkPlugins ?? []),
+      remarkGfm,
+      remarkUnwrapImages,
+    ];
 
       return typedOptions;
     },

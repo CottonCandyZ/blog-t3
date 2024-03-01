@@ -25,6 +25,7 @@ export default function PostContent({ code }: { code: string }) {
     em: tagRenderer('em'),
     strong: tagRenderer('strong'),
     del: tagRenderer('del'),
+    image: NextImage,
   } as unknown as MDXContentProps["components"];
   const Component = React.useMemo(() => getMDXComponent(code), [code]);
   return <Component components={components} />;
