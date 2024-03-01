@@ -1,12 +1,19 @@
 import PreCodeBlock from "~/components/posts/content/Codeblock/pre-codeblock";
 
-export default function CodeBlock({
+interface CodeblockProps {
+  className: string
+
+}
+
+
+
+const CodeBlock: React.FC = ({
   children,
   className,
 }: {
   children?: string;
   className?: string;
-}) {
+}) => {
   if (!children) return null;
   const language = className?.replace(/language-/, "");
   if (!language && !children.endsWith("\n"))
@@ -17,3 +24,5 @@ export default function CodeBlock({
     );
   return <PreCodeBlock language={language!} code={children.trim()} />;
 }
+
+export default CodeBlock

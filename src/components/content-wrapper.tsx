@@ -18,7 +18,7 @@ export default function ContentWrapper({
      items-center gap-4 px-2 transition-all duration-500 sm:items-start`,
         {
           [`max-w-4xl`]: isList,
-          [`max-w-6xl`]: !isList,
+          [`max-w-7xl`]: !isList,
         },
       )}
     >
