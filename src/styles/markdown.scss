@@ -1,6 +1,6 @@
 .markdown-body {
   @apply break-words text-base text-primary-dark;
-  
+
   // Heading
   .mdx-h1,
   .mdx-h2,
@@ -45,12 +45,13 @@
 
   // Table
   .mdx-table {
-    @apply w-full my-8 text-left border-collapse;
-    .mdx-thead, .mdx-tbody .mdx-tr:not(:last-child) {
+    @apply my-8 w-full border-collapse text-left;
+    .mdx-thead,
+    .mdx-tbody .mdx-tr:not(:last-child) {
       @apply border-b border-primary-dark;
     }
     .mdx-th {
-      @apply p-2.5 whitespace-nowrap;
+      @apply whitespace-nowrap p-2.5;
     }
     .mdx-td {
       @apply p-2.5;
@@ -61,14 +62,39 @@
   .mdx-em {
     @apply font-bold not-italic;
   }
-  
+
   // Strong
   .mdx-strong {
     @apply font-bold text-primary-medium;
   }
 
-  //Image
+  // Image
   .mdx-image {
     @applay my-6;
+  }
+
+  // List
+  .mdx-ul,
+  .mdx-ol {
+    @apply my-6;
+    .mdx-p {
+      @apply m-0;
+    }
+    .mdx-ul .mdx-ol {
+      @apply my-0;
+      .mdx-li:last-child {
+        @apply my-0;
+      }
+    }
+  }
+
+  .mdx-ol > .mdx-li {
+    counter-increment: list-item;
+    &::before {
+      @apply mr-2 font-medium text-primary;
+      content: counter(list-item) ". ";
+      min-width: 20px;
+      font-feature-settings: "tnum";
+    }
   }
 }

@@ -86,3 +86,62 @@ export function BgmIcon(props: SVGProps<SVGSVGElement>) {
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M15.414 5h5.594c.548 0 .992.445.992 1v14c0 .552-.455 1-.992 1H2.992A.994.994 0 0 1 2 20V6c0-.552.455-1 .992-1h5.594L6.05 2.465L7.464 1.05L11.414 5h1.172l3.95-3.95l1.414 1.415L15.414 5ZM4 7v12h16V7H4Z"></path></svg>
   )
 }
+
+export const ArrowRight: React.FC<SVGProps<SVGSVGElement>> = props => {
+  return (
+    <svg
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M13 7L18 12M18 12L13 17M18 12L6 12"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+export const Checked: React.FC<SVGProps<SVGSVGElement>> = props => {
+  return (
+    <svg
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      {...props}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.0327 12.2324L9.20425 9.40396L7.79004 10.8182L12.0327 15.0608L22.6393 4.45421L21.2251 3.04L12.0327 12.2324Z"
+        fill="currentColor"
+      />
+      <path
+        d="M15.9343 6.20943C14.8131 5.44615 13.4586 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 11.4491 18.9364 10.913 18.816 10.3988L20.4146 8.80023C20.7929 9.79445 21 10.873 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.0118 3 15.8695 3.66011 17.3682 4.77556L15.9343 6.20943Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export const Unchecked: React.FC<SVGProps<SVGSVGElement>> = props => {
+  return (
+    <svg
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  )
+}
