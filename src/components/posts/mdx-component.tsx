@@ -1,9 +1,11 @@
 import React from "react";
 import { getMDXComponent } from "mdx-bundler/client";
 import type { MDXContentProps } from "mdx-bundler/dist/types";
-import CodeBlock from "~/components/posts/content/Codeblock";
 import NextImage from "~/components/posts/content/Image";
 import tagRenderer from "~/components/posts/tag-render";
+import UnorderedList from "~/components/posts/content/lists/UnorderedList";
+import OrderedList from "~/components/posts/content/lists/OrderedList";
+import ListItem from "~/components/posts/content/lists/ListItem";
 
 
 export default function PostContent({ code }: { code: string }) {
@@ -25,6 +27,10 @@ export default function PostContent({ code }: { code: string }) {
     em: tagRenderer('em'),
     strong: tagRenderer('strong'),
     del: tagRenderer('del'),
+    image: NextImage,
+    ul: UnorderedList,
+    ol: OrderedList,
+    li: ListItem,
   } as unknown as MDXContentProps["components"];
   const Component = React.useMemo(() => getMDXComponent(code), [code]);
   return <Component components={components} />;
