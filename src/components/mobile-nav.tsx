@@ -30,8 +30,8 @@ const MobileNav: React.FC = (props) => {
           className={clsx(
             "absolute inset-0 z-10 h-screen w-screen backdrop-blur-xl transition-opacity duration-500",
             {
-              "opacity-1, touch-none": expend,
-              "opacity-0, touch-auto": !expend,
+              "opacity-1 touch-none": expend,
+              "opacity-0 touch-auto": !expend,
             },
           )}
         ></button>
