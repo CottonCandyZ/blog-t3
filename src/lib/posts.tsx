@@ -8,7 +8,7 @@ import { bundleMDX } from "mdx-bundler";
 import dayjs from "dayjs";
 import type { Options } from "@mdx-js/esbuild/lib";
 import remarkUnwrapImages from "remark-unwrap-images";
-import remarkMdxCodeProps from "~/lib/unified/remark-mdx-code-props";
+// import remarkMdxCodeProps from "~/lib/unified/remark-mdx-code-props";
 
 const cache = new Map<string, string[] | PostFrontmatter>();
 
@@ -53,7 +53,7 @@ export async function getPostContent(slug: string) {
         ...(typedOptions.remarkPlugins ?? []),
         remarkGfm,
         remarkUnwrapImages,
-        remarkMdxCodeProps,
+        // remarkMdxCodeProps,
       ];
 
       return typedOptions;
