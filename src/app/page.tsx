@@ -13,13 +13,13 @@ export default async function Page() {
   return (
     <div>
       <div className="col-span-full h-64 bg-primary-extralight">
-        <div className="h-14"></div>
-        <div className="sticky top-0 mx-auto max-w-6xl bg-primary-extralight px-10 py-3">
+        <div className="h-10 hidden md:block"></div>
+        <div className="sticky top-0 mx-auto max-w-6xl bg-primary-extralight py-3 px-5 md:px-10">
           <Header />
         </div>
       </div>
-      <main className="mx-auto grid max-w-6xl grid-cols-[2fr_1fr] gap-10 px-10 py-20">
-        <section className="col-span-1">
+      <main className="mx-auto grid max-w-6xl grid-cols-[2fr_1fr] gap-10 py-20 px-5 md:px-10">
+        <section className="col-span-full md:col-span-1">
           <h1 className="text-xl font-medium tracking-widest text-primary">
             最新序
           </h1>
@@ -28,7 +28,7 @@ export default async function Page() {
             <PostsList props={latestPostsListInfo} />
           </div>
         </section>
-        <section className="col-span-1"></section>
+        <section className="col-auto hidden md:col-span-1"></section>
       </main>
     </div>
   );

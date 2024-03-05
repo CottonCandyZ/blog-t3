@@ -15,6 +15,10 @@ export default {
           "100%": { opacity: "1"},
         },
       },
+      transitionDuration: {
+        '400': '400ms',
+        '600': '600ms',
+      },
       animation: {
         backshake: "backshake 0.5s linear",
         show: "show 0.5s ease-in-out",
@@ -31,6 +35,9 @@ export default {
   safelist: [
     {
       pattern: /theme-/,
+    },
+    {
+      pattern: /duration-(400|500|600|700)/,
     }
   ],
 } satisfies Config;

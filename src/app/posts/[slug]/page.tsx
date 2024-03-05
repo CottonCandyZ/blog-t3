@@ -8,24 +8,25 @@ export default async function Page({ params }: { params: { slug: string } }) {
   );
   return (
     <div>
-      <div className="sticky top-0 mx-auto max-w-6xl px-10 py-3 z-[5]">
+      <div className="sticky top-0 z-[5] mx-auto max-w-6xl px-5 py-3 md:px-10">
         <Header />
       </div>
-
-      <div className="col-span-full h-64 bg-primary-extralight relative">
-        <div className="absolute h-16 -top-[4rem] bg-primary-extralight w-full"></div>
-        <div className="h-16 z-[4] sticky top-0 bg-primary-extralight"></div>
-        <h1 className="relative z-[2] mx-auto mt-10 max-w-6xl px-10 text-4xl font-bold text-primary">
+      <div className="relative col-span-full h-64 bg-primary-extralight">
+        <div className="absolute -top-[4rem] h-16 w-full bg-primary-extralight"></div>
+        <div className="sticky top-0 z-[4] h-16 bg-primary-extralight"></div>
+        <h1 className="relative z-[2] mx-auto mt-10 max-w-6xl px-5 text-4xl font-bold text-primary md:px-10">
           {frontmatter.title}
         </h1>
       </div>
-      <div className="h-16 z-[4] sticky top-0 bg-white"></div>
-      <div className="mx-auto flex max-w-6xl flex-row gap-10 px-10">
-        <article className="markdown-body w-full basis-2/3">
+      <div className="sticky top-0 z-[4] h-16 bg-white"></div>
+      <div className="mx-auto flex max-w-6xl flex-row justify-center gap-10 px-5 pb-10 md:px-10 lg:justify-normal">
+        <article className="markdown-body max-w-2xl w-full">
           <PostContent code={code} />
         </article>
-        <div className="sticky top-20 h-min basis-1/3 p-2">
-          <h2 className="text-2xl font-medium text-primary tracking-wider">目录</h2>
+        <div className="sticky top-20 hidden h-min basis-1/3 p-2 lg:block">
+          <h2 className="text-2xl font-medium tracking-wider text-primary">
+            目录
+          </h2>
         </div>
       </div>
     </div>

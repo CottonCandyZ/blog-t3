@@ -12,11 +12,11 @@ export default function PostsList({ props }: { props: PostListProps }) {
   return props.map(({ slug, frontmatter }, id) => (
     <article key={id}>
       <Link href={`/posts/${slug}`} className="group">
-        <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row items-start justify-between gap-4">
           <h1 className="text-xl font-semibold group-hover:text-primary">
             {frontmatter.title}
           </h1>
-          <h2 className="min-w-max font-medium">
+          <h2 className="min-w-max mt-[2px] font-medium">
             {dayjs(frontmatter.date).format("MMMM D")}
           </h2>
         </div>

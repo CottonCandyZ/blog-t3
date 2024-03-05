@@ -180,13 +180,8 @@ export const Unchecked: React.FC<SVGProps<SVGSVGElement>> = (props) => {
     </svg>
   );
 };
-interface IconProps extends SVGProps<SVGSVGElement> {
-  primary_color?: string;
-  secondary_color?: string;
-}
-export const CottonCandy: React.FC<IconProps> = (props) => {
-  const primary_color = props.primary_color;
-  const secondary_color = props.secondary_color;
+
+export const CottonCandy: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
       width="1rem"
@@ -196,17 +191,37 @@ export const CottonCandy: React.FC<IconProps> = (props) => {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle cx="260.5" cy="116.5" r="107.5" fill={primary_color} />
-      <circle cx="195" cy="316" r="113" fill={primary_color} />
-      <circle cx="191" cy="180" r="96" fill={primary_color} />
-      <circle cx="327" cy="352" r="77" fill={primary_color} />
-      <circle cx="355" cy="267" r="94" fill={primary_color} />
-      <circle cx="369.5" cy="253.5" r="82.5" fill={secondary_color} />
-      <circle cx="367.5" cy="157.5" r="59.5" fill={primary_color} />
-      <circle cx="262" cy="113" r="104" fill={secondary_color} />
-      <circle cx="202.5" cy="157.5" r="90.5" fill={secondary_color} />
-      <circle cx="346.5" cy="154.5" r="53.5" fill={secondary_color} />
-      <circle cx="302.5" cy="180.5" r="52.5" fill={secondary_color} />
+      <circle className="fill-primary-light" cx="260.5" cy="116.5" r="107.5" />
+      <circle className="fill-primary-light" cx="195" cy="316" r="113" />
+      <circle className="fill-primary-light" cx="191" cy="180" r="96" />
+      <circle className="fill-primary-light" cx="327" cy="352" r="77" />
+      <circle className="fill-primary-light" cx="355" cy="267" r="94" />
+      <circle
+        className="fill-primary-extralight"
+        cx="369.5"
+        cy="253.5"
+        r="82.5"
+      />
+      <circle className="fill-primary-light" cx="367.5" cy="157.5" r="59.5" />
+      <circle className="fill-primary-extralight" cx="262" cy="113" r="104" />
+      <circle
+        className="fill-primary-extralight"
+        cx="202.5"
+        cy="157.5"
+        r="90.5"
+      />
+      <circle
+        className="fill-primary-extralight"
+        cx="346.5"
+        cy="154.5"
+        r="53.5"
+      />
+      <circle
+        className="fill-primary-extralight"
+        cx="302.5"
+        cy="180.5"
+        r="52.5"
+      />
       <rect x="237" y="407" width="50" height="119" rx="25" fill="#D7F3FF" />
       <rect x="237" y="419" width="24" height="103" rx="12" fill="#BDEBFF" />
       <rect x="255" y="410" width="25" height="14" rx="7" fill="#BDEBFF" />
@@ -257,6 +272,39 @@ export const PhotoIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
       <path
         fill="currentColor"
         d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm0-2h14V5H5zm1-2h12l-3.75-5l-3 4L9 13zm-1 2V5zm3.5-9q.625 0 1.063-.437T10 8.5q0-.625-.437-1.062T8.5 7q-.625 0-1.062.438T7 8.5q0 .625.438 1.063T8.5 10"
+      ></path>
+    </svg>
+  );
+};
+export const NavIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1"
+      ></path>
+    </svg>
+  );
+};
+
+export const CloseIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275z"
       ></path>
     </svg>
   );
