@@ -6,8 +6,9 @@ import path from "path";
 import type { PostFrontmatter } from "~/components/posts";
 import { bundleMDX } from "mdx-bundler";
 import dayjs from "dayjs";
-import type { Options } from "@mdx-js/esbuild/lib"
+import type { Options } from "@mdx-js/esbuild/lib";
 import remarkUnwrapImages from "remark-unwrap-images";
+// import remarkMdxCodeProps from "~/lib/unified/remark-mdx-code-props";
 
 const cache = new Map<string, string[] | PostFrontmatter>();
 
@@ -15,7 +16,7 @@ const cache = new Map<string, string[] | PostFrontmatter>();
  * Get sorted and filtered posts info.
  * @returns Sorted by day and filtered `slug` and `frontmatter`.
  */
-export async function getPostsListInfo() {
+export async function getLatestPostsListInfo() {
   const postsPathName = await getAllPostsPathName();
   const allPostsListInfo = await Promise.all(
     postsPathName.map(async (postPathName) => {
@@ -48,10 +49,12 @@ export async function getPostContent(slug: string) {
     mdxOptions(options) {
       // Fix: bundle-MDX type error
       const typedOptions = options as Options;
-      typedOptions.remarkPlugins = [...(typedOptions.remarkPlugins ?? []),
-      remarkGfm,
-      remarkUnwrapImages,
-    ];
+      typedOptions.remarkPlugins = [
+        ...(typedOptions.remarkPlugins ?? []),
+        remarkGfm,
+        remarkUnwrapImages,
+        // remarkMdxCodeProps,
+      ];
 
       return typedOptions;
     },
@@ -60,7 +63,7 @@ export async function getPostContent(slug: string) {
 }
 
 /**
- * Get all posts path name under posts folder and subfolder. 
+ * Get all posts path name under posts folder and subfolder.
  * Including the file with `.mdx` suffix.
  * Path name default contain the create date and title.
  * @returns Posts path name.
@@ -72,7 +75,6 @@ async function getAllPostsPathName() {
   cache.set(cacheKey, postsPathName);
   return postsPathName;
 }
-
 
 /**
  * Remove `.mdx` suffix to get slug name.
