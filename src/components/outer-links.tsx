@@ -1,4 +1,4 @@
-import { CONFIG } from "~/config/base";
+import { CONFIG } from "~/config";
 
 export default function OuterLinks() {
   const outer_link = CONFIG.outer_link;
