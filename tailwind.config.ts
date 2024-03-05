@@ -33,7 +33,4 @@ export default {
       pattern: /theme-/,
     }
   ],
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
 } satisfies Config;

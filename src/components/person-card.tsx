@@ -2,7 +2,7 @@
 import Image from "next/image";
 import NavigationBar from "~/components/navigation-bar";
 import OuterLinks from "./outer-links";
-import { CONFIG } from "~/config/base";
+import { CONFIG } from "~/config"
 
 export default function InfoCard({ home }: { home: boolean }) {
   const card_info = CONFIG.card_info;
@@ -12,8 +12,8 @@ export default function InfoCard({ home }: { home: boolean }) {
         <NavigationBar />
       </div>
       <Image
-        className="h-48 w-48 max-w-none rounded-b-full"
-        src="/images/avatar.jpg"
+        className="h-44 w-44 max-w-none rounded-b-full"
+        src="/images/avatar.webp"
         width={250}
         height={250}
         priority={true}
@@ -37,7 +37,7 @@ export default function InfoCard({ home }: { home: boolean }) {
       <div className="ml-2 flex h-16 w-16 shrink-0 justify-center marker:items-center sm:h-20 sm:w-20 sm:ml-4">
         <Image
           className="rounded-b-full"
-          src="/images/avatar.jpg"
+          src="/images/avatar.webp"
           width={250}
           height={250}
           priority={true}

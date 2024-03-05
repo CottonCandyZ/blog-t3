@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CONFIG } from "~/config/base";
+import { CONFIG } from "~/config";
 import clsx from "clsx";
 
 export default function NavigationBar() {
@@ -9,7 +9,7 @@ export default function NavigationBar() {
   const router_content = CONFIG.card_router;
   return (
     <nav>
-      <ul className="flex justify-center gap-4">
+      <ul className="flex justify-center gap-2">
         {router_content.map((item, index) => (
           <ListItem
             key={index}
@@ -36,11 +36,11 @@ function ListItem({
   current?: boolean;
 }) {
   return (
-    <li>
+    <li className="w-[5.5rem]">
       <Link
         href={href}
         className={clsx(
-          `relative z-0 flex items-center
+          `mx-auto w-max relative z-0 flex items-center
           leading-8 transition-all duration-300 before:absolute before:bottom-0
            before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light`,
           {
