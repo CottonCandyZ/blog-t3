@@ -19,7 +19,7 @@ const MobileNav: React.FC = (props) => {
           <NavIcon className="h-9 w-9 text-primary-dark" />
         )}
       </button>
-      <div className="pointer-events-auto fixed inset-0 z-10">
+      <div className="pointer-events-none fixed inset-0 z-10">
         <button
           onClick={() => setExpend(false)}
           className={clsx(
