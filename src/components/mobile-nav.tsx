@@ -19,14 +19,19 @@ const MobileNav: React.FC = (props) => {
           <NavIcon className="h-9 w-9 text-primary-dark" />
         )}
       </button>
-      <div className="pointer-events-none fixed inset-0 z-10">
+      <div className={clsx(" fixed inset-0 z-10",
+          {
+            "pointer-events-auto": expend,
+            "pointer-events-none": !expend,
+          },
+      )}>
         <button
           onClick={() => setExpend(false)}
           className={clsx(
-            "absolute inset-0 z-10 h-screen w-screen touch-none backdrop-blur-xl transition-opacity duration-500",
+            "absolute inset-0 z-10 h-screen w-screen backdrop-blur-xl transition-opacity duration-500",
             {
-              "opacity-1": expend,
-              "opacity-0": !expend,
+              "opacity-1, touch-none": expend,
+              "opacity-0, touch-auto": !expend,
             },
           )}
         ></button>
