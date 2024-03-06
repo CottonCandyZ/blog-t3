@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 import type { Options } from "@mdx-js/esbuild/lib";
 import remarkUnwrapImages from "remark-unwrap-images";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeSlug from 'rehype-slug'
 
 const cache = new Map<string, string[] | PostFrontmatter>();
 /**
@@ -55,6 +57,8 @@ export async function getPostContent(slug: string) {
       ];
       typedOptions.rehypePlugins = [
         ...(typedOptions.rehypePlugins ?? []),
+        rehypeSlug,
+        [rehypeAutolinkHeadings, { behavior: 'wrap', properties: { class: 'anchor' } }],
         [rehypeMdxCodeProps, { tagName: "code" }],
       ];
 

@@ -2,6 +2,16 @@
   @apply break-words text-base text-primary-dark;
 
   // Heading
+  .anchor {
+    @apply relative;
+    &:hover {
+      @apply underline decoration-primary/20;
+      &::before {
+        @apply font-normal text-primary absolute -left-5;
+        content: "#";
+      }
+    }
+  }
   .mdx-h1,
   .mdx-h2,
   .mdx-h3,
@@ -97,21 +107,22 @@
       font-feature-settings: "tnum";
     }
   }
-  
+
   // Inline Code
   .mdx-inline-code {
-    @apply inline-block rounded bg-zinc-400/10 px-1 text-sm font-medium text-primary-dark
+    @apply inline-block rounded bg-zinc-400/10 px-1 text-sm font-medium text-primary-dark;
   }
 
   // CodeBlock
   .mdx-fenced-codeblock {
-    @apply overflow-x-auto p-4 text-sm rounded-md;
-  }
-  
-  //link
-  .mdx-a:not([class~=anchor]) {
-    @apply text-primary font-medium underline underline-offset-4 decoration-primary/20 hover:decoration-primary transition;
-    .mdx-inline-code { @apply text-primary; }
+    @apply overflow-x-auto rounded-md p-4 text-sm;
   }
 
+  //link
+  .mdx-a:not([class~="anchor"]) {
+    @apply font-medium text-primary underline decoration-primary/20 underline-offset-4 transition hover:decoration-primary;
+    .mdx-inline-code {
+      @apply text-primary;
+    }
+  }
 }

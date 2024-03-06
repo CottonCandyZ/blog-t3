@@ -5,7 +5,13 @@ import { ExternalLink } from "~/components/icons";
 const MDXLink: React.FC<JSX.IntrinsicElements["a"]> = (props) => {
   const { className, href = "", children, ...rest } = props;
   const isPlainAnchor = typeof children === "string";
-
+  if (href.startsWith("#")) {
+    return (
+      <a {...props} href={href}>
+        {children}
+      </a>
+    );
+  }
   if (!href.startsWith("http")) {
     return (
       <Link className={clsx(className, "mdx-a")} href={href}>
