@@ -1,12 +1,14 @@
 "use client";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext } from "react";
 import { CloseIcon, NavIcon } from "~/components/icons";
+import { RootContext } from "~/components/root-provider";
 import { CONFIG } from "~/config";
 
-const MobileNav: React.FC = (props) => {
-  const [expend, setExpend] = useState(false);
+const MobileNav: React.FC = () => {
+  const { MobileNavExpend: expend, setMobileNavExpend: setExpend } =
+    useContext(RootContext);
   return (
     <div className="relative h-0 md:hidden">
       <button
@@ -19,19 +21,18 @@ const MobileNav: React.FC = (props) => {
           <NavIcon className="h-9 w-9 text-primary-dark" />
         )}
       </button>
-      <div className={clsx(" fixed inset-0 z-10",
-          {
-            "pointer-events-auto": expend,
-            "pointer-events-none": !expend,
-          },
-      )}>
+      <div
+        className={clsx("fixed inset-0 z-10", {
+          "pointer-events-none": !expend,
+        })}
+      >
         <button
           onClick={() => setExpend(false)}
           className={clsx(
-            "absolute inset-0 z-10 h-screen w-screen backdrop-blur-xl transition-opacity duration-500",
+            "absolute inset-0 z-10 backdrop-blur-xl transition-opacity duration-500",
             {
               "opacity-1 touch-none": expend,
-              "opacity-0 touch-auto": !expend,
+              "touch-auto opacity-0": !expend,
             },
           )}
         ></button>

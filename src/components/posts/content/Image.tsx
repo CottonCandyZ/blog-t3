@@ -7,5 +7,7 @@ export default function NextImage({
   alt: string;
   title?: string;
 }) {
-  return <Image className="mdx-img" src={src} alt={alt} placeholder="blur" />;
+  return (
+      <Image className="mdx-img w-full h-auto" width={0} height={0} sizes="100vw" src={src} alt={alt} />
+  );
 }

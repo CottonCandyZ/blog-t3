@@ -6,6 +6,8 @@ import tagRenderer from "~/components/posts/tag-render";
 import UnorderedList from "~/components/posts/content/lists/UnorderedList";
 import OrderedList from "~/components/posts/content/lists/OrderedList";
 import ListItem from "~/components/posts/content/lists/ListItem";
+import CodeBlock from "~/components/posts/content/Codeblock";
+import MDXLink from "~/components/posts/content/link";
 
 
 export default function PostContent({ code }: { code: string }) {
@@ -27,10 +29,13 @@ export default function PostContent({ code }: { code: string }) {
     em: tagRenderer('em'),
     strong: tagRenderer('strong'),
     del: tagRenderer('del'),
-    image: NextImage,
+    img: NextImage,
     ul: UnorderedList,
     ol: OrderedList,
     li: ListItem,
+    hr: tagRenderer('hr'),
+    code: CodeBlock,
+    a: MDXLink,
   } as unknown as MDXContentProps["components"];
   const Component = React.useMemo(() => getMDXComponent(code), [code]);
   return <Component components={components} />;
