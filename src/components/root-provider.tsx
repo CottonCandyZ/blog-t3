@@ -36,13 +36,15 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
     <RootContext.Provider value={value}>
       <body
         className={clsx(
-          `antialiased ${noto_sans.className} theme-${themeNumber} min-h-screen`,
+          `antialiased ${noto_sans.className} min-h-screen`,
           {
             "overflow-hidden": MobileNavExpend,
           },
         )}
-      >
+      ><div className={`theme-${themeNumber}`}>
         {props.children}
+      </div>
+
       </body>
     </RootContext.Provider>
   );
