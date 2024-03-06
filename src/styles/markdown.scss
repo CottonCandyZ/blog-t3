@@ -107,4 +107,11 @@
   .mdx-fenced-codeblock {
     @apply overflow-x-auto p-4 text-sm rounded-md;
   }
+  
+  //link
+  .mdx-a:not([class~=anchor]) {
+    @apply text-primary font-medium underline underline-offset-4 decoration-primary/20 hover:decoration-primary transition;
+    .mdx-inline-code { @apply text-primary; }
+  }
+
 }
