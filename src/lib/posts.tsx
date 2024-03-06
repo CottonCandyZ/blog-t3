@@ -8,10 +8,9 @@ import { bundleMDX } from "mdx-bundler";
 import dayjs from "dayjs";
 import type { Options } from "@mdx-js/esbuild/lib";
 import remarkUnwrapImages from "remark-unwrap-images";
-// import remarkMdxCodeProps from "~/lib/unified/remark-mdx-code-props";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 const cache = new Map<string, string[] | PostFrontmatter>();
-
 /**
  * Get sorted and filtered posts info.
  * @returns Sorted by day and filtered `slug` and `frontmatter`.
@@ -53,7 +52,10 @@ export async function getPostContent(slug: string) {
         ...(typedOptions.remarkPlugins ?? []),
         remarkGfm,
         remarkUnwrapImages,
-        // remarkMdxCodeProps,
+      ];
+      typedOptions.rehypePlugins = [
+        ...(typedOptions.rehypePlugins ?? []),
+        [rehypeMdxCodeProps, { tagName: "code" }],
       ];
 
       return typedOptions;
