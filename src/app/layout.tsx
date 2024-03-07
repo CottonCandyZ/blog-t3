@@ -1,6 +1,5 @@
 import "~/styles/globals.scss";
 import "~/styles/markdown.scss";
-
 import { headers } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 import Footer from "~/components/footer";
