@@ -96,7 +96,7 @@ function getPostSlug(postPathName: string) {
  * @param slug Post path name without `.mdx` suffix.
  * @returns `PostFrontmatter`.
  */
-async function getPostFrontmatter(slug: string): Promise<PostFrontmatter> {
+export async function getPostFrontmatter(slug: string): Promise<PostFrontmatter> {
   const cacheKey = `post:frontmatter:${slug}`;
   if (cache.has(cacheKey)) {
     return cache.get(cacheKey) as PostFrontmatter;

@@ -23,15 +23,17 @@ export default async function Page() {
       <div className="sticky top-0 z-[4] h-16 bg-white"></div>
       <main className="mx-auto grid max-w-6xl grid-cols-[2fr_1fr] gap-10 pb-20 px-5 md:px-10">
         <section className="col-span-full md:col-span-1">
-          <h1 className="text-xl font-medium tracking-widest text-primary">
+          <h2 className="text-xl font-medium tracking-widest text-primary">
             最新序
-          </h1>
+          </h2>
           <div className="h-10"></div>
           <div className="flex flex-col gap-8">
             <PostsList props={latestPostsListInfo} />
           </div>
         </section>
-        <section className="col-auto hidden md:col-span-1"></section>
+        <section className="col-auto hidden md:col-span-1 md:block">
+          <h2 className="text-xl font-medium tracking-widest text-primary">Tags</h2>
+        </section>
       </main>
     </div>
   );

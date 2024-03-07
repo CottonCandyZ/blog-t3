@@ -1,4 +1,4 @@
-import PostContent from "~/components/posts/mdx-component";
+import PostContent from "~/components/posts/post-content";
 import type { PostFrontmatter } from "~/components/posts";
 
 interface postPageProps {
