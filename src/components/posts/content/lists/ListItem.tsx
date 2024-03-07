@@ -31,7 +31,7 @@ const ListItem: React.FC<JSX.IntrinsicElements["li"]> = (props) => {
   return (
     <li
       className={clsx(className, `mdx-li my-4 flex items-start`, {
-        anchor: rest.id,
+        "anchor": rest.id,
       })}
       {...rest}
     >

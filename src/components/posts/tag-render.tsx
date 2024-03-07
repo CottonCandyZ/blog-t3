@@ -9,7 +9,7 @@ const tagRenderer = (name: string) => {
       {
         ...rest,
         className: clsx(`mdx-${name}`, className, {
-          anchor: rest.id,
+          "anchor": rest.id,
         }),
       },
       children,
