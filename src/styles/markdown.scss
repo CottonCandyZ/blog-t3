@@ -3,13 +3,9 @@
 
   // Heading
   .anchor {
-    @apply relative;
+    @apply scroll-mt-20;
     &:hover {
       @apply underline decoration-primary/20;
-      &::before {
-        @apply font-normal text-primary absolute -left-5;
-        content: "#";
-      }
     }
   }
   .mdx-h1,
@@ -18,7 +14,11 @@
   .mdx-h4,
   .mdx-h5,
   .mdx-h6 {
-    @apply mb-4 font-bold;
+    @apply relative mb-4 font-bold;
+    &.anchor:hover::before {
+      @apply absolute -left-5 font-normal text-primary;
+      content: "#";
+    }
   }
   .mdx-h1 {
     @apply mt-4 text-3xl;
