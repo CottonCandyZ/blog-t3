@@ -7,7 +7,7 @@ const MDXLink: React.FC<JSX.IntrinsicElements["a"]> = (props) => {
   const isPlainAnchor = typeof children === "string";
   if (href.startsWith("#")) {
     return (
-      <a {...props} href={href}>
+      <a {...rest} className={clsx(className, rest.id && "anchor")} href={href}>
         {children}
       </a>
     );

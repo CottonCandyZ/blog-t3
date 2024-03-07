@@ -6,7 +6,10 @@ const tagRenderer = (name: string) => {
     const { children, className, ...rest } = props;
     return React.createElement(
       name,
-      { ...rest, className: clsx(`mdx-${name}`, className) },
+      {
+        ...rest,
+        className: clsx(`mdx-${name} ${rest.id && "anchor"}`, className),
+      },
       children,
     );
   }) as React.FC<PropsWithChildren<HTMLElement>>;

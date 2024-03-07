@@ -58,7 +58,7 @@ export async function getPostContent(slug: string) {
       typedOptions.rehypePlugins = [
         ...(typedOptions.rehypePlugins ?? []),
         rehypeSlug,
-        [rehypeAutolinkHeadings, { behavior: 'wrap', properties: { class: 'anchor' } }],
+        [rehypeAutolinkHeadings, { behavior: 'wrap'}],
         [rehypeMdxCodeProps, { tagName: "code" }],
       ];
 

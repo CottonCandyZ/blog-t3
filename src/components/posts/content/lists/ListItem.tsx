@@ -29,7 +29,13 @@ const ListItem: React.FC<JSX.IntrinsicElements["li"]> = (props) => {
   }[type];
 
   return (
-    <li className={clsx(className, "mdx-li my-4 flex items-start")} {...rest}>
+    <li
+      className={clsx(
+        className,
+        `mdx-li my-4 flex items-start ${rest.id && "anchor"}`,
+      )}
+      {...rest}
+    >
       {getMarker()}
       <div className="">{type !== "tl" ? children : childrenList.slice(2)}</div>
     </li>
