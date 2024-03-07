@@ -12,10 +12,18 @@ const noto_sans = Noto_Sans({
   subsets: ["latin"],
 });
 interface RootContext {
-  themeNumber: number;
-  setThemeNumber: Dispatch<SetStateAction<number>>;
-  MobileNavExpend: boolean;
-  setMobileNavExpend: Dispatch<SetStateAction<boolean>>;
+  themeNumber: {
+    value: number;
+    setter: Dispatch<SetStateAction<number>>;
+  };
+  mobileNavExpend: {
+    value: boolean;
+    setter: Dispatch<SetStateAction<boolean>>;
+  };
+  postTitle: {
+    value: string;
+    setter: Dispatch<SetStateAction<string>>;
+  };
 }
 
 export const RootContext = createContext({} as RootContext);
@@ -24,27 +32,32 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
   const [themeNumber, setThemeNumber] = useState(
     Math.floor(Math.random() * 8) + 1,
   );
-  const [MobileNavExpend, setMobileNavExpend] = useState(false);
-  const value = {
-    themeNumber,
-    setThemeNumber,
-    MobileNavExpend,
-    setMobileNavExpend,
-  };
+  const [mobileNavExpend, setMobileNavExpend] = useState(false);
+  const [postTitle, setPostTitle] = useState("");
 
   return (
-    <RootContext.Provider value={value}>
+    <RootContext.Provider
+      value={{
+        themeNumber: {
+          value: themeNumber,
+          setter: setThemeNumber,
+        },
+        mobileNavExpend: {
+          value: mobileNavExpend,
+          setter: setMobileNavExpend,
+        },
+        postTitle: {
+          value: postTitle,
+          setter: setPostTitle,
+        },
+      }}
+    >
       <body
-        className={clsx(
-          `antialiased ${noto_sans.className} min-h-screen`,
-          {
-            "overflow-hidden": MobileNavExpend,
-          },
-        )}
-      ><div className={`theme-${themeNumber}`}>
-        {props.children}
-      </div>
-
+        className={clsx(`antialiased ${noto_sans.className} min-h-screen`, {
+          "overflow-hidden": mobileNavExpend,
+        })}
+      >
+        <div className={`theme-${themeNumber}`}>{props.children}</div>
       </body>
     </RootContext.Provider>
   );

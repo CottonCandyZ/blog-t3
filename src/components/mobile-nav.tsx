@@ -7,8 +7,9 @@ import { RootContext } from "~/components/root-provider";
 import { CONFIG } from "~/config";
 
 const MobileNav: React.FC = () => {
-  const { MobileNavExpend: expend, setMobileNavExpend: setExpend } =
-    useContext(RootContext);
+  const {
+    mobileNavExpend: { value: expend, setter: setExpend },
+  } = useContext(RootContext);
   return (
     <div className="relative h-0 md:hidden">
       <button
