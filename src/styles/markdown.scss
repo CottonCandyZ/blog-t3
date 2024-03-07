@@ -4,9 +4,7 @@
   // Heading
   .anchor {
     @apply scroll-mt-20;
-    &:hover {
-      @apply underline decoration-primary/20;
-    }
+
   }
   .mdx-h1,
   .mdx-h2,
@@ -15,10 +13,16 @@
   .mdx-h5,
   .mdx-h6 {
     @apply relative mb-4 font-bold;
-    &.anchor:hover::before {
-      @apply absolute -left-5 font-normal text-primary;
-      content: "#";
+    &:hover {
+      @apply underline decoration-primary/20 decoration-2;
+      @media (min-width: 768px) {
+        &::before {
+          @apply absolute -left-5 font-normal text-primary;
+          content: "#";
+        }
+      }
     }
+    
   }
   .mdx-h1 {
     @apply mt-4 text-3xl;
@@ -41,7 +45,7 @@
 
   // Paragraph
   .mdx-p {
-    @apply my-4;
+    @apply mb-4;
   }
 
   // Blockquote
@@ -115,7 +119,7 @@
 
   // CodeBlock
   .mdx-fenced-codeblock {
-    @apply overflow-x-auto rounded-md p-4 text-sm;
+    @apply overflow-x-auto rounded-md p-4 text-sm mb-4;
   }
 
   //link
