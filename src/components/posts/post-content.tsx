@@ -10,7 +10,7 @@ export default async function PostContent({ slug }: { slug: string }) {
         <h2 className="anchor invisible absolute -top-6" id="Introduction">
           {frontmatter.title}
         </h2>
-        <MDXComponent code={code} />;
+        <MDXComponent code={code} />
       </article>
       <aside className="sticky top-28 hidden max-h-[calc(-112px+100vh)] basis-1/3 overflow-auto p-2 lg:block lg:gap-4">
         <nav className="flex flex-col gap-2">
