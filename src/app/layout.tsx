@@ -16,12 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <RootProvider>
-        <TRPCReactProvider headers={headers()}>
+        {/* <TRPCReactProvider headers={headers()}> */}
           <HeaderWithWrapper />
           <MobileNav />
           {children}
           <Footer />
-        </TRPCReactProvider>
+        {/* </TRPCReactProvider> */}
       </RootProvider>
     </html>
   );
