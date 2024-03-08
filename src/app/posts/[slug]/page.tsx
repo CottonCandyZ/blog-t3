@@ -27,9 +27,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <SetTitle title={frontmatter.title} />
-      {/* <Suspense fallback={<PostContentSkeleton />}> */}
+      <Suspense fallback={<PostContentSkeleton />}>
         <PostContent slug={params.slug} />
-      {/* </Suspense> */}
+      </Suspense>
     </>
   );
 }
