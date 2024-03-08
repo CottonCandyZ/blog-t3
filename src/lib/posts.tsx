@@ -91,6 +91,11 @@ function getPostSlug(postPathName: string) {
   return postPathName.replace(/^posts\/|\.mdx$/g, "");
 }
 
+export async function getAllPostsSlug() {
+  return (await getAllPostsPathName()).map(path => getPostSlug(path));
+}
+
+
 /**
  * Extract frontmatter info.
  * @param slug Post path name without `.mdx` suffix.

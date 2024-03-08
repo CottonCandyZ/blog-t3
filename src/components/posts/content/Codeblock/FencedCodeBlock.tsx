@@ -29,7 +29,7 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
       code={props.codeContent}
       language={props.language}
     >
-      {({ className, style, tokens, getLineProps, getTokenProps }) => (
+      {({ style, tokens, getLineProps, getTokenProps }) => (
         <div className="relative">
           <div
             className="absolute -top-7 right-10 h-fit w-fit rounded-t-lg 
@@ -40,7 +40,10 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
           <div className="absolute right-5 top-4 z-[1] fill-primary">
             <CopyButton copied={copied} onCopy={onCopy} />
           </div>
-          <pre style={style} className="mdx-fenced-codeblock z-0 relative mt-12">
+          <pre
+            style={style}
+            className="mdx-fenced-codeblock relative z-0 mt-12"
+          >
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line })}>
                 <span>
