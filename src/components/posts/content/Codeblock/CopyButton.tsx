@@ -18,7 +18,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
     after:border-b-transparent after:border-l-black after:border-t-transparent after:transition-opacity after:duration-400 after:ease-in`,
         {
           [`before:invisible before:opacity-0 after:invisible after:opacity-0 `]:
-            copied,
+            !copied,
         },
       )}
     >
