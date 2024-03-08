@@ -1,9 +1,16 @@
 import PostContent from "~/components/posts/post-content";
-import { getPostFrontmatter } from "~/lib/posts";
+import { getAllPostsSlug, getPostFrontmatter } from "~/lib/posts";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import PostContentSkeleton from "~/components/posts/post-content-skeleton";
 import SetTitle from "~/components/posts/set-title";
+
+export async function generateStaticParams() {
+  const postsSlug = await getAllPostsSlug();
+  return postsSlug.map((postSlug) => ({
+    slug: postSlug,
+  }))
+}
 
 export async function generateMetadata({
   params,
