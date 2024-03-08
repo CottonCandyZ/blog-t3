@@ -7,10 +7,6 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { Noto_Sans } from "next/font/google";
-const noto_sans = Noto_Sans({
-  subsets: ["latin"],
-});
 interface RootContext {
   themeNumber: {
     value: number;
@@ -53,7 +49,7 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
       }}
     >
       <body
-        className={clsx(`antialiased ${noto_sans.className} min-h-screen`, {
+        className={clsx(`min-h-screen antialiased`, {
           "overflow-hidden": mobileNavExpend,
         })}
       >
