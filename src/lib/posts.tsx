@@ -9,8 +9,8 @@ import dayjs from "dayjs";
 import type { Options } from "@mdx-js/esbuild/lib";
 import remarkUnwrapImages from "remark-unwrap-images";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeSlug from "rehype-slug";
 
 const cache = new Map<string, string[] | PostFrontmatter>();
 /**
@@ -37,6 +37,23 @@ export async function getLatestPostsListInfo() {
       return dayA - dayB;
     });
 }
+/**
+ * Get all tags appear in posts.
+ * @returns All tags in posts.
+ */
+export async function getAllTags() {
+  const posts = await getLatestPostsListInfo();
+  const oTags: string[][] = [];
+  const uniqueTags = new Set<string>();
+
+  posts.forEach((post) => {
+    if (post.frontmatter.tags) oTags.push(post.frontmatter.tags);
+    post.frontmatter.tags?.forEach((tag) => {
+      uniqueTags.add(tag);
+    });
+  });
+  return { uniqueTags: uniqueTags, oTags: oTags };
+}
 
 /**
  * Parse the post content by slug.
@@ -58,7 +75,7 @@ export async function getPostContent(slug: string) {
       typedOptions.rehypePlugins = [
         ...(typedOptions.rehypePlugins ?? []),
         rehypeSlug,
-        [rehypeAutolinkHeadings, { behavior: 'wrap'}],
+        [rehypeAutolinkHeadings, { behavior: "wrap" }],
         [rehypeMdxCodeProps, { tagName: "code" }],
       ];
 
@@ -92,16 +109,17 @@ function getPostSlug(postPathName: string) {
 }
 
 export async function getAllPostsSlug() {
-  return (await getAllPostsPathName()).map(path => getPostSlug(path));
+  return (await getAllPostsPathName()).map((path) => getPostSlug(path));
 }
-
 
 /**
  * Extract frontmatter info.
  * @param slug Post path name without `.mdx` suffix.
  * @returns `PostFrontmatter`.
  */
-export async function getPostFrontmatter(slug: string): Promise<PostFrontmatter> {
+export async function getPostFrontmatter(
+  slug: string,
+): Promise<PostFrontmatter> {
   const cacheKey = `post:frontmatter:${slug}`;
   if (cache.has(cacheKey)) {
     return cache.get(cacheKey) as PostFrontmatter;

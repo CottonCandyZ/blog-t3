@@ -1,22 +1,43 @@
+'use client'
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useContext } from "react";
 import { ArrowRight } from "~/components/icons";
 import type { PostFrontmatter } from "~/components/posts";
+import { TagsContext } from "~/components/posts/tag-provider";
 
-export type PostListProps = {
-  slug: string;
-  frontmatter: PostFrontmatter;
-}[];
+export interface PostListProps {
+  posts: { slug: string; frontmatter: PostFrontmatter }[];
+}
 
-export default function PostsList({ props }: { props: PostListProps }) {
-  return props.map(({ slug, frontmatter }, id) => (
+const PostsList: React.FC<PostListProps> = ({ posts }) => {
+  const { toggleState } = useContext(TagsContext);
+  const toggledTags = new Set<string>();
+  toggleState.forEach((isToggled, tagName) => {
+    if (isToggled) toggledTags.add(tagName);
+  });
+  if (toggleState.size != 0) {
+    posts = posts.filter(({frontmatter}) => {
+      // 是否存在这样的文章包含已经选中的 tags
+      if (!frontmatter.tags) return false;
+      let include = true;
+      toggledTags.forEach((tagName) => {
+        if (!frontmatter.tags?.includes(tagName)) {
+          include = false;
+        }
+      });
+      return include;
+    });
+  }
+
+  return posts.map(({ slug, frontmatter }, id) => (
     <article key={id}>
       <Link href={`/posts/${slug}`} className="group">
         <div className="flex flex-row items-start justify-between gap-4">
           <h1 className="text-xl font-semibold group-hover:text-primary">
             {frontmatter.title}
           </h1>
-          <h2 className="min-w-max mt-[2px] font-medium">
+          <h2 className="mt-[2px] min-w-max font-medium">
             {dayjs(frontmatter.date).format("MMMM D")}
           </h2>
         </div>
@@ -31,4 +52,6 @@ export default function PostsList({ props }: { props: PostListProps }) {
       </Link>
     </article>
   ));
-}
+};
+
+export default PostsList;
