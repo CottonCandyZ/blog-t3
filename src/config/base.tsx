@@ -5,14 +5,13 @@ import {
   GithubIcon,
   TwitterIcon,
   BgmIcon,
-  PhotoIcon,
+  ToysIcon,
 } from "~/components/icons";
 
 const BASE = {
-  card_info: { name: "棉花糖", description: "喜欢 Coding 的前端新玩家 😶‍🌫️" },
   card_router: [
     { name: "文章", href: "/", icon: ArticleIcon },
-    { name: "相册", href: "/photos", icon: PhotoIcon },
+    { name: "玩具", href: "/toys", icon: ToysIcon },
     { name: "友链", href: "/link", icon: LinkIcon },
     { name: "关于", href: "/about", icon: AboutIcon },
   ],

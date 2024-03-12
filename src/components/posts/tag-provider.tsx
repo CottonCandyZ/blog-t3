@@ -9,37 +9,22 @@ import {
 } from "react";
 
 interface TagsContext {
-  toggleState: Map<string, boolean>;
-  setToggleState: Dispatch<SetStateAction<Map<string, boolean>>>;
-}
-interface TagsProviderProps {
-  uniqueTags: Set<string>;
+  toggledTags: Set<string>;
+  setToggledTags: Dispatch<SetStateAction<Set<string>>>;
 }
 
 export const TagsContext = createContext({} as TagsContext);
 
-const TagsProvider: React.FC<PropsWithChildren<TagsProviderProps>> = ({
+const TagsProvider: React.FC<PropsWithChildren> = ({
   children,
-  uniqueTags,
 }) => {
-  const toggleTagsMap = new Map<string, boolean>();
-  uniqueTags.forEach((tagName) => {
-    toggleTagsMap.set(tagName, false);
-  });
-  const [toggleState, setToggleState] = useState(
-    new Map(
-      [...toggleTagsMap.entries()].sort((a, b) =>
-        String(a[0]).localeCompare(b[0]),
-      ),
-    ),
-  );
+  const [toggledTags, setToggledTags] = useState(new Set<string>());
 
   return (
-    <TagsContext.Provider value={{ toggleState, setToggleState }}>
+    <TagsContext.Provider value={{ toggledTags, setToggledTags }}>
       {children}
     </TagsContext.Provider>
   );
 };
-
 
 export default TagsProvider;
