@@ -34,7 +34,7 @@ export async function getLatestPostsListInfo() {
     .sort((a, b) => {
       const dayA = dayjs(a.frontmatter.date).valueOf();
       const dayB = dayjs(b.frontmatter.date).valueOf();
-      return dayA - dayB;
+      return dayB - dayA;
     });
 }
 /**
