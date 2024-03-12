@@ -109,7 +109,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
   return (
     <div className="flex flex-col gap-2">
       <button
-        className={clsx("ml-auto mr-14 font-semibold text-primary", {
+        className={clsx("ml-auto font-semibold text-primary", {
           invisible: noToggled,
         })}
         onClick={() => {
@@ -119,7 +119,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
           );
         }}
       >
-        clear
+        Clear
       </button>
       <div className="flex flex-row flex-wrap gap-2">
         {Array.from(currentTags.current).map((tagName, index) => {
