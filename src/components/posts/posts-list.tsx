@@ -11,14 +11,9 @@ export interface PostListProps {
 }
 
 const PostsList: React.FC<PostListProps> = ({ posts }) => {
-  const { toggleState } = useContext(TagsContext);
-  const toggledTags = new Set<string>();
-  toggleState.forEach((isToggled, tagName) => {
-    if (isToggled) toggledTags.add(tagName);
-  });
-  if (toggleState.size != 0) {
+  const { toggledTags } = useContext(TagsContext);
+  if (toggledTags.size != 0) {
     posts = posts.filter(({frontmatter}) => {
-      // 是否存在这样的文章包含已经选中的 tags
       if (!frontmatter.tags) return false;
       let include = true;
       toggledTags.forEach((tagName) => {

@@ -14,7 +14,7 @@ export default async function Page() {
   const { uniqueTags, oTags } = await getAllTags();
   return (
     <main className="relative mx-auto grid max-w-6xl min-h-screen grid-cols-[2fr_1fr] gap-10 px-5 pb-20 md:px-10">
-      <TagsProvider uniqueTags={uniqueTags}>
+      <TagsProvider>
         <section className="col-span-full md:col-span-1">
           <h2 className="text-xl font-medium tracking-widest text-primary">
             最新序
