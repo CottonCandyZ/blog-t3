@@ -51,6 +51,7 @@ const MobileNav: React.FC = () => {
                 )}>
                   <Link
                     href={item.href}
+                    className="w-full block"
                     onClick={() => setExpend(false)}
                   >
                     {item.name}
