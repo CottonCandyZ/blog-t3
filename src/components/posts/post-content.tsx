@@ -6,7 +6,7 @@ import TableOfContents from "~/components/posts/table-of-contents";
 export default async function PostContent({ slug }: { slug: string }) {
   const { code, frontmatter } = await getPostContent(decodeURIComponent(slug));
   return (
-    <div className="mx-auto flex max-w-6xl flex-row justify-center gap-10 px-5 py-10 md:px-10 lg:justify-normal">
+    <div className="flex flex-row justify-center gap-10 lg:justify-normal">
       <article className="markdown-body relative w-full max-w-2xl">
         <h2 className="anchor invisible absolute -top-6" id="Introduction">
           {frontmatter.title}
