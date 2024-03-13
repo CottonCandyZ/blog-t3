@@ -9,13 +9,13 @@ import {
 } from "~/components/icons";
 
 const BASE = {
-  card_router: [
-    { name: "文章", href: "/", icon: ArticleIcon },
-    { name: "玩具", href: "/toys", icon: ToysIcon },
-    { name: "友链", href: "/link", icon: LinkIcon },
-    { name: "关于", href: "/about", icon: AboutIcon },
+  nav_router: [
+    { name: "Posts", href: "/", icon: ArticleIcon },
+    { name: "Toys", href: "/toys", icon: ToysIcon },
+    { name: "Links", href: "/link", icon: LinkIcon },
+    { name: "About", href: "/about", icon: AboutIcon },
   ],
-  outer_link: [
+  social_link: [
     {
       name: "GitHub",
       href: "https://github.com/CottonCandyZ",
@@ -32,8 +32,47 @@ const BASE = {
       icon: BgmIcon,
     },
   ],
+  toy_cards: [
+    {
+      title: "ToysTitle",
+      project_list: [
+        {
+          title: "Toy Sample",
+          description:
+            "Toy Description",
+          href: "https://github.com/CottonCandyZ/",
+          img_alt: "Describe how loss and sampler work",
+          img_src: "/toyImages/example.webp",
+        },
+      ],
+    },
+  ],
+  friend_link: [
+    {
+      name: "Blog Name",
+      description: "Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
+    },
+    {
+      name: "Blog Name",
+      description: "Blog description Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
+    },
+    {
+      name: "Blog Name",
+      description: "Blog description Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
+    },
+    {
+      name: "Blog Name",
+      description: "Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
+    },
+  ],
   footer_info: { name: "CottonCandyZ" },
-  // Global default to show code line number
-  CodeLineNumber: false,
 };
 export default BASE;

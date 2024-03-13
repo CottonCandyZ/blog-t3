@@ -6,10 +6,10 @@ import clsx from "clsx";
 
 export default function NavigationBar() {
   const pathname = usePathname();
-  const router_content = CONFIG.card_router;
+  const router_content = CONFIG.nav_router;
   return (
     <nav>
-      <ul className="flex justify-center gap-2">
+      <ul className="flex justify-center gap-4">
         {router_content.map((item, index) => (
           <ListItem
             key={index}
@@ -36,7 +36,7 @@ function ListItem({
   current?: boolean;
 }) {
   return (
-    <li className="w-[5.5rem]">
+    <li>
       <Link
         href={href}
         className={clsx(
