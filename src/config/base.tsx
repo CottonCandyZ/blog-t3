@@ -15,7 +15,7 @@ const BASE = {
     { name: "Links", href: "/link", icon: LinkIcon },
     { name: "About", href: "/about", icon: AboutIcon },
   ],
-  outer_link: [
+  social_link: [
     {
       name: "GitHub",
       href: "https://github.com/CottonCandyZ",
@@ -34,17 +34,43 @@ const BASE = {
   ],
   toy_cards: [
     {
-      title: "深度学习",
+      title: "ToysTitle",
       project_list: [
         {
-          title: "LFSA: CLIP Based Text-Image Person Search",
+          title: "Toy Sample",
           description:
-            "利用 CLIP 做文本行人重识别，换上重新设计的 loss 和 sampler",
-          href: "https://github.com/CottonCandyZ/LFSA",
+            "Toy Description",
+          href: "https://github.com/CottonCandyZ/",
           img_alt: "Describe how loss and sampler work",
-          img_src: "/toyImages/LFSA.webp",
+          img_src: "/toyImages/example.webp",
         },
       ],
+    },
+  ],
+  friend_link: [
+    {
+      name: "Blog Name",
+      description: "Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
+    },
+    {
+      name: "Blog Name",
+      description: "Blog description Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
+    },
+    {
+      name: "Blog Name",
+      description: "Blog description Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
+    },
+    {
+      name: "Blog Name",
+      description: "Blog description",
+      href: "https://google.com",
+      avatar_src: "/linkAvatar/AvatarSample.webp",
     },
   ],
   footer_info: { name: "CottonCandyZ" },
