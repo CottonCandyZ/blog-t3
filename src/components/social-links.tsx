@@ -1,7 +1,7 @@
 import { CONFIG } from "~/config";
 
 export default function OuterLinks() {
-  const outer_link = CONFIG.outer_link;
+  const outer_link = CONFIG.social_link;
   return (
     <ul className="flex justify-center space-x-4">
       {outer_link.map((item, index) => (
