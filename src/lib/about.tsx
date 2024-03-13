@@ -11,8 +11,8 @@ import rehypeSlug from "rehype-slug";
 
 export async function getAboutContent() {
   const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
-    file: path.join(process.cwd(), `posts/about/about.mdx`),
-    cwd: path.join(process.cwd(), "./posts/about"),
+    file: path.join(process.cwd(), `src/config/about.mdx`),
+    cwd: path.join(process.cwd(), "./src/config"),
     mdxOptions(options) {
       // Fix: bundle-MDX type error
       const typedOptions = options as Options;
