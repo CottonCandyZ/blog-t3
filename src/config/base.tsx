@@ -9,11 +9,11 @@ import {
 } from "~/components/icons";
 
 const BASE = {
-  card_router: [
-    { name: "文章", href: "/", icon: ArticleIcon },
-    { name: "玩具", href: "/toys", icon: ToysIcon },
-    { name: "友链", href: "/link", icon: LinkIcon },
-    { name: "关于", href: "/about", icon: AboutIcon },
+  nav_router: [
+    { name: "Posts", href: "/", icon: ArticleIcon },
+    { name: "Toys", href: "/toys", icon: ToysIcon },
+    { name: "Links", href: "/link", icon: LinkIcon },
+    { name: "About", href: "/about", icon: AboutIcon },
   ],
   outer_link: [
     {
@@ -32,8 +32,21 @@ const BASE = {
       icon: BgmIcon,
     },
   ],
+  toy_cards: [
+    {
+      title: "深度学习",
+      project_list: [
+        {
+          title: "LFSA: CLIP Based Text-Image Person Search",
+          description:
+            "利用 CLIP 做文本行人重识别，换上重新设计的 loss 和 sampler",
+          href: "https://github.com/CottonCandyZ/LFSA",
+          img_alt: "Describe how loss and sampler work",
+          img_src: "/toyImages/LFSA.webp",
+        },
+      ],
+    },
+  ],
   footer_info: { name: "CottonCandyZ" },
-  // Global default to show code line number
-  CodeLineNumber: false,
 };
 export default BASE;

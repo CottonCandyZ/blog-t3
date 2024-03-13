@@ -39,7 +39,7 @@ const MobileNav: React.FC = () => {
         ></button>
         <nav className="absolute bottom-20 left-0 z-20 flex h-2/4 w-3/4 flex-col justify-between">
           <div className="flex flex-col gap-3">
-            {CONFIG.card_router.map((item, index) => {
+            {CONFIG.nav_router.map((item, index) => {
               return (
                 <Link
                   key={index}
