@@ -33,7 +33,7 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
             {frontmatter.title}
           </h1>
           <h2 className="mt-[2px] min-w-max font-medium">
-            {dayjs(frontmatter.date).format("YYYY.M.D")}
+            <time dateTime={frontmatter.date}>{dayjs(frontmatter.date).format("YYYY.M.D")}</time>
           </h2>
         </div>
         <p className="mt-5">{frontmatter.abstract}</p>
