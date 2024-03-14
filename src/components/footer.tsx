@@ -2,7 +2,7 @@ import { CONFIG } from "~/config";
 
 export default function Footer() {
   return (
-    <div className="mt-auto flex flex-col items-center gap-1 py-5 bg-black">
+    <footer className="mt-auto flex flex-col items-center gap-1 py-5 bg-black">
       <span className="font-semibold text-white">
         Build with{" "}
         <a href="https://nextjs.org" className="text-primary-medium">
@@ -16,6 +16,6 @@ export default function Footer() {
       <span className="font-normal text-white">
         &copy;{new Date().getFullYear()}&nbsp;{CONFIG.footer_info.name}
       </span>
-    </div>
+    </footer>
   );
 }
