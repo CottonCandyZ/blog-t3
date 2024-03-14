@@ -97,7 +97,7 @@ export function TwitterIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <g clip-path="url(#clip0_2_5)">
+      <g clipPath="url(#clip0_2_5)">
         <path
           d="M864.163 672.284L1310.89 153H1205.03L817.137 603.887L507.328 153H150L618.492 834.821L150 1379.37H255.866L665.491 903.218L992.672 1379.37H1350L864.137 672.284H864.163ZM719.165 840.828L671.697 772.934L294.011 232.694H456.615L761.412 668.685L808.88 736.579L1205.08 1303.3H1042.48L719.165 840.854V840.828Z"
           fill="currentColor"
