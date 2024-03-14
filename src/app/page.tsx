@@ -13,7 +13,7 @@ export default async function Page() {
   const latestPostsListInfo = await getLatestPostsListInfo();
   const { uniqueTags, oTags } = await getAllTags();
   return (
-    <main className="min-h-[calc(-300px+100dvh)] relative mx-auto grid max-w-6xl auto-rows-max grid-cols-[2fr_1fr] gap-10 px-5 pb-20 md:px-10">
+    <div className="relative grid auto-rows-max grid-cols-[2fr_1fr] gap-10 ">
       <TagsProvider>
         <section className="col-span-full row-start-1 h-min md:sticky md:top-24 md:col-start-2 md:block">
           <h2 className="text-xl font-medium tracking-widest text-primary">
@@ -33,6 +33,6 @@ export default async function Page() {
           </div>
         </section>
       </TagsProvider>
-    </main>
+    </div>
   );
 }

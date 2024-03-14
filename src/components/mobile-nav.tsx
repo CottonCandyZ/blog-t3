@@ -38,27 +38,28 @@ const MobileNav: React.FC = () => {
           )}
         ></button>
         <nav className="absolute bottom-20 left-0 z-20 flex h-2/4 w-3/4 flex-col justify-between">
-          <div className="flex flex-col gap-3">
+          <ul className="flex flex-col gap-3">
             {CONFIG.nav_router.map((item, index) => {
               return (
-                <Link
-                  key={index}
-                  href={item.href}
-                  className={clsx(
-                    `-translate-x-full py-3 pl-10 text-4xl font-bold tracking-widest text-primary transition-transform
-                    duration-${(index + 4) * 100}`,
-                    {
-                      "translate-x-0": expend,
-                      "-translate-x-full": !expend,
-                    },
-                  )}
-                  onClick={() => setExpend(false)}
-                >
-                  {item.name}
-                </Link>
+                <li key={index} className={clsx(
+                  `-translate-x-full py-3 pl-10 text-4xl font-bold tracking-widest text-primary transition-transform
+                duration-${(index + 4) * 100}`,
+                  {
+                    "translate-x-0": expend,
+                    "-translate-x-full": !expend,
+                  },
+                )}>
+                  <Link
+                    href={item.href}
+                    className="w-full block"
+                    onClick={() => setExpend(false)}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </nav>
       </div>
     </div>

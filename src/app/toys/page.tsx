@@ -3,7 +3,7 @@ import { CONFIG } from "~/config";
 
 export default function page() {
   return (
-    <main className="mx-auto flex min-h-[calc(-300px+100dvh)] max-w-6xl flex-col gap-2 px-5 pb-20 md:px-10">
+    <div className="flex max-w-6xl flex-col gap-6">
       {CONFIG.toy_cards.map((info, index) => {
         return (
           <div key={index}>
@@ -22,6 +22,6 @@ export default function page() {
           </div>
         );
       })}
-    </main>
+    </div>
   );
 }
