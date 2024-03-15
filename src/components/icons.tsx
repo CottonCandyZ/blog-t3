@@ -164,12 +164,12 @@ export const Dot: React.FC<SVGProps<SVGSVGElement>> = (props) => {
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
-      viewBox="0 0 256 256"
+      viewBox="0 0 16 16"
       {...props}
     >
       <path
         fill="currentColor"
-        d="M156 128a28 28 0 1 1-28-28a28 28 0 0 1 28 28"
+        d="M8 9.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"
       ></path>
     </svg>
   );
