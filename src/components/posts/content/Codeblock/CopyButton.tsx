@@ -10,7 +10,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
   return (
     <div
       className={clsx(
-        `relative font-['Noto_Sans'] before:absolute before:-left-[4.1rem] before:top-0
+        `relative font-sans before:absolute before:-left-[4.1rem] before:top-0
     before:h-full before:rounded-md before:bg-black before:px-2 before:py-1 before:text-xs
      before:leading-5 before:text-white before:transition-opacity before:duration-400
      before:ease-in before:content-['Copied!'] after:absolute after:-left-2 after:top-[0.65rem] 
