@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import ListProvider from "~/components/posts/content/lists/ListProvider";
+import ListProvider from "~/components/posts/content/lists/list-provider";
 
 const OrderedList:React.FC<JSX.IntrinsicElements["ol"]> = props => {
     const { className, ...rest } = props;

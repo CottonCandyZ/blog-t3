@@ -1,4 +1,4 @@
-import FencedCodeBlock from "~/components/posts/content/Codeblock/FencedCodeBlock";
+import FencedCodeBlock from "~/components/posts/content/Codeblock/fenced-code-block";
 
 interface CodeblockProps {
   className?: string;

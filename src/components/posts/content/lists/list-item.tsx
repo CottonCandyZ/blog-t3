@@ -2,7 +2,7 @@
 import clsx from "clsx";
 import { Children, type ReactElement, useContext } from "react";
 import { Checked, Dot, Unchecked } from "~/components/icons";
-import { ListContext } from "~/components/posts/content/lists/ListProvider";
+import { ListContext } from "~/components/posts/content/lists/list-provider";
 
 const ListItem: React.FC<JSX.IntrinsicElements["li"]> = (props) => {
   const { children, className, ...rest } = props;
