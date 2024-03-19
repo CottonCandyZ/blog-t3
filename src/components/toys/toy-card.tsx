@@ -13,7 +13,7 @@ interface ToyCardProps {
 const ToyCard: React.FC<ToyCardProps> = ({ props }) => {
   return (
     <a
-      className="h-min w-full rounded-xl border-2 border-primary-light p-4 hover:border-primary sm:w-80"
+      className="w-full block rounded-xl border-2 border-primary-light p-4 hover:border-primary"
       href={props.href}
       target="_blank"
     >
@@ -22,10 +22,11 @@ const ToyCard: React.FC<ToyCardProps> = ({ props }) => {
       <Image
         className="mt-2 h-28 rounded-md border-2 border-primary-extralight object-cover"
         alt={props.img_alt}
-        height={500}
-        width={500}
+        height={600}
+        width={600}
         src={props.img_src}
       />
+      
     </a>
   );
 };

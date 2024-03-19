@@ -11,7 +11,7 @@ interface LinkCardProps {
 const LinkCard: React.FC<LinkCardProps> = ({ props }) => {
   return (
     <a
-      className="relative flex h-min w-full flex-row gap-4 rounded-2xl bg-primary-extralight p-4 sm:w-72
+      className="relative flex w-full flex-row gap-4 rounded-2xl bg-primary-extralight p-4
         hover:before:absolute hover:before:-bottom-2 hover:before:-left-2 hover:before:-right-2 hover:before:-top-2 
         before:rounded-3xl before:border-4 before:border-primary-extralight
         before:absolute before:top-2 before:bottom-2 before:left-2 before:right-2 before:transition-all before:"
