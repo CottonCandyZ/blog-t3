@@ -16,11 +16,35 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
   const currentTags = useRef(
     new Set<string>([...uniqueTags].sort((a, b) => a.localeCompare(b))),
   );
+  const otherTagsSet = new Set<string>();
+  oTags.forEach((tags) => {
+    // 是否存在这样的文章包含已经选中的 tags
+    let include = true;
+    toggledTags.forEach((toggledTagName) => {
+      if (!tags.includes(toggledTagName)) {
+        include = false;
+      }
+    });
+    if (include) {
+      tags.forEach((tag) => otherTagsSet.add(tag));
+    }
+  });
+  uniqueTags.forEach((tagName) => {
+    if (otherTagsSet.has(tagName)) {
+      if (!currentTags.current.has(tagName))
+        currentTags.current.add(tagName);
+    } else {
+      if (currentTags.current.has(tagName))
+        currentTags.current.delete(tagName);
+    }
+  }); 
+  currentTags.current = new Set(
+    [...currentTags.current].sort((a, b) => a.localeCompare(b)),
+  );
 
   // 这个地方写的有点恶心
   const toggle = (tagName: string) => {
     return () => {
-      const otherTagsSet = new Set<string>();
       // 确定是移除还是新增
       const remove = toggledTags.has(tagName);
       if (remove) {
@@ -80,30 +104,6 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
             toggledTags.add(otherTagName);
           });
       }
-      oTags.forEach((tags) => {
-        // 是否存在这样的文章包含已经选中的 tags
-        let include = true;
-        toggledTags.forEach((toggledTagName) => {
-          if (!tags.includes(toggledTagName)) {
-            include = false;
-          }
-        });
-        if (include) {
-          tags.forEach((tag) => otherTagsSet.add(tag));
-        }
-      });
-      uniqueTags.forEach((tagName) => {
-        if (otherTagsSet.has(tagName)) {
-          if (!currentTags.current.has(tagName))
-            currentTags.current.add(tagName);
-        } else {
-          if (currentTags.current.has(tagName))
-            currentTags.current.delete(tagName);
-        }
-      });
-      currentTags.current = new Set(
-        [...currentTags.current].sort((a, b) => a.localeCompare(b)),
-      );
       setToggledTags(new Set(toggledTags));
     };
   };
@@ -116,9 +116,6 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
         })}
         onClick={() => {
           setToggledTags(new Set());
-          currentTags.current = new Set<string>(
-            [...uniqueTags].sort((a, b) => a.localeCompare(b)),
-          );
         }}
       >
         Clear
