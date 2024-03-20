@@ -1,5 +1,4 @@
 import PostsList from "~/components/posts/posts-list";
-import TagsProvider from "~/components/posts/tag-provider";
 import Tags from "~/components/posts/tags";
 import { getAllTags, getLatestPostsListInfo } from "~/lib/posts";
 
