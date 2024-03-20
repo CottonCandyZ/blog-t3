@@ -2,7 +2,7 @@
 import clsx from "clsx";
 import { useContext, useRef } from "react";
 import { CloseIcon } from "~/components/icons";
-import { TagsContext } from "~/components/posts/tag-provider";
+import { RootContext } from "~/components/root-provider";
 
 interface tagProps {
   uniqueTags: Set<string>;
@@ -10,7 +10,9 @@ interface tagProps {
 }
 
 const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
-  const { toggledTags, setToggledTags } = useContext(TagsContext);
+  const {
+    toggledTags: { value: toggledTags, setter: setToggledTags },
+  } = useContext(RootContext);
   const currentTags = useRef(
     new Set<string>([...uniqueTags].sort((a, b) => a.localeCompare(b))),
   );

@@ -20,6 +20,10 @@ interface RootContext {
     value: string;
     setter: Dispatch<SetStateAction<string>>;
   };
+  toggledTags: {
+    value: Set<string>;
+    setter: Dispatch<SetStateAction<Set<string>>>;
+  };
 }
 
 export const RootContext = createContext({} as RootContext);
@@ -30,6 +34,7 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
   );
   const [mobileNavExpend, setMobileNavExpend] = useState(false);
   const [postTitle, setPostTitle] = useState("");
+  const [toggledTags, setToggledTags] = useState(new Set<string>());
 
   return (
     <RootContext.Provider
@@ -46,6 +51,10 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
           value: postTitle,
           setter: setPostTitle,
         },
+        toggledTags: {
+          value: toggledTags,
+          setter: setToggledTags,
+        }
       }}
     >
       <body
