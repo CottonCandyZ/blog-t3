@@ -25,8 +25,8 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
     });
   }
 
-  return posts.map(({ slug, frontmatter }, id) => (
-    <article key={id}>
+  return posts.map(({ slug, frontmatter }) => (
+    <article key={slug}>
       <Link href={`/posts/${slug}`} className="group">
         <div className="flex flex-row items-start justify-between gap-4">
           <h1 className="text-xl font-semibold group-hover:text-primary">

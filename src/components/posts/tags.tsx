@@ -122,7 +122,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
         Clear
       </button>
       <div className="flex flex-row flex-wrap gap-2">
-        {Array.from(currentTags.current).map((tagName, index) => {
+        {Array.from(currentTags.current).map((tagName) => {
           const isToggled = toggledTags.has(tagName);
           return (
             <button
@@ -134,7 +134,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
                 },
               )}
               onClick={toggle(tagName)}
-              key={index}
+              key={tagName}
             >
               {tagName}
               <CloseIcon
