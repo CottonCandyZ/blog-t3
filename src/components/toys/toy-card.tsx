@@ -1,19 +1,17 @@
 import Image from "next/image";
 
 interface ToyCardProps {
-  props: {
-    title: string;
-    description: string;
-    href: string;
-    img_alt: string;
-    img_src: string;
-  };
+  title: string;
+  description: string;
+  href: string;
+  img_alt: string;
+  img_src: string;
 }
 
-const ToyCard: React.FC<ToyCardProps> = ({ props }) => {
+const ToyCard: React.FC<ToyCardProps> = (props) => {
   return (
     <a
-      className="w-full block rounded-xl border-2 border-primary-light p-4 hover:border-primary"
+      className="block w-full rounded-xl border-2 border-primary-light p-4 hover:border-primary"
       href={props.href}
       target="_blank"
     >
@@ -26,7 +24,6 @@ const ToyCard: React.FC<ToyCardProps> = ({ props }) => {
         width={600}
         src={props.img_src}
       />
-      
     </a>
   );
 };

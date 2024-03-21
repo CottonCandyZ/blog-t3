@@ -17,9 +17,8 @@ export default function page() {
             <div className="flex-wap mt-4 flex flex-row flex-wrap gap-5">
               {info.project_list.map((project_info, index) => (
                 <div key={index} className="md:w-80">
-                  <ToyCard props={project_info} />
+                  <ToyCard {...project_info} />
                   </div>
-                
               ))}
             </div>
           </div>
