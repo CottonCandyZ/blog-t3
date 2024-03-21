@@ -13,9 +13,8 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
   const {
     toggledTags: { value: toggledTags, setter: setToggledTags },
   } = useContext(RootContext);
-  const currentTags = useRef(
-    new Set<string>([...uniqueTags].sort((a, b) => a.localeCompare(b))),
-  );
+  let currentTags = new Set<string>(uniqueTags);
+
   const otherTagsSet = new Set<string>();
   oTags.forEach((tags) => {
     // 是否存在这样的文章包含已经选中的 tags
@@ -30,19 +29,16 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
     }
   });
   uniqueTags.forEach((tagName) => {
-    if (otherTagsSet.has(tagName)) {
-      if (!currentTags.current.has(tagName))
-        currentTags.current.add(tagName);
-    } else {
-      if (currentTags.current.has(tagName))
-        currentTags.current.delete(tagName);
+    if (!otherTagsSet.has(tagName)) {
+      currentTags.delete(tagName);
     }
   }); 
-  currentTags.current = new Set(
-    [...currentTags.current].sort((a, b) => a.localeCompare(b)),
+  currentTags = new Set(
+    [...currentTags].sort((a, b) => a.localeCompare(b)),
   );
 
   // 这个地方写的有点恶心
+  // TODO: Need to rewrite. Including simplified code and useReducer.
   const toggle = (tagName: string) => {
     return () => {
       // 确定是移除还是新增
@@ -121,7 +117,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
         Clear
       </button>
       <div className="flex flex-row flex-wrap gap-2">
-        {Array.from(currentTags.current).map((tagName) => {
+        {Array.from(currentTags).map((tagName) => {
           const isToggled = toggledTags.has(tagName);
           return (
             <button
