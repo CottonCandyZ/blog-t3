@@ -6,12 +6,9 @@ import {
   createContext,
   type Dispatch,
   type SetStateAction,
+  useRef,
 } from "react";
 interface RootContext {
-  themeNumber: {
-    value: number;
-    setter: Dispatch<SetStateAction<number>>;
-  };
   mobileNavExpend: {
     value: boolean;
     setter: Dispatch<SetStateAction<boolean>>;
@@ -27,22 +24,15 @@ interface RootContext {
 }
 
 export const RootContext = createContext({} as RootContext);
-
 const RootProvider: React.FC<PropsWithChildren> = (props) => {
-  const [themeNumber, setThemeNumber] = useState(
-    Math.floor(Math.random() * 8) + 1,
-  );
   const [mobileNavExpend, setMobileNavExpend] = useState(false);
   const [postTitle, setPostTitle] = useState("");
   const [toggledTags, setToggledTags] = useState(new Set<string>());
+  const themeNumber = useRef(Math.floor(Math.random() * 8) + 1);
 
   return (
     <RootContext.Provider
       value={{
-        themeNumber: {
-          value: themeNumber,
-          setter: setThemeNumber,
-        },
         mobileNavExpend: {
           value: mobileNavExpend,
           setter: setMobileNavExpend,
@@ -62,7 +52,7 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
           "overflow-hidden": mobileNavExpend,
         })}
       >
-        <div className={`theme-${themeNumber}`}>{props.children}</div>
+        <div className={`theme-${themeNumber.current}`}>{props.children}</div>
       </body>
     </RootContext.Provider>
   );
