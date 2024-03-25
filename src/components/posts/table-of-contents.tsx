@@ -35,16 +35,18 @@ function useScrollSpy(ids: string[]) {
     const element = ids
       .map((id) => document.getElementById(id))
       .filter(Boolean);
-    window.addEventListener("scroll", () => {
-      element.forEach((item, index) => {
-        if (index == 0 && item!.getBoundingClientRect().top > 85) {
-          setActiveId('');
-        }
-        if (item!.getBoundingClientRect().top < 85) {
-          setActiveId(item!.id);
-        }
-      });
-    });
+      const handleScroll = () => {
+        element.forEach((item, index) => {
+          if (index == 0 && item!.getBoundingClientRect().top > 85) {
+            setActiveId('');
+          }
+          if (item!.getBoundingClientRect().top < 85) {
+            setActiveId(item!.id);
+          }
+        });
+      }
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [ids]);
   return activeId;
 }
