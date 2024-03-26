@@ -1,5 +1,4 @@
 import PostsList from "~/components/posts/posts-list";
-import TagsProvider from "~/components/posts/tag-provider";
 import Tags from "~/components/posts/tags";
 import { getAllTags, getLatestPostsListInfo } from "~/lib/posts";
 
@@ -14,7 +13,6 @@ export default async function Page() {
   const { uniqueTags, oTags } = await getAllTags();
   return (
     <div className="relative grid auto-rows-max grid-cols-[2fr_1fr] gap-10 ">
-      <TagsProvider>
         <section className="col-span-full row-start-1 h-min md:sticky md:top-24 md:col-start-2 md:block">
           <search>
             <h2 className="text-xl font-medium tracking-widest text-primary">
@@ -34,7 +32,6 @@ export default async function Page() {
             <PostsList posts={latestPostsListInfo} />
           </div>
         </section>
-      </TagsProvider>
     </div>
   );
 }

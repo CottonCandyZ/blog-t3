@@ -4,9 +4,9 @@ import { getMDXComponent } from "mdx-bundler/client";
 import type { MDXContentProps } from "mdx-bundler/dist/types";
 import NextImage from "~/components/posts/content/Image";
 import tagRenderer from "~/components/posts/tag-render";
-import UnorderedList from "~/components/posts/content/lists/UnorderedList";
-import OrderedList from "~/components/posts/content/lists/OrderedList";
-import ListItem from "~/components/posts/content/lists/ListItem";
+import UnorderedList from "~/components/posts/content/lists/unordered-list";
+import OrderedList from "~/components/posts/content/lists/ordered-list";
+import ListItem from "~/components/posts/content/lists/list-item";
 import CodeBlock from "~/components/posts/content/Codeblock";
 import MDXLink from "~/components/posts/content/link";
 

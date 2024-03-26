@@ -1,8 +1,8 @@
 "use client";
 import clsx from "clsx";
 import { Children, type ReactElement, useContext } from "react";
-import { ArrowRight, Checked, Unchecked } from "~/components/icons";
-import { ListContext } from "~/components/posts/content/lists/ListProvider";
+import { Checked, Dot, Unchecked } from "~/components/icons";
+import { ListContext } from "~/components/posts/content/lists/list-provider";
 
 const ListItem: React.FC<JSX.IntrinsicElements["li"]> = (props) => {
   const { children, className, ...rest } = props;
@@ -12,7 +12,7 @@ const ListItem: React.FC<JSX.IntrinsicElements["li"]> = (props) => {
   const getMarker = {
     ul: () => (
       <span className="pr-2 pt-[2px]">
-        <ArrowRight className="-ml-1 mr-1 text-xl text-primary" />
+        <Dot className="-ml-1 mr-1 text-xl text-primary" />
       </span>
     ),
     ol: () => null,

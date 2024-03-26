@@ -1,7 +1,7 @@
 "use client";
 import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useState } from "react";
-import CopyButton from "~/components/posts/content/Codeblock/CopyButton";
+import CopyButton from "~/components/posts/content/Codeblock/copy-button";
 import { copyToClipboard } from "~/lib/tools/clipboard";
 
 interface FencedCodeBlockProps {

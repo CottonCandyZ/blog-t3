@@ -1,5 +1,5 @@
 import { type Config } from "tailwindcss";
-
+import defaultTheme from "tailwindcss/defaultTheme"
 export default {
   content: ["./src/**/*.tsx"],
   future: {
@@ -7,6 +7,9 @@ export default {
   },
   theme: {
     extend: {
+      fontFamily: {
+        'sans' : ['Noto Sans', 'Noto Sans SC', ...defaultTheme.fontFamily.sans]
+      },
       keyframes: {
         backshake: {
           "0%, 50%": { transform: "rotate(8deg)" },

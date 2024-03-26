@@ -1,19 +1,21 @@
-'use client'
+"use client";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useContext } from "react";
 import { ArrowRight } from "~/components/icons";
 import type { PostFrontmatter } from "~/components/posts";
-import { TagsContext } from "~/components/posts/tag-provider";
+import { RootContext } from "~/components/root-provider";
 
 export interface PostListProps {
   posts: { slug: string; frontmatter: PostFrontmatter }[];
 }
 
 const PostsList: React.FC<PostListProps> = ({ posts }) => {
-  const { toggledTags } = useContext(TagsContext);
+  const {
+    toggledTags: { value: toggledTags },
+  } = useContext(RootContext);
   if (toggledTags.size != 0) {
-    posts = posts.filter(({frontmatter}) => {
+    posts = posts.filter(({ frontmatter }) => {
       if (!frontmatter.tags) return false;
       let include = true;
       toggledTags.forEach((tagName) => {
@@ -25,15 +27,17 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
     });
   }
 
-  return posts.map(({ slug, frontmatter }, id) => (
-    <article key={id}>
+  return posts.map(({ slug, frontmatter }) => (
+    <article key={slug}>
       <Link href={`/posts/${slug}`} className="group">
         <div className="flex flex-row items-start justify-between gap-4">
           <h1 className="text-xl font-semibold group-hover:text-primary">
             {frontmatter.title}
           </h1>
           <h2 className="mt-[2px] min-w-max font-medium">
-            <time dateTime={frontmatter.date}>{dayjs(frontmatter.date).format("YYYY.M.D")}</time>
+            <time dateTime={frontmatter.date}>
+              {dayjs(frontmatter.date).format("YYYY.M.D")}
+            </time>
           </h2>
         </div>
         <p className="mt-5">{frontmatter.abstract}</p>

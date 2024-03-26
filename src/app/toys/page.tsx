@@ -14,9 +14,11 @@ export default function page() {
             >
               {info.title}
             </h2>
-            <div className="flex-wap mt-4 flex flex-row flex-wrap gap-5 ">
+            <div className="flex-wap mt-4 flex flex-row flex-wrap gap-5">
               {info.project_list.map((project_info, index) => (
-                <ToyCard key={index} props={project_info} />
+                <div key={index} className="md:w-80">
+                  <ToyCard {...project_info} />
+                  </div>
               ))}
             </div>
           </div>

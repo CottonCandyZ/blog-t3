@@ -8,7 +8,7 @@ export default async function PostContent({ slug }: { slug: string }) {
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
       <article className="markdown-body relative w-full max-w-2xl">
-        <h2 className="anchor invisible absolute -top-6" id="Introduction">
+        <h2 className="anchor invisible absolute top-4" id="Introduction">
           {frontmatter.title}
         </h2>
         <MDXComponent code={code} />

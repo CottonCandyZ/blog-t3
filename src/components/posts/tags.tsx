@@ -2,7 +2,7 @@
 import clsx from "clsx";
 import { useContext, useRef } from "react";
 import { CloseIcon } from "~/components/icons";
-import { TagsContext } from "~/components/posts/tag-provider";
+import { RootContext } from "~/components/root-provider";
 
 interface tagProps {
   uniqueTags: Set<string>;
@@ -10,15 +10,37 @@ interface tagProps {
 }
 
 const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
-  const { toggledTags, setToggledTags } = useContext(TagsContext);
-  const currentTags = useRef(
-    new Set<string>([...uniqueTags].sort((a, b) => a.localeCompare(b))),
+  const {
+    toggledTags: { value: toggledTags, setter: setToggledTags },
+  } = useContext(RootContext);
+  let currentTags = new Set<string>(uniqueTags);
+
+  const otherTagsSet = new Set<string>();
+  oTags.forEach((tags) => {
+    // 是否存在这样的文章包含已经选中的 tags
+    let include = true;
+    toggledTags.forEach((toggledTagName) => {
+      if (!tags.includes(toggledTagName)) {
+        include = false;
+      }
+    });
+    if (include) {
+      tags.forEach((tag) => otherTagsSet.add(tag));
+    }
+  });
+  uniqueTags.forEach((tagName) => {
+    if (!otherTagsSet.has(tagName)) {
+      currentTags.delete(tagName);
+    }
+  }); 
+  currentTags = new Set(
+    [...currentTags].sort((a, b) => a.localeCompare(b)),
   );
 
   // 这个地方写的有点恶心
+  // TODO: Need to rewrite. Including simplified code and useReducer.
   const toggle = (tagName: string) => {
     return () => {
-      const otherTagsSet = new Set<string>();
       // 确定是移除还是新增
       const remove = toggledTags.has(tagName);
       if (remove) {
@@ -78,30 +100,6 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
             toggledTags.add(otherTagName);
           });
       }
-      oTags.forEach((tags) => {
-        // 是否存在这样的文章包含已经选中的 tags
-        let include = true;
-        toggledTags.forEach((toggledTagName) => {
-          if (!tags.includes(toggledTagName)) {
-            include = false;
-          }
-        });
-        if (include) {
-          tags.forEach((tag) => otherTagsSet.add(tag));
-        }
-      });
-      uniqueTags.forEach((tagName) => {
-        if (otherTagsSet.has(tagName)) {
-          if (!currentTags.current.has(tagName))
-            currentTags.current.add(tagName);
-        } else {
-          if (currentTags.current.has(tagName))
-            currentTags.current.delete(tagName);
-        }
-      });
-      currentTags.current = new Set(
-        [...currentTags.current].sort((a, b) => a.localeCompare(b)),
-      );
       setToggledTags(new Set(toggledTags));
     };
   };
@@ -114,15 +112,12 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
         })}
         onClick={() => {
           setToggledTags(new Set());
-          currentTags.current = new Set<string>(
-            [...uniqueTags].sort((a, b) => a.localeCompare(b)),
-          );
         }}
       >
         Clear
       </button>
       <div className="flex flex-row flex-wrap gap-2">
-        {Array.from(currentTags.current).map((tagName, index) => {
+        {Array.from(currentTags).map((tagName) => {
           const isToggled = toggledTags.has(tagName);
           return (
             <button
@@ -134,7 +129,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
                 },
               )}
               onClick={toggle(tagName)}
-              key={index}
+              key={tagName}
             >
               {tagName}
               <CloseIcon

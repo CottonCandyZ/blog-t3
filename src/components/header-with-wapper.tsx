@@ -26,7 +26,7 @@ const HeaderWithWrapper = () => {
         })}
       >
         <div className="absolute -top-[4rem] h-16 w-full bg-primary-extralight"></div>
-        <div className="sticky top-0 z-[4] h-20 md:h-12 bg-primary-extralight"></div>
+        <div className="sticky top-0 z-[4] h-20 md:h-14 bg-primary-extralight"></div>
         {pathname.startsWith("/posts") && (
           <h1 className="relative z-[2] mx-auto mt-10 max-w-6xl px-5 text-4xl font-bold text-primary md:px-10">
             {title}
