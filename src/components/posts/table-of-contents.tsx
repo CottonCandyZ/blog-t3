@@ -3,11 +3,13 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
-type headings = {
+interface heading {
   id: string;
   text: string;
   level: number;
-}[];
+};
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface headings extends Array<heading> {}
 
 const useHeadings = () => {
   const [headings, setHeadings] = useState<headings>([]);
