@@ -22,14 +22,13 @@ interface RootContext {
     setter: Dispatch<SetStateAction<Set<string>>>;
   };
 }
-
+let themeNumber = Math.floor(Math.random() * 8) + 1;
 export const RootContext = createContext({} as RootContext);
 const RootProvider: React.FC<PropsWithChildren> = (props) => {
   const [mobileNavExpend, setMobileNavExpend] = useState(false);
   const [postTitle, setPostTitle] = useState("");
   const [toggledTags, setToggledTags] = useState(new Set<string>());
-  const themeNumber = useRef(Math.floor(Math.random() * 8) + 1);
-
+  themeNumber = (themeNumber % 8) + 1;
   return (
     <RootContext.Provider
       value={{
@@ -52,7 +51,7 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
           "overflow-hidden": mobileNavExpend,
         })}
       >
-        <div className={`theme-${themeNumber.current}`}>{props.children}</div>
+        <div className={`theme-${themeNumber}`}>{props.children}</div>
       </body>
     </RootContext.Provider>
   );
