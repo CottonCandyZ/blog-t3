@@ -11,8 +11,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const themeNumber = Math.floor(Math.random() * 8) + 1;
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`scroll-smooth theme-${themeNumber}`}>
       <RootProvider>
         <HeaderWithWrapper />
         <MobileNav />

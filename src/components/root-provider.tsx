@@ -28,7 +28,6 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
   const [mobileNavExpend, setMobileNavExpend] = useState(false);
   const [postTitle, setPostTitle] = useState("");
   const [toggledTags, setToggledTags] = useState(new Set<string>());
-  const themeNumber = useRef(Math.floor(Math.random() * 8) + 1);
 
   return (
     <RootContext.Provider
@@ -52,7 +51,7 @@ const RootProvider: React.FC<PropsWithChildren> = (props) => {
           "overflow-hidden": mobileNavExpend,
         })}
       >
-        <div className={`theme-${themeNumber.current}`}>{props.children}</div>
+        {props.children}
       </body>
     </RootContext.Provider>
   );
