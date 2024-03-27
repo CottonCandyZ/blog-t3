@@ -48,8 +48,8 @@ dependencies:
     specifier: ^4.0.3
     version: 4.0.3
   mdx-bundler:
-    specifier: ^10.0.1
-    version: 10.0.1(esbuild@0.19.5)
+    specifier: ^10.0.2
+    version: 10.0.2(esbuild@0.19.5)
   next:
     specifier: ^14.1.3
     version: 14.1.3(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
@@ -3147,8 +3147,8 @@ packages:
     dependencies:
       '@types/mdast': 4.0.3
 
-  /mdx-bundler@10.0.1(esbuild@0.19.5):
-    resolution: {integrity: sha512-y/+RtkJf+vTQTl8Ae/zql42igpcp44ja8a2S74tWq87rX+R22Zwn4OmPc5APO+xhIaIy/I1oxoxlPrt4GwEuGQ==}
+  /mdx-bundler@10.0.2(esbuild@0.19.5):
+    resolution: {integrity: sha512-0wF0zoCv+Ms4G+eSlk/jaKYoJHc0oXBaOma3kYlFJiKq9H8h41Dd66ioDBGF4noy80Pf7KTBQlyHfEpTqVml7A==}
     engines: {node: '>=18', npm: '>=6'}
     peerDependencies:
       esbuild: 0.*
