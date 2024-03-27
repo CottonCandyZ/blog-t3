@@ -5,8 +5,6 @@ import MobileNav from "~/components/mobile-nav";
 import ThemeWrapper from "~/components/theme-wrapper";
 import HeaderWithWrapper from "~/components/header-with-wapper";
 import MainWrapper from "~/components/main-wrapper";
-export const dynamic = 'force-dynamic';
-
 export default function RootLayout({
   children,
 }: {

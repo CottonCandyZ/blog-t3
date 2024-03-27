@@ -6,7 +6,6 @@ export const metadata = {
   description: "棉花糖的 Blog",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
-
 export default async function Page() {
   const latestPostsListInfo = await getLatestPostsListInfo();
   const { uniqueTags, oTags } = await getAllTags();
