@@ -11,7 +11,6 @@ export interface PostListProps {
 }
 
 const PostsList: React.FC<PostListProps> = ({ posts }) => {
-  dayjs.locale('zh-cn')
   const {
     toggledTags: { value: toggledTags },
   } = useContext(RootContext);
