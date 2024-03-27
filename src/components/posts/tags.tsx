@@ -1,108 +1,15 @@
 "use client";
 import clsx from "clsx";
-import { useContext, useRef } from "react";
 import { CloseIcon } from "~/components/icons";
-import { RootContext } from "~/components/root-provider";
 
 interface tagProps {
-  uniqueTags: Set<string>;
-  oTags: string[][];
+  toggledTags: Set<string>;
+  currentTags: Set<string>;
+  toggle: (tagName: string) => () => void;
+  clear: () => void;
 }
 
-const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
-  const {
-    toggledTags: { value: toggledTags, setter: setToggledTags },
-  } = useContext(RootContext);
-  let currentTags = new Set<string>(uniqueTags);
-
-  const otherTagsSet = new Set<string>();
-  oTags.forEach((tags) => {
-    // 是否存在这样的文章包含已经选中的 tags
-    let include = true;
-    toggledTags.forEach((toggledTagName) => {
-      if (!tags.includes(toggledTagName)) {
-        include = false;
-      }
-    });
-    if (include) {
-      tags.forEach((tag) => otherTagsSet.add(tag));
-    }
-  });
-  uniqueTags.forEach((tagName) => {
-    if (!otherTagsSet.has(tagName)) {
-      currentTags.delete(tagName);
-    }
-  }); 
-  currentTags = new Set(
-    [...currentTags].sort((a, b) => a.localeCompare(b)),
-  );
-
-  // 这个地方写的有点恶心
-  // TODO: Need to rewrite. Including simplified code and useReducer.
-  const toggle = (tagName: string) => {
-    return () => {
-      // 确定是移除还是新增
-      const remove = toggledTags.has(tagName);
-      if (remove) {
-        toggledTags.delete(tagName);
-        // 要保留的 tags
-        const remain = new Set<string>();
-        toggledTags.forEach((toggledTag) => {
-          const otherTagsArray: string[][] = [];
-          oTags.forEach((tags) => {
-            let include = true;
-            if (!tags.includes(toggledTag)) {
-              include = false;
-            }
-            if (include) {
-              otherTagsArray.push(tags);
-            }
-          });
-          // 找到最小化的单位
-          const filtered = otherTagsArray[0]?.filter((item) => {
-            for (let i = 1; i < otherTagsArray.length; i++) {
-              if (!otherTagsArray[i]?.includes(item)) return false;
-            }
-            return true;
-          });
-          // 如果里面不包含要去除的 tag，那就保留
-          if (!filtered?.includes(tagName)) {
-            filtered?.forEach((tag) => remain.add(tag));
-          }
-        });
-        toggledTags.forEach((tag) => {
-          if (!remain.has(tag)) toggledTags.delete(tag);
-        });
-      } else {
-        const otherTagsArray: string[][] = [];
-        toggledTags.add(tagName);
-        oTags.forEach((tags) => {
-          // 是否存在这样的文章包含已经选中的 tags
-          let include = true;
-          toggledTags.forEach((toggledTagName) => {
-            if (!tags.includes(toggledTagName)) {
-              include = false;
-            }
-          });
-          if (include) {
-            otherTagsArray.push(tags);
-          }
-        });
-        // 寻找最小集
-        otherTagsArray[0]
-          ?.filter((item) => {
-            for (let i = 1; i < otherTagsArray.length; i++) {
-              if (!otherTagsArray[i]?.includes(item)) return false;
-            }
-            return true;
-          })
-          ?.forEach((otherTagName) => {
-            toggledTags.add(otherTagName);
-          });
-      }
-      setToggledTags(new Set(toggledTags));
-    };
-  };
+const Tags: React.FC<tagProps> = ({ toggledTags, currentTags, clear, toggle }) => {
   const noToggled = toggledTags.size == 0;
   return (
     <div className="flex flex-col gap-2">
@@ -110,9 +17,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
         className={clsx("ml-auto font-semibold text-primary", {
           invisible: noToggled,
         })}
-        onClick={() => {
-          setToggledTags(new Set());
-        }}
+        onClick={clear}
       >
         Clear
       </button>

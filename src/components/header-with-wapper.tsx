@@ -1,16 +1,10 @@
 "use client";
-import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import { useContext } from "react";
 import Header from "~/components/header";
-import { RootContext } from "~/components/root-provider";
 import SocialLinks from "~/components/social-links";
 
 const HeaderWithWrapper = () => {
   const pathname = usePathname();
-  const {
-    postTitle: { value: title },
-  } = useContext(RootContext);
   return (
     <>
       {pathname == "/" && (
@@ -19,27 +13,18 @@ const HeaderWithWrapper = () => {
       <div className="sticky top-0 z-[5] mx-auto max-w-6xl px-5 py-3 md:px-10">
         <Header />
       </div>
-      <div
-        className={clsx("relative col-span-full bg-primary-extralight", {
-          "h-36": !pathname.startsWith("/posts"),
-          "h-64": pathname.startsWith("/posts"),
-        })}
-      >
-        <div className="absolute -top-[4rem] h-16 w-full bg-primary-extralight"></div>
-        <div className="sticky top-0 z-[4] h-20 md:h-14 bg-primary-extralight"></div>
-        {pathname.startsWith("/posts") && (
-          <h1 className="relative z-[2] mx-auto mt-10 max-w-6xl px-5 text-4xl font-bold text-primary md:px-10">
-            {title}
-          </h1>
-        )}
-        {!pathname.startsWith("/posts") && (
-          <div className="mx-auto flex max-w-6xl flex-row justify-end px-5 py-3 md:px-10">
-            <SocialLinks />
+      {!pathname.startsWith("/posts") && (
+        <>
+          <div className="relative col-span-full h-36 bg-primary-extralight">
+            <div className="absolute -top-[4rem] h-16 w-full bg-primary-extralight"></div>
+            <div className="sticky top-0 z-[4] h-20 bg-primary-extralight md:h-14"></div>
+            <div className="mx-auto flex max-w-6xl flex-row justify-end px-5 py-3 md:px-10">
+              <SocialLinks />
+            </div>
           </div>
-        )}
-      </div>
-
-      <div className="sticky top-0 z-[4] h-16 bg-white"></div>
+          <div className="sticky top-0 z-[4] h-16 bg-white"></div>
+        </>
+      )}
     </>
   );
 };
