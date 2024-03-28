@@ -11,10 +11,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const theme = cookies().get("theme")?.value;
+  // const theme = cookies().get("theme")?.value;
   return (
     <html lang="en" className={`scroll-smooth antialiased`}>
-      <ThemeWrapper themeCookie={theme}>
+      <ThemeWrapper themeCookie={'1'}>
         <HeaderWithWrapper />
         <MobileNav />
         <MainWrapper>{children}</MainWrapper>

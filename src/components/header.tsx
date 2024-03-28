@@ -51,6 +51,7 @@ const Header = () => {
               )}
               onClick={() => {
                 setThemeNumber(availableThemeNumber[0]!);
+                localStorage.theme = availableThemeNumber[0]!
               }}
             />
             <CottonCandy
@@ -64,6 +65,7 @@ const Header = () => {
               )}
               onClick={() => {
                 setThemeNumber(availableThemeNumber[1]!);
+                localStorage.theme = availableThemeNumber[1]!
               }}
             />
             <CottonCandy
@@ -78,6 +80,7 @@ const Header = () => {
               )}
               onClick={() => {
                 setThemeNumber(availableThemeNumber[2]!);
+                localStorage.theme = availableThemeNumber[2]!
               }}
             />
             <CottonCandy
