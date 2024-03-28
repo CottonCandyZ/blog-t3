@@ -40,12 +40,6 @@ const Tags: React.FC<tagProps> = ({ allTags, toggledTags, currentTags, clear, to
               key={tagName}
             >
               {tagName}
-              <CloseIcon
-                className={clsx(``, {
-                  "wl-1 w-auto translate-x-1 opacity-100": isToggled,
-                  "w-0 opacity-0": !isToggled,
-                })}
-              />
             </button>
           );
         })}
