@@ -11,7 +11,10 @@ import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 
-const cache = new Map<string, string[] | PostFrontmatter>();
+const cache = new Map<
+  string,
+  string[] | PostFrontmatter | string | Set<string> | string[][]
+>();
 /**
  * Get sorted and filtered posts info.
  * @returns Sorted by day and filtered `slug` and `frontmatter`.
@@ -41,6 +44,14 @@ export async function getLatestPostsListInfo() {
  * @returns All tags in posts.
  */
 export async function getAllTags() {
+  const cacheUniqueTagsKey = `post:uniqueTags`;
+  const cacheOTagsKey = `post:oTags`;
+  if (cache.has(cacheUniqueTagsKey) && cache.has(cacheOTagsKey)) {
+    return {
+      uniqueTags: cache.get(cacheUniqueTagsKey) as Set<string>,
+      oTags: cache.get(cacheOTagsKey) as string[][],
+    };
+  }
   const posts = await getLatestPostsListInfo();
   const oTags: string[][] = [];
   const uniqueTags = new Set<string>();
@@ -51,6 +62,8 @@ export async function getAllTags() {
       uniqueTags.add(tag);
     });
   });
+  cache.set(cacheUniqueTagsKey, uniqueTags);
+  cache.set(cacheOTagsKey, oTags);
   return { uniqueTags: uniqueTags, oTags: oTags };
 }
 
@@ -60,6 +73,14 @@ export async function getAllTags() {
  * @returns `code` and `frontmatter` parsed by `bundleMDX`.
  */
 export async function getPostContent(slug: string) {
+  const cacheCodeKey = `post:code:${slug}`;
+  const cacheFrontmatterKey = `post:frontmatter:${slug}`;
+  if (cache.has(cacheCodeKey) && cache.has(cacheFrontmatterKey)) {
+    return {
+      code: cache.get(cacheCodeKey) as string,
+      frontmatter: cache.get(cacheFrontmatterKey) as PostFrontmatter,
+    };
+  }
   const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
     file: path.join(process.cwd(), `posts/${slug}.mdx`),
     cwd: path.join(process.cwd(), "./posts"),
@@ -79,6 +100,8 @@ export async function getPostContent(slug: string) {
       return options;
     },
   });
+  cache.set(cacheCodeKey, code);
+  cache.set(cacheFrontmatterKey, frontmatter);
   return { code, frontmatter };
 }
 
