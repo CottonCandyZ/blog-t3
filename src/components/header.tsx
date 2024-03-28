@@ -44,9 +44,9 @@ const Header = () => {
                 `theme-${availableThemeNumber[0]} absolute
           -z-10 h-10 w-10 transition-all duration-200`,
                 {
-                  "translate-y-[110%] md:-translate-x-8 md:-translate-y-10 md:-rotate-45":
+                  "translate-y-[110%] -translate-x-[100%] md:-translate-x-8 md:-translate-y-10 md:-rotate-45":
                     toggle && !useList,
-                    "translate-y-[110%]": toggle && useList,
+                    "translate-y-[110%] -translate-x-[100%]": toggle && useList,
                 },
               )}
               onClick={() => {
@@ -58,8 +58,8 @@ const Header = () => {
                 `theme-${availableThemeNumber[1]} absolute 
           -z-10 h-10 w-10 transition-all duration-400`,
                 {
-                  "translate-y-[220%] md:-translate-y-12": toggle && !useList,
-                  "translate-y-[220%]": toggle && useList,
+                  "translate-y-[110%] md:-translate-y-12": toggle && !useList,
+                  "translate-y-[110%]": toggle && useList,
                 },
               )}
               onClick={() => {
@@ -71,9 +71,9 @@ const Header = () => {
                 `theme-${availableThemeNumber[2]} absolute  
           -z-10 h-10 w-10 transition-all duration-600`,
                 {
-                  "translate-y-[330%] md:-translate-y-10 md:translate-x-8 md:rotate-45":
+                  "translate-y-[110%] translate-x-[100%] md:-translate-y-10 md:translate-x-8 md:rotate-45":
                   toggle && !useList,
-                  "translate-y-[330%]": toggle && useList,
+                  "translate-y-[110%] translate-x-[100%]": toggle && useList,
                 },
               )}
               onClick={() => {
