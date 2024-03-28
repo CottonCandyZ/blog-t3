@@ -54,7 +54,7 @@ export async function getAllTags() {
   }
   const posts = await getLatestPostsListInfo();
   const oTags: string[][] = [];
-  const uniqueTags = new Set<string>();
+  let uniqueTags = new Set<string>();
 
   posts.forEach((post) => {
     if (post.frontmatter.tags) oTags.push(post.frontmatter.tags);
@@ -62,6 +62,7 @@ export async function getAllTags() {
       uniqueTags.add(tag);
     });
   });
+  uniqueTags = new Set([...uniqueTags].sort((a, b) => a.localeCompare(b)));
   cache.set(cacheUniqueTagsKey, uniqueTags);
   cache.set(cacheOTagsKey, oTags);
   return { uniqueTags: uniqueTags, oTags: oTags };

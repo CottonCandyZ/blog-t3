@@ -34,7 +34,7 @@ const HomeList: React.FC<homeListProps> = ({
       currentTags.delete(tagName);
     }
   });
-  currentTags = new Set([...currentTags].sort((a, b) => a.localeCompare(b)));
+  currentTags = new Set([...currentTags]);
 
   // 这个地方写的有点恶心
   // TODO: Need to rewrite. Including simplified code and useReducer.
@@ -115,6 +115,7 @@ const HomeList: React.FC<homeListProps> = ({
           </h2>
           <div className="mt-3 h-min">
             <Tags
+              allTags={uniqueTags}
               currentTags={currentTags}
               toggledTags={toggledTags}
               toggle={toggle}
