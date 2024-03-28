@@ -6,7 +6,6 @@ import path from "path";
 import type { PostFrontmatter } from "~/components/posts";
 import { bundleMDX } from "mdx-bundler";
 import dayjs from "dayjs";
-import type { Options } from "@mdx-js/esbuild/lib";
 import remarkUnwrapImages from "remark-unwrap-images";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -65,21 +64,19 @@ export async function getPostContent(slug: string) {
     file: path.join(process.cwd(), `posts/${slug}.mdx`),
     cwd: path.join(process.cwd(), "./posts"),
     mdxOptions(options) {
-      // Fix: bundle-MDX type error
-      const typedOptions = options as Options;
-      typedOptions.remarkPlugins = [
-        ...(typedOptions.remarkPlugins ?? []),
+      options.remarkPlugins = [
+        ...(options.remarkPlugins ?? []),
         remarkGfm,
         remarkUnwrapImages,
       ];
-      typedOptions.rehypePlugins = [
-        ...(typedOptions.rehypePlugins ?? []),
+      options.rehypePlugins = [
+        ...(options.rehypePlugins ?? []),
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: "wrap" }],
         [rehypeMdxCodeProps, { tagName: "code" }],
       ];
 
-      return typedOptions;
+      return options;
     },
   });
   return { code, frontmatter };

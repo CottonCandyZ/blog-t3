@@ -1,15 +1,12 @@
 "use client";
 import clsx from "clsx";
 import Link from "next/link";
-import { useContext } from "react";
 import { CloseIcon, NavIcon } from "~/components/icons";
-import { RootContext } from "~/components/root-provider";
 import { CONFIG } from "~/config";
+import { useState } from "react";
 
 const MobileNav: React.FC = () => {
-  const {
-    mobileNavExpend: { value: expend, setter: setExpend },
-  } = useContext(RootContext);
+   const [expend, setExpend] = useState(false);
   return (
     <div className="relative h-0 md:hidden">
       <button
