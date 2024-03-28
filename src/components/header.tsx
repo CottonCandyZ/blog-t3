@@ -17,7 +17,7 @@ const Header = () => {
   useEffect(() => {
     const tog = () => {
       setToggle(false)
-      if (switchRef.current!.getBoundingClientRect().top < 52) {
+      if (switchRef.current!.getBoundingClientRect().top < 50) {
         setForceList(true);
       } else {
         setForceList(false)
