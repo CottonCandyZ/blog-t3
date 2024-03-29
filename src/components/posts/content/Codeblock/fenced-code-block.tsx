@@ -33,7 +33,7 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
         <div className="relative">
           <div
             className="absolute -top-7 right-10 h-fit w-fit rounded-t-lg 
-            bg-[#f6f8fa] px-3 pt-1 font-semibold text-primary-medium"
+            bg-[#fafafa] px-3 pt-1 font-semibold text-primary-medium"
           >
             {props.language.toUpperCase()}
           </div>
