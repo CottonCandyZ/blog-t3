@@ -25,7 +25,7 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
 
   return (
     <Highlight
-      theme={themes.github}
+      theme={themes.oneLight}
       code={props.codeContent}
       language={props.language}
     >

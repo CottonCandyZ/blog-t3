@@ -12,7 +12,7 @@
   .mdx-h4,
   .mdx-h5,
   .mdx-h6 {
-    @apply relative mb-4 font-bold;
+    @apply relative mb-4 font-bold text-primary;
     &:hover {
       @apply underline decoration-primary/20 decoration-2;
       @media (min-width: 768px) {
