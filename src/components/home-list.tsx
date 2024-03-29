@@ -111,6 +111,7 @@ const HomeList: React.FC<homeListProps> = ({
   };
   const clearTag = () => {
     setToggledTags(new Set());
+    sessionStorage.setItem("tags", JSON.stringify([]));
   };
 
   return (
