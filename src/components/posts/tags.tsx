@@ -1,6 +1,5 @@
 "use client";
 import clsx from "clsx";
-import { CloseIcon } from "~/components/icons";
 
 interface tagProps {
   allTags: Set<string>;
@@ -30,8 +29,8 @@ const Tags: React.FC<tagProps> = ({ allTags, toggledTags, currentTags, clear, to
               className={clsx(
                 `flex flex-row items-center rounded-xl px-2 py-0.5 font-medium transition-all `,
                 {
-                  "bg-primary-extralight text-primary hover:bg-primary-medium hover:text-white hover:shadow-sm": !isToggled && currentTags.has(tagName),
-                  "bg-primary-medium text-white shadow-sm": isToggled,
+                  "bg-primary-extralight text-primary hover:bg-primary-medium hover:text-white hover:shadow-md": !isToggled && currentTags.has(tagName),
+                  "bg-primary-medium text-white shadow-md": isToggled,
                   "text-primary cursor-not-allowed ": !currentTags.has(tagName)
                 },
               )}

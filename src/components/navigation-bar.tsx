@@ -44,10 +44,10 @@ function ListItem({
           leading-8 transition-all duration-300 before:absolute before:bottom-0
            before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light`,
           {
-            [`pointer-events-none px-3 text-white before:h-full before:bg-primary-medium`]:
+            [`pointer-events-none px-3 text-white before:h-full before:bg-primary-medium before:shadow-md`]:
               current === true,
             [`group before:h-1 before:bg-primary-light before:transition-all before:duration-300 hover:px-3 hover:text-white
-            hover:before:h-full hover:before:bg-primary-medium`]:
+            hover:before:h-full hover:before:bg-primary-medium hover:before:shadow-md`]:
               current == false,
           },
         )}

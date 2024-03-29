@@ -37,7 +37,7 @@ function ListItem({
       after:py-1 after:text-xs after:text-white after:opacity-0
       after:transition after:duration-500
       after:content-[attr(after-content)] hover:bg-primary-medium
-      hover:after:translate-y-3 hover:after:opacity-100"
+      hover:after:translate-y-3 hover:after:opacity-100 hover:shadow-md"
       >
         <Icon className="h-6 w-6 transition-all duration-500 ease-out text-primary group-hover:text-white" />
       </a>

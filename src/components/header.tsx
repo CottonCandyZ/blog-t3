@@ -17,11 +17,7 @@ const Header = () => {
   useEffect(() => {
     const tog = () => {
       setToggle(false)
-      if (switchRef.current!.getBoundingClientRect().top < 50) {
-        setForceList(true);
-      } else {
-        setForceList(false)
-      }
+      setForceList(switchRef.current!.getBoundingClientRect().top < 50);
     };
     window.addEventListener("scroll", tog);
     return () => {
@@ -30,11 +26,12 @@ const Header = () => {
   }, []);
   useEffect(() => {
     setToggle(false);
+    setForceList(switchRef.current!.getBoundingClientRect().top < 50);
   }, [pathname])
   return (
     <header className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center gap-7">
-        <div className="flex flex-row items-center gap-1 cursor-pointer" ref={switchRef} onClick={() => {
+        <div className="flex flex-row items-center gap-1 cursor-pointer group" ref={switchRef} onClick={() => {
                 setToggle((toggle) => !toggle);
               }}>
           <span className="text-2xl font-semibold text-primary">Cotton</span>
@@ -84,9 +81,7 @@ const Header = () => {
               }}
             />
             <CottonCandy
-              className={clsx(`h-10 w-10 animate-move-show`, {
-              })}
-              
+              className={`h-10 w-10 animate-move-show drop-shadow-md group-hover:drop-shadow-lg`}
             />
           </span>
 

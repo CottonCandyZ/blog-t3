@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostsList, { type PostListProps } from "~/components/posts/posts-list";
 import Tags from "~/components/posts/tags";
 
@@ -14,6 +14,12 @@ const HomeList: React.FC<homeListProps> = ({
   uniqueTags,
   oTags,
 }) => {
+  useEffect(() => {
+    const saveTags = sessionStorage.getItem("tags");
+    if (saveTags) {
+      setToggledTags(new Set(JSON.parse(saveTags) as Array<string>));
+    };
+  },[])
   const [toggledTags, setToggledTags] = useState(new Set<string>());
   let currentTags = new Set<string>(uniqueTags);
   const otherTagsSet = new Set<string>();
@@ -100,6 +106,7 @@ const HomeList: React.FC<homeListProps> = ({
           });
       }
       setToggledTags(new Set(toggledTags));
+      sessionStorage.setItem("tags", JSON.stringify([...toggledTags]));
     };
   };
   const clearTag = () => {
