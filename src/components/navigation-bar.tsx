@@ -42,7 +42,7 @@ function ListItem({
         className={clsx(
           `mx-auto w-max relative z-0 flex items-center
           leading-8 transition-all duration-300 before:absolute before:bottom-0
-           before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light`,
+           before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light drop-shadow-sm`,
           {
             [`pointer-events-none px-3 text-white before:h-full before:bg-primary-medium before:shadow-md`]:
               current === true,
