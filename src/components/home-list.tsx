@@ -21,7 +21,6 @@ const HomeList: React.FC<homeListProps> = ({
     };
   },[])
   const [toggledTags, setToggledTags] = useState(new Set<string>());
-  let currentTags = new Set<string>(uniqueTags);
   const otherTagsSet = new Set<string>();
   oTags.forEach((tags) => {
     // 是否存在这样的文章包含已经选中的 tags
@@ -35,13 +34,7 @@ const HomeList: React.FC<homeListProps> = ({
       tags.forEach((tag) => otherTagsSet.add(tag));
     }
   });
-  uniqueTags.forEach((tagName) => {
-    if (!otherTagsSet.has(tagName)) {
-      currentTags.delete(tagName);
-    }
-  });
-  currentTags = new Set([...currentTags]);
-
+  const currentTags = new Set([...otherTagsSet].concat([...toggledTags]));
   // 这个地方写的有点恶心
   // TODO: Need to rewrite. Including simplified code and useReducer.
   const toggle = (tagName: string) => {
@@ -63,7 +56,7 @@ const HomeList: React.FC<homeListProps> = ({
               otherTagsArray.push(tags);
             }
           });
-          // 找到最小化的单位
+          // 找到交集
           const filtered = otherTagsArray[0]?.filter((item) => {
             for (let i = 1; i < otherTagsArray.length; i++) {
               if (!otherTagsArray[i]?.includes(item)) return false;
@@ -93,7 +86,7 @@ const HomeList: React.FC<homeListProps> = ({
             otherTagsArray.push(tags);
           }
         });
-        // 寻找最小集
+        // 寻找交集
         otherTagsArray[0]
           ?.filter((item) => {
             for (let i = 1; i < otherTagsArray.length; i++) {
