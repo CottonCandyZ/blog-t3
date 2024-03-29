@@ -38,7 +38,7 @@ const Header = () => {
             setToggle((toggle) => !toggle);
           }}
         >
-          <span className="text-2xl font-semibold text-primary drop-shadow-md">
+          <span className="text-2xl font-semibold text-primary drop-shadow-sm">
             Cotton
           </span>
           <span className="group relative flex items-center justify-center">
@@ -94,7 +94,7 @@ const Header = () => {
             />
           </span>
 
-          <span className="text-2xl font-semibold text-primary drop-shadow-md">
+          <span className="text-2xl font-semibold text-primary drop-shadow-sm">
             Candy
           </span>
         </div>
