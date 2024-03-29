@@ -29,15 +29,15 @@ const MobileNav: React.FC = () => {
         <button
           onClick={() => setExpend(false)}
           className={clsx(
-            "absolute inset-0 z-10 backdrop-blur-xl transition-opacity duration-500",
+            "absolute inset-0 z-10 backdrop-blur-2xl transition-opacity duration-500",
             {
               "opacity-1 touch-none": expend,
               "touch-auto opacity-0": !expend,
             },
           )}
         ></button>
-        <nav className="absolute bottom-20 left-0 z-20 flex h-2/4 w-3/4 flex-col justify-between text-primary">
-          <ul className="flex flex-col gap-3">
+        <nav className="absolute bottom-20 left-0 z-20 flex h-2/4 w-max flex-col justify-between text-primary-medium">
+          <ul className="flex flex-col gap-5">
             {CONFIG.nav_router.map((item, index) => {
               return (
                 <li
@@ -59,9 +59,9 @@ const MobileNav: React.FC = () => {
                     font-bold leading-8 drop-shadow-sm
                     before:absolute before:bottom-0 before:left-0 
                     before:right-0 before:-z-10 
-                    before:rounded-xl before:bg-primary-light`,
+                    before:rounded-xl before:bg-primary-light `,
                       {
-                        "pointer-events-none text-white before:h-full before:bg-primary-medium before:shadow-md":
+                        "pointer-events-none text-white before:h-full before:bg-primary-medium before:shadow-sm":
                           pathname == item.href,
                       },
                     )}
