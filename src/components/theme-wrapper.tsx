@@ -12,7 +12,7 @@ interface themeContext {
   setThemeNumber: Dispatch<SetStateAction<number>>;
 }
 export const ThemeContext = createContext({} as themeContext);
-const ThemeWrapper: React.FC<PropsWithChildren<{ themeCookie?: string }>> = ({
+const ThemeWrapper: React.FC<PropsWithChildren> = ({
   children,
 }) => {
   const [themeNumber, setThemeNumber] = useState(1);
