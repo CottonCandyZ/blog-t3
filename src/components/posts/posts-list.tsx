@@ -36,7 +36,7 @@ const PostsList: React.FC<PostListProps> = ({ posts, toggledTags }) => {
             </time>
           </h2>
         </div>
-        <p className="mt-5 leading-7">{frontmatter.abstract}</p>
+        <p className="mt-5 leading-relaxed">{frontmatter.abstract}</p>
         <div className="mt-3 flex flex-row items-center gap-1">
           <h2 className="text-base font-medium">Read More</h2>
           <ArrowRight
