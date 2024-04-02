@@ -8,7 +8,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans' : ['Noto Sans', 'Noto Sans SC', ...defaultTheme.fontFamily.sans]
+        'sans' : ['Noto Sans', 'Noto Sans SC', ...defaultTheme.fontFamily.sans],
+        'mono': ['Noto Sans Mono', ...defaultTheme.fontFamily.mono],
       },
       keyframes: {
         "move-show": {
