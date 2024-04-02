@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans' : ['Noto Sans', 'Noto Sans SC', ...defaultTheme.fontFamily.sans],
+        'sans' : ['SF Pro SC', 'PingFang SC', 'Noto Sans', 'Noto Sans SC', ...defaultTheme.fontFamily.sans],
         'mono': ['Noto Sans Mono', ...defaultTheme.fontFamily.mono],
       },
       keyframes: {
