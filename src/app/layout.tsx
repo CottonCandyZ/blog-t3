@@ -3,7 +3,7 @@ import "~/styles/markdown.scss";
 import Footer from "~/components/footer";
 import MobileNav from "~/components/mobile-nav";
 import ThemeWrapper from "~/components/theme-wrapper";
-import HeaderWithWrapper from "~/components/header-with-wapper";
+import HeaderWithWrapper from "~/components/header-with-wrapper";
 import MainWrapper from "~/components/main-wrapper";
 export default function RootLayout({
   children,
