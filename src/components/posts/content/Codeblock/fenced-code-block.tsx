@@ -25,35 +25,42 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
 
   return (
     <Highlight
-      theme={themes.github}
+      theme={themes.duotoneLight}
       code={props.codeContent}
       language={props.language}
     >
       {({ style, tokens, getLineProps, getTokenProps }) => (
-        <div className="relative">
+        <div className="relative mt-10 mb-5">
           <div
             className="absolute -top-7 right-10 h-fit w-fit rounded-t-lg 
-            bg-[#f6f8fa] px-3 pt-1 font-semibold text-primary-medium"
+            bg-[#faf8f5] px-3 pt-1 font-semibold text-primary-medium"
           >
             {props.language.toUpperCase()}
           </div>
-          <div className="absolute right-5 top-4 z-[1] fill-primary">
-            <CopyButton copied={copied} onCopy={onCopy} />
-          </div>
-          <pre
-            style={style}
-            className="mdx-fenced-codeblock relative z-0 mt-12"
-          >
-            {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line })}>
-                <span>
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token })} />
-                  ))}
-                </span>
+          <div className="flex flex-row">
+            <pre
+              style={style}
+              className="mdx-fenced-codeblock relative overflow-x-auto z-0 w-full rounded-l-2xl"
+            >
+              {tokens.map((line, i) => (
+                <div key={i} {...getLineProps({ line })}>
+                  <span>
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token })} />
+                    ))}
+                  </span>
+                </div>
+              ))}
+            </pre>
+            <div>
+              <div className="bg-[#faf8f5] h-full rounded-r-2xl w-12">
+                <div className="fill-primary inline-block mt-4 ml-1">
+                  <CopyButton copied={copied} onCopy={onCopy} />
+                </div>
+                
               </div>
-            ))}
-          </pre>
+            </div>
+          </div>
         </div>
       )}
     </Highlight>

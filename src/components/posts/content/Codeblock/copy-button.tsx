@@ -12,8 +12,8 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
       className={clsx(
         `relative font-sans before:absolute before:-left-[4.1rem] before:top-0
     before:h-full before:rounded-md before:bg-black before:px-2 before:py-1 before:text-xs
-     before:leading-5 before:text-white before:transition-opacity before:duration-400
-     before:ease-in before:content-['Copied!'] after:absolute after:-left-2 after:top-[0.65rem] 
+     before:leading-6 before:text-white before:transition-opacity before:duration-400
+     before:ease-in before:content-['Copied!'] after:absolute after:-left-2 after:top-[0.75rem] 
      after:border-b-4 after:border-l-[6px] after:border-t-4
     after:border-b-transparent after:border-l-black after:border-t-transparent after:transition-opacity after:duration-400 after:ease-in`,
         {
@@ -24,12 +24,12 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
     >
       <button
         onClick={onCopy}
-        className="relative h-7 w-7 rounded-md hover:bg-slate-200"
+        className="relative h-8 w-8 rounded-md hover:border-2 hover:border-primary-medium"
       >
         {copied ? (
-          <CopyFinishIcon className="m-auto h-4 w-4 " />
+          <CopyFinishIcon className="m-auto h-5 w-5" />
         ) : (
-          <CopyIcon className="m-auto h-4 w-4" />
+          <CopyIcon className="m-auto h-5 w-5" />
         )}
       </button>
     </div>

@@ -57,7 +57,7 @@ const TableOfContents: React.FC = () => {
   const headings = useHeadings();
   const activeId = useScrollSpy(headings.map(({ id }) => id));
   return (
-    <ul className="flex list-none flex-col gap-0.5">
+    <ul className="flex list-none flex-col gap-2">
       {headings.map((heading, index) => {
         return (
           <li key={index}>

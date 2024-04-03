@@ -36,8 +36,8 @@ function ListItem({
       after:-bottom-5 after:rounded-2xl after:bg-primary-medium after:px-1.5
       after:py-1 after:text-xs after:text-white after:opacity-0
       after:transition after:duration-500
-      after:content-[attr(after-content)] hover:bg-primary-medium
-      hover:after:translate-y-3 hover:after:opacity-100"
+      md:after:content-[attr(after-content)] hover:bg-primary-medium
+      hover:after:translate-y-2 hover:after:opacity-100 hover:shadow-md after:shadow-md"
       >
         <Icon className="h-6 w-6 transition-all duration-500 ease-out text-primary group-hover:text-white" />
       </a>

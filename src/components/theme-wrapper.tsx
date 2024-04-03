@@ -12,15 +12,18 @@ interface themeContext {
   setThemeNumber: Dispatch<SetStateAction<number>>;
 }
 export const ThemeContext = createContext({} as themeContext);
-const ThemeWrapper: React.FC<PropsWithChildren<{themeCookie?: string}>> = ({ children, themeCookie }) => {
-  const def = themeCookie ? Number(themeCookie) : 1;
-  const [themeNumber, setThemeNumber] = useState(def);
+const ThemeWrapper: React.FC<PropsWithChildren> = ({
+  children,
+}) => {
+  const [themeNumber, setThemeNumber] = useState(1);
   useEffect(() => {
-    document.cookie = `theme=${themeNumber}`
-  },[themeNumber])
+    setThemeNumber(localStorage.theme
+    ? localStorage.theme as number
+    : 1);
+  }, [])
   return (
     <ThemeContext.Provider value={{ themeNumber, setThemeNumber }}>
-        <body className={`theme-${themeNumber}`}>{children}</body>
+      <body className={`theme-${themeNumber}`}>{children}</body>
     </ThemeContext.Provider>
   );
 };

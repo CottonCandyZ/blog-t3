@@ -12,7 +12,7 @@
   .mdx-h4,
   .mdx-h5,
   .mdx-h6 {
-    @apply relative mb-4 font-bold;
+    @apply relative mb-4 font-bold text-primary;
     &:hover {
       @apply underline decoration-primary/20 decoration-2;
       @media (min-width: 768px) {
@@ -45,7 +45,7 @@
 
   // Paragraph
   .mdx-p {
-    @apply mb-4;
+    @apply mb-4 leading-7 text-base;
   }
 
   // Blockquote
@@ -90,7 +90,7 @@
   // List
   .mdx-ul,
   .mdx-ol {
-    @apply my-6;
+    @apply my-6 leading-7;
     .mdx-p {
       @apply m-0;
     }
@@ -119,7 +119,7 @@
 
   // CodeBlock
   .mdx-fenced-codeblock {
-    @apply overflow-x-auto rounded-md p-4 text-sm mb-4;
+    @apply p-6 text-base font-medium leading-7;
   }
 
   //link
