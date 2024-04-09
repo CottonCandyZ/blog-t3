@@ -26,12 +26,12 @@ const origin =
   process.env.NODE_ENV !== "production"
     ? `http://${rpID}:3000`
     : `https://${rpID}`;
-    
+
 export async function Logout() {
   await Promise.resolve(cookies().delete("session-id"));
 }
 
-async function newSession(userId: string) {
+async function newSession(userId: number) {
   return await prisma.session.create({
     data: {
       userId: userId,
@@ -62,14 +62,9 @@ async function getAuthSessionData(sessionId: string) {
     },
   });
 }
-async function newAuthSession(
-  userId: string,
-  currentChallenge: string,
-  userName?: string,
-) {
+async function newAuthSession(currentChallenge: string, userName?: string) {
   return prisma.authSession.create({
     data: {
-      userId: userId,
       userName: userName,
       currentChallenge: currentChallenge,
     },
@@ -84,80 +79,34 @@ async function getCurrentAuthSession() {
   }
   return null;
 }
-
-async function getUserAuthenticators(userId: string) {
-  return await prisma.user.findUnique({
+async function getUserAuthenticator(credentialID: string) {
+  return await prisma.device.findUnique({
     where: {
-      id: userId,
+      credentialID: credentialID,
     },
     select: {
-      device: {
-        select: {
-          credentialID: true,
-        },
-      },
+      counter: true,
+      credentialID: true,
+      credentialPublicKey: true,
+      transports: true,
+      userId: true,
     },
   });
 }
-async function getUserAuthenticator(userId: string, credentialID: string) {
-  return await prisma.user.findUnique({
+async function UpdateAuthenticator(credentialID: string, counter: number) {
+  return await prisma.device.update({
     where: {
-      id: userId,
-      device: {
-        some: {
-          credentialID: credentialID,
-        },
-      },
-    },
-    select: {
-      id: true,
-      device: {
-        select: {
-          counter: true,
-          credentialID: true,
-          credentialPublicKey: true,
-          transports: true,
-        },
-      },
-    },
-  });
-}
-async function UpdateAuthenticator(
-  userId: string,
-  credentialID: string,
-  counter: number,
-) {
-  return await prisma.user.update({
-    where: {
-      id: userId,
+      credentialID: credentialID,
     },
     data: {
-      device: {
-        update: {
-          where: {
-            credentialID: credentialID,
-          },
-          data: {
-            counter: counter,
-          },
-        },
-      },
+      counter: counter,
     },
   });
 }
 
-async function findUser(userId: string) {
-  return await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
-}
-
-async function newUser(userId: string, userName: string) {
+async function newUser(userName: string) {
   return await prisma.user.create({
     data: {
-      id: userId,
       name: userName,
     },
   });
@@ -167,29 +116,21 @@ async function newUser(userId: string, userName: string) {
 // Reg
 export async function generateRegistrationOpt(formData: FormData) {
   const schema = z.object({
-    userId: z.string(),
     userName: z.string(),
   });
   const data = schema.parse({
-    userId: formData.get("userId"),
-    userName: formData.get("userName"),
+    userName: formData.get("username"),
   });
-  if (data.userId == "") {
-    return { message: ERROR_MESSAGE.USER_ID_CAN_NOT_BE_EMPTY };
-  }
   if (data.userName == "") {
-    data.userName = data.userId;
-  }
-  if (await findUser(data.userId)) {
-    return { message: ERROR_MESSAGE.USER_ALREADY_EXIST };
+    return { message: ERROR_MESSAGE.USER_ID_CAN_NOT_BE_EMPTY };
   }
   let options;
   try {
     options = await generateRegistrationOptions({
       rpName,
       rpID,
-      userID: data.userId,
-      userName: data.userId,
+      userID: data.userName,
+      userName: data.userName,
       authenticatorSelection: {
         // Defaults
         residentKey: "preferred",
@@ -198,15 +139,11 @@ export async function generateRegistrationOpt(formData: FormData) {
     });
   } catch (e) {
     console.error(e);
-    return { message: ERROR_MESSAGE.USER_ALREADY_EXIST };
+    return { message: ERROR_MESSAGE.GENERATE_REG_OPTIONS_FAILED };
   }
   let session;
   try {
-    session = await newAuthSession(
-      data.userId,
-      options.challenge,
-      data.userName,
-    );
+    session = await newAuthSession(options.challenge, data.userName);
   } catch (e) {
     console.error(e);
     return { message: ERROR_MESSAGE.GENERATE_NEW_REG_SESSION_FAILED };
@@ -249,7 +186,6 @@ export async function verifyRegistrationRes(
   };
   try {
     const user = await saveNewUserAuthenticatorInDB(
-      currentSession.userId,
       currentSession.userName!,
       newAuthenticator,
     );
@@ -270,12 +206,10 @@ interface AuthenticatorInfo {
 }
 
 async function saveNewUserAuthenticatorInDB(
-  userId: string,
   userName: string,
   newAuthenticator: AuthenticatorInfo,
 ) {
-  // 如果在这里出现重名的怎么办 是不是应该一开始就将它加进去 有任何失败再更新表？（这种情况很少见，暂时先这么写
-  const user = await newUser(userId, userName);
+  const user = await newUser(userName);
   await prisma.device.create({
     data: {
       ...newAuthenticator,
@@ -287,35 +221,18 @@ async function saveNewUserAuthenticatorInDB(
 
 // Auth
 export async function generateAuthenticationOpt(formData: FormData) {
-  const schema = z.object({
-    userId: z.string(),
-  });
-  const data = schema.parse({
-    userId: formData.get("userId"),
-  });
-  if (data.userId == "") {
-    return { message: ERROR_MESSAGE.USER_ID_CAN_NOT_BE_EMPTY };
-  }
-  const user = await getUserAuthenticators(data.userId);
-  if (!user) {
-    return { message: ERROR_MESSAGE.USER_ID_NOT_EXIST };
-  }
   let options;
   try {
     options = await generateAuthenticationOptions({
       rpID,
-      allowCredentials: user.device.map((dev) => ({
-        id: isoBase64URL.toBuffer(dev.credentialID),
-        type: "public-key",
-      })),
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return { message: ERROR_MESSAGE.GENERATE_AUTH_OPTIONS_FAILED };
   }
   let session;
   try {
-    session = await newAuthSession(data.userId, options.challenge);
+    session = await newAuthSession(options.challenge);
   } catch (e) {
     console.error(e);
     return { message: ERROR_MESSAGE.GENERATE_NEW_AUTH_SESSION_FAILED };
@@ -331,15 +248,10 @@ export async function verifyAuthenticationRes(
   if (!currentSession) {
     return { message: ERROR_MESSAGE.AUTH_SESSION_EXPIRE };
   }
-  const authenticator = await getUserAuthenticator(
-    currentSession.userId,
-    options.rawId,
-  );
+  const authenticator = await getUserAuthenticator(options.rawId);
   if (!authenticator) {
-    return { message: ERROR_MESSAGE.USER_ID_NOT_EXIST_IN_VERIFY };
-  }
-  if (authenticator.device.length == 0)
     return { message: ERROR_MESSAGE.AUTHENTICATOR_NOT_FOUND };
+  }
   let verification;
   try {
     verification = await verifyAuthenticationResponse({
@@ -348,16 +260,14 @@ export async function verifyAuthenticationRes(
       expectedOrigin: origin,
       expectedRPID: rpID,
       authenticator: {
-        ...authenticator.device[0]!,
-        credentialID: isoBase64URL.toBuffer(
-          authenticator.device[0]!.credentialID,
-        ),
+        ...authenticator,
+        credentialID: isoBase64URL.toBuffer(authenticator.credentialID),
         credentialPublicKey: isoBase64URL.toBuffer(
-          authenticator.device[0]!.credentialPublicKey,
+          authenticator.credentialPublicKey,
         ),
-        transports: authenticator.device[0]!.transports
+        transports: authenticator.transports
           ? (JSON.parse(
-              authenticator.device[0]!.transports,
+              authenticator.transports,
             ) as AuthenticatorTransportFuture[])
           : undefined,
       },
@@ -369,16 +279,15 @@ export async function verifyAuthenticationRes(
   if (!verification.verified) {
     return { message: ERROR_MESSAGE.VERIFY_AUTH_RESPONSE_FAILED };
   }
-  // await UpdateAuthenticator(
-  //   authenticator.id,
-  //   authenticator.device[0]!.credentialID,
-  //   verification.authenticationInfo.newCounter,
-  // );
+  await UpdateAuthenticator(
+    authenticator.credentialID,
+    verification.authenticationInfo.newCounter,
+  );
   try {
-    const session = await newSession(authenticator.id);
+    const session = await newSession(authenticator.userId);
     cookies().set("session-id", session.id);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return { message: ERROR_MESSAGE.CREATE_NEW_SESSION_FAILED };
   }
 

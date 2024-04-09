@@ -101,51 +101,33 @@ const AuthRegForm = () => {
   }
 
   return (
-    <form className="flex flex-row flex-wrap gap-2">
-      <div className="flex w-full flex-row flex-wrap gap-2">
-        <div className="grow basis-80">
+    <form className="flex flex-row flex-wrap items-end gap-2">
+        <div className="basis-80">
           <label
-            htmlFor="userId"
+            htmlFor="username"
             className="block text-base font-semibold text-primary"
           >
-            ID
+            Name
           </label>
           <input
             type="text"
-            id="userId"
-            name="userId"
-            placeholder="需要是唯一的！"
+            id="username"
+            name="username"
+            placeholder="别太长，喜欢就行，登陆可以不用填哦"
             autoComplete="username webauthn"
-            className="mt-1 block w-full rounded-md border-0 px-3.5 py-2
+            className="mt-1 block w-full rounded-md border-0 px-3.5 py-2.5
       shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light 
       focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-medium"
           />
         </div>
-        <div className="grow basis-80">
-          <label
-            htmlFor="userName"
-            className="block text-base font-semibold text-primary"
-          >
-            名字
-          </label>
-          <input
-            type="text"
-            id="userName"
-            name="userName"
-            placeholder="可选的！空则同 ID 登陆时不需要"
-            className="mt-1 block w-full rounded-md border-0 px-3.5 py-2
-      shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light 
-      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-medium"
-          />
-        </div>
-      </div>
       <div className="mt-1 flex flex-row gap-2">
         <AuthButton Auth={Auth} />
         <RegButton Reg={Reg} />
-        <p className="px-3.5 py-2.5 font-medium text-primary">
-          {message.message}
-        </p>
       </div>
+      <p className="px-3.5 py-2.5 font-medium text-primary w-full">
+          {message.message}
+      </p>
+
     </form>
   );
 };
