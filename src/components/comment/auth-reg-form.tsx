@@ -124,10 +124,9 @@ const AuthRegForm = () => {
         <AuthButton Auth={Auth} />
         <RegButton Reg={Reg} />
       </div>
-      <p className="px-3.5 py-2.5 font-medium text-primary w-full">
+      <p className="py-2.5 font-medium text-primary w-full">
           {message.message}
       </p>
-
     </form>
   );
 };
