@@ -369,11 +369,11 @@ export async function verifyAuthenticationRes(
   if (!verification.verified) {
     return { message: ERROR_MESSAGE.VERIFY_AUTH_RESPONSE_FAILED };
   }
-  await UpdateAuthenticator(
-    authenticator.id,
-    authenticator.device[0]!.credentialID,
-    verification.authenticationInfo.newCounter,
-  );
+  // await UpdateAuthenticator(
+  //   authenticator.id,
+  //   authenticator.device[0]!.credentialID,
+  //   verification.authenticationInfo.newCounter,
+  // );
   try {
     const session = await newSession(authenticator.id);
     cookies().set("session-id", session.id);
