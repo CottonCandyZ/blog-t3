@@ -39,7 +39,7 @@ const UserInfo: React.FC<{ user: { id: string; name: string } }> = ({
         <div>
           <span className="text-pretty text-2xl text-primary-dark">Hi! </span>
           <span className="text-2xl font-medium text-primary">{user.name}</span>
-          <span className="text-sm">@{user.name}</span>
+          <span className="text-sm">@{user.id}</span>
         </div>
         <div className="flex gap-2">
           <form>
