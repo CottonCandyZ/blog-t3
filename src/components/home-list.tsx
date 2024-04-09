@@ -18,8 +18,8 @@ const HomeList: React.FC<homeListProps> = ({
     const saveTags = sessionStorage.getItem("tags");
     if (saveTags) {
       setToggledTags(new Set(JSON.parse(saveTags) as Array<string>));
-    };
-  },[])
+    }
+  }, []);
   const [toggledTags, setToggledTags] = useState(new Set<string>());
   const otherTagsSet = new Set<string>();
   oTags.forEach((tags) => {
@@ -112,9 +112,9 @@ const HomeList: React.FC<homeListProps> = ({
       <section className="col-span-full row-start-1 h-min md:sticky md:top-24 md:col-start-2 md:block">
         <search>
           <h2 className="text-xl font-medium tracking-widest text-primary">
-            Tags (Click to filter)
+            Tags
           </h2>
-          <div className="mt-3 h-min">
+          <div className="mt-1 h-min">
             <Tags
               allTags={uniqueTags}
               currentTags={currentTags}
