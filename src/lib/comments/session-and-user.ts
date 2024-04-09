@@ -189,7 +189,7 @@ export async function generateRegistrationOpt(formData: FormData) {
       rpName,
       rpID,
       userID: data.userId,
-      userName: data.userName,
+      userName: data.userId,
       authenticatorSelection: {
         // Defaults
         residentKey: "preferred",
