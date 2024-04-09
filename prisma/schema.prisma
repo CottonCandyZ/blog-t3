@@ -1,25 +1,55 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Article {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    title     String
-    tags      Tag[]
+model User {
+  id       String    @id
+  createAt DateTime  @default(now())
+  name     String
+  comments Comment[]
+  device   Device[]
+  session  Session[]
 }
 
-model Tag {
-    id       Int       @id @default(autoincrement())
-    name     String
-    Articles Article[]
+model Comment {
+  id       Int      @id @default(autoincrement())
+  createAt DateTime @default(now())
+  author   User     @relation(fields: [authorId], references: [id])
+  authorId String
+  content  String
+  postSlug String
+}
+
+model Session {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model AuthSession {
+  id               String @id @default(uuid())
+  userId           String
+  userName         String?
+  currentChallenge String
+}
+
+model Device {
+  credentialID        String   @id
+  createAt            DateTime @default(now())
+  user                User     @relation(fields: [userId], references: [id])
+  userId              String
+  credentialPublicKey String
+  counter             Int
+  transports          String?
 }
