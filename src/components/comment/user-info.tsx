@@ -35,7 +35,7 @@ const UserInfo: React.FC<{ user: { id: string; name: string } }> = ({
 }) => {
   return (
     <div>
-      <div className="flex items-end justify-between gap-2">
+      <div className="flex items-end justify-between gap-2 flex-wrap">
         <div>
           <span className="text-pretty text-2xl text-primary-dark">Hi! </span>
           <span className="text-2xl font-medium text-primary">{user.name}</span>
