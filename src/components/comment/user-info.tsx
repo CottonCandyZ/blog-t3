@@ -30,7 +30,7 @@ function LogOutButton({
     </button>
   );
 }
-const UserInfo: React.FC<{ user: { id: number; name: string } }> = ({
+const UserInfo: React.FC<{ user: { label: number; name: string } }> = ({
   user,
 }) => {
   return (
@@ -39,7 +39,7 @@ const UserInfo: React.FC<{ user: { id: number; name: string } }> = ({
         <div>
           <span className="text-pretty text-2xl text-primary-dark">Hi! </span>
           <span className="text-2xl font-medium text-primary">{user.name}</span>
-          <span className="text-sm text-primary-light"> #{user.id}</span>
+          <span className="text-sm text-primary-light"> #{user.label}</span>
         </div>
         <div className="flex gap-2">
           <form>

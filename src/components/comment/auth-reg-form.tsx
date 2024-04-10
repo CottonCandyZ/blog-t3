@@ -22,7 +22,7 @@ function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
       formAction={Auth}
       disabled={pending}
       className={clsx(
-        `block h-min shrink-0 rounded-md px-3.5 py-2.5 text-center text-base
+        `block h-min w-full shrink-0 rounded-md px-3.5 py-2.5 text-center text-base
     font-semibold text-primary shadow-sm 
     ring-1 ring-inset ring-primary-light 
     hover:bg-primary-extralight hover:shadow-inner
@@ -101,32 +101,34 @@ const AuthRegForm = () => {
   }
 
   return (
-    <form className="flex flex-row flex-wrap items-end gap-2">
-        <div className="basis-80">
-          <label
+    <form className="flex flex-row flex-wrap gap-2">
+      <div className="w-32 sm:w-20">
+        <AuthButton Auth={Auth} />
+      </div>
+      <div className="flex basis-96 flex-wrap gap-2">
+        <div className="basis-[19rem] grow">
+          {/* <label
             htmlFor="username"
             className="block text-base font-semibold text-primary"
           >
             Name
-          </label>
+          </label> */}
           <input
             type="text"
             id="username"
             name="username"
-            placeholder="别太长，喜欢就行，登陆可以不用填哦"
+            placeholder="名字，别太长，登陆可以不用填哦"
             autoComplete="username webauthn"
-            className="mt-1 block w-full rounded-md border-0 px-3.5 py-2.5
+            className="block w-full rounded-md border-0 px-3.5 py-2.5
       shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light 
       focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-medium"
           />
         </div>
-      <div className="mt-1 flex flex-row gap-2">
-        <AuthButton Auth={Auth} />
         <RegButton Reg={Reg} />
-      </div>
-      <p className="py-2.5 font-medium text-primary w-full">
+        <p className="py-2.5 font-medium text-primary flex-1">
           {message.message}
-      </p>
+        </p>
+      </div>
     </form>
   );
 };

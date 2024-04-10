@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import prisma from "~/server/db";
 import z from "zod";
+import crypto from "crypto";
 
 import {
   generateAuthenticationOptions,
@@ -31,7 +32,7 @@ export async function Logout() {
   await Promise.resolve(cookies().delete("session-id"));
 }
 
-async function newSession(userId: number) {
+async function newSession(userId: string) {
   return await prisma.session.create({
     data: {
       userId: userId,
@@ -50,6 +51,7 @@ export async function getLoggedInUserInfo() {
         select: {
           id: true,
           name: true,
+          label: true,
         },
       },
     },
@@ -62,9 +64,14 @@ async function getAuthSessionData(sessionId: string) {
     },
   });
 }
-async function newAuthSession(currentChallenge: string, userName?: string) {
+async function newAuthSession(
+  currentChallenge: string,
+  userId?: string,
+  userName?: string,
+) {
   return prisma.authSession.create({
     data: {
+      userId: userId,
       userName: userName,
       currentChallenge: currentChallenge,
     },
@@ -104,9 +111,10 @@ async function UpdateAuthenticator(credentialID: string, counter: number) {
   });
 }
 
-async function newUser(userName: string) {
+async function newUser(userId: string, userName: string) {
   return await prisma.user.create({
     data: {
+      id: userId,
       name: userName,
     },
   });
@@ -124,12 +132,13 @@ export async function generateRegistrationOpt(formData: FormData) {
   if (data.userName == "") {
     return { message: ERROR_MESSAGE.USER_ID_CAN_NOT_BE_EMPTY };
   }
+  const userId = crypto.randomUUID();
   let options;
   try {
     options = await generateRegistrationOptions({
       rpName,
       rpID,
-      userID: data.userName,
+      userID: userId,
       userName: data.userName,
       authenticatorSelection: {
         // Defaults
@@ -143,7 +152,7 @@ export async function generateRegistrationOpt(formData: FormData) {
   }
   let session;
   try {
-    session = await newAuthSession(options.challenge, data.userName);
+    session = await newAuthSession(options.challenge, userId, data.userName);
   } catch (e) {
     console.error(e);
     return { message: ERROR_MESSAGE.GENERATE_NEW_REG_SESSION_FAILED };
@@ -186,6 +195,7 @@ export async function verifyRegistrationRes(
   };
   try {
     const user = await saveNewUserAuthenticatorInDB(
+      currentSession.userId!,
       currentSession.userName!,
       newAuthenticator,
     );
@@ -206,14 +216,15 @@ interface AuthenticatorInfo {
 }
 
 async function saveNewUserAuthenticatorInDB(
+  userId: string,
   userName: string,
   newAuthenticator: AuthenticatorInfo,
 ) {
-  const user = await newUser(userName);
+  const user = await newUser(userId, userName);
   await prisma.device.create({
     data: {
       ...newAuthenticator,
-      userId: user.id,
+      userId: userId,
     },
   });
   return user;
