@@ -33,7 +33,7 @@ function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
         },
       )}
     >
-      登陆
+      验证
     </button>
   );
 }
@@ -77,7 +77,7 @@ const AuthRegForm = () => {
       setMessage({ message: ERROR_MESSAGE.USER_CANCELED });
       return;
     }
-    setMessage({ message: "已经发送过去啦，请耐心等待服务器验证..." });
+    setMessage({ message: "已经发送过去啦，请耐心等待服务器认证..." });
     const verifyRes = await verifyRegistrationRes(localRes);
     setMessage({ ...verifyRes });
   }
@@ -117,7 +117,7 @@ const AuthRegForm = () => {
             type="text"
             id="username"
             name="username"
-            placeholder="名字，别太长，登陆可以不用填哦"
+            placeholder="名字，别太长，验证可以不用填哦"
             autoComplete="username webauthn"
             className="block w-full rounded-md border-0 px-3.5 py-2.5
       shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light 

@@ -21,7 +21,7 @@ export const ERROR_MESSAGE = {
   CREATE_NEW_SESSION_FAILED: "Session 没有创建成功！",
 
   // New Comment
-  SESSION_EXPIRE: "登陆过期了的说",
+  SESSION_EXPIRE: "验证过期了的说",
   CREATE_COMMENT_FAILED: "创建评论失败了",
   COMMENT_EMPTY: "评论不能为空",
 
