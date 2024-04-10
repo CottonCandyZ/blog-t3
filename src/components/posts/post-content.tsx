@@ -1,7 +1,7 @@
 import { getPostContent } from "~/lib/posts";
 import MDXComponent from "~/components/posts/mdx-component";
 import TableOfContents from "~/components/posts/table-of-contents";
-export const dynamic = 'force-static';
+
 export default async function PostContent({ slug }: { slug: string }) {
   const { code, frontmatter } = await getPostContent(decodeURIComponent(slug));
   return (
