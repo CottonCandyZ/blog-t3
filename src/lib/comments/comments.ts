@@ -54,6 +54,9 @@ export async function createTodo(
       },
     });
     revalidatePath("/posts/[slug]", "page");
+    if (slug == "about") {
+      revalidatePath("/about");
+    }
   } catch (e) {
     return { message: ERROR_MESSAGE.CREATE_COMMENT_FAILED };
   }
