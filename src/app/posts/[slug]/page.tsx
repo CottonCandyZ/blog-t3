@@ -38,9 +38,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
       </div>
       <div className="sticky top-0 z-[4] h-16 bg-white"></div>
       <main className="mx-auto min-h-[calc(-300px+100dvh)] max-w-6xl px-5 pb-20 md:px-10">
-        <Suspense fallback={<PostContentSkeleton />}>
+        {/* <Suspense fallback={<PostContentSkeleton />}> */}
           <PostContent slug={params.slug} />
-        </Suspense>
+        {/* </Suspense> */}
         <div className="mx-auto mt-10 w-full max-w-3xl lg:mx-0 flex justify-center items-center">
             <Comments slug={params.slug}/>
         </div>
