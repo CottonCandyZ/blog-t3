@@ -6,6 +6,7 @@ import { useState } from "react";
 const TimeFromNow: React.FC<{ time: Date }> = ({ time }) => {
   const timeString = () => {
     const diff = new Date().getTime() - time.getTime();
+    if (diff < 0) return "";
     const sec = Math.floor(diff / 1000);
     if (sec < 60) {
       return sec + "秒";
