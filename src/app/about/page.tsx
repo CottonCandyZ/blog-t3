@@ -10,9 +10,9 @@ export default function page() {
   return (
     <div className="lg:justify-normal">
       <article className="markdown-body relative mx-auto w-full max-w-3xl lg:mx-0">
-        {/* <Suspense fallback={<AboutSkeleton />}> */}
+        <Suspense fallback={<AboutSkeleton />}>
           <AboutContent />
-        {/* </Suspense> */}
+        </Suspense>
       </article>
       <div className="mx-auto mt-10 w-full max-w-3xl lg:mx-0 flex justify-center items-center">
             <Comments slug="about"/>
