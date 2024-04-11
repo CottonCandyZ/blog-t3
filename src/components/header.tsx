@@ -14,6 +14,10 @@ const Header = () => {
   const pathname = usePathname();
   const [forceList, setForceList] = useState(false);
   const useList = forceList || pathname != "/";
+  const saveTheme = (number: number) => {
+    setThemeNumber(availableThemeNumber[number]!);
+    document.cookie = `theme=${availableThemeNumber[number]!}`;
+  }
   useEffect(() => {
     const tog = () => {
       setToggle(false);
@@ -54,8 +58,7 @@ const Header = () => {
                 },
               )}
               onClick={() => {
-                setThemeNumber(availableThemeNumber[0]!);
-                localStorage.theme = availableThemeNumber[0]!;
+                saveTheme(0);
               }}
             />
             <CottonCandy
@@ -69,8 +72,7 @@ const Header = () => {
                 },
               )}
               onClick={() => {
-                setThemeNumber(availableThemeNumber[1]!);
-                localStorage.theme = availableThemeNumber[1]!;
+                saveTheme(1);
               }}
             />
             <CottonCandy
@@ -85,8 +87,7 @@ const Header = () => {
                 },
               )}
               onClick={() => {
-                setThemeNumber(availableThemeNumber[2]!);
-                localStorage.theme = availableThemeNumber[2]!;
+                saveTheme(2);
               }}
             />
             <CottonCandy
