@@ -1,5 +1,5 @@
 import MDXComponent from "~/components/posts/mdx-component";
-import { getAboutContent } from "~/lib/about";
+import { getAboutContent } from "~/server/fetch/about";
 import dayjs from "dayjs";
 
 const AboutContent: React.FC = async () => {

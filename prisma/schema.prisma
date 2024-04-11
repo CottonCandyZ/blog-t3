@@ -54,4 +54,5 @@ model Device {
   credentialPublicKey String
   counter             Int
   transports          String?
+  removed             Boolean @default(false)
 }

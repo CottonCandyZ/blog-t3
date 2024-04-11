@@ -1,4 +1,4 @@
-import { getPostContent } from "~/lib/posts";
+import { getPostContent } from "~/server/fetch/posts";
 import MDXComponent from "~/components/posts/mdx-component";
 import TableOfContents from "~/components/posts/table-of-contents";
 

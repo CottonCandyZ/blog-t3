@@ -2,7 +2,7 @@
 import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useState } from "react";
 import CopyButton from "~/components/posts/content/Codeblock/copy-button";
-import { copyToClipboard } from "~/lib/tools/clipboard";
+import { copyToClipboard } from "~/server/tools/clipboard";
 
 interface FencedCodeBlockProps {
   language: string;

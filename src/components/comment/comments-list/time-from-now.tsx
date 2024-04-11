@@ -30,6 +30,6 @@ const TimeFromNow: React.FC<{ time: Date }> = ({ time }) => {
     setFromNow(timeString());
   }, 1000);
 
-  return <time>{fromNow}</time>;
+  return <time suppressHydrationWarning>{fromNow}</time>;
 };
 export default TimeFromNow;

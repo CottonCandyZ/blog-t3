@@ -1,18 +1,13 @@
 "use client";
 import {
-  generateAuthenticationOpt,
-  generateRegistrationOpt,
-  verifyAuthenticationRes,
-  verifyRegistrationRes,
-} from "~/lib/comments/session-and-user";
-import {
   startAuthentication,
   startRegistration,
 } from "@simplewebauthn/browser";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import clsx from "clsx";
-import { ERROR_MESSAGE } from "~/lib/comments/message";
+import { ERROR_MESSAGE } from "~/server/message";
+import { AuthOptAction, RegOptAction, vAuthResAction, vRegResAction } from "~/server/action/webauthn";
 
 function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
   const { pending } = useFormStatus();
@@ -62,42 +57,42 @@ function RegButton({ Reg }: { Reg: (formData: FormData) => Promise<void> }) {
 }
 
 const AuthRegForm = () => {
-  const [message, setMessage] = useState({ message: "" });
+  const [message, setMessage] = useState("");
   async function Reg(formData: FormData) {
-    setMessage({ message: "请等待认证框弹出" }); // 这个暂时不会工作！！
-    const optionRes = await generateRegistrationOpt(formData);
-    if (!optionRes.options) {
-      setMessage({ ...optionRes });
+    setMessage("请等待认证框弹出"); // 这个暂时不会工作！！
+    const optionRes = await RegOptAction(formData);
+    setMessage(optionRes.message);
+    if (!optionRes.data) {
       return;
     }
     let localRes;
     try {
-      localRes = await startRegistration(optionRes.options);
+      localRes = await startRegistration(optionRes.data);
     } catch {
-      setMessage({ message: ERROR_MESSAGE.USER_CANCELED });
+      setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
       return;
     }
-    setMessage({ message: "已经发送过去啦，请耐心等待服务器认证..." });
-    const verifyRes = await verifyRegistrationRes(localRes);
-    setMessage({ ...verifyRes });
+    setMessage("已经发送过去啦，请耐心等待服务器认证...");
+    const verifyRes = await vRegResAction(localRes);
+    setMessage(verifyRes.message);
   }
-  async function Auth(formData: FormData) {
-    setMessage({ message: "请等待认证框弹出" });
-    const optionRes = await generateAuthenticationOpt(formData);
-    setMessage({ ...optionRes });
-    if (!optionRes.options) {
+  async function Auth() {
+    setMessage("请等待认证框弹出");
+    const optionRes = await AuthOptAction();
+    setMessage(optionRes.message);
+    if (!optionRes.data) {
       return;
     }
     let localRes;
     try {
-      localRes = await startAuthentication(optionRes.options);
+      localRes = await startAuthentication(optionRes.data);
     } catch {
-      setMessage({ message: ERROR_MESSAGE.USER_CANCELED });
+      setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
       return;
     }
-    setMessage({ message: "已经发送过去啦，请耐心等待验证..." });
-    const verifyRes = await verifyAuthenticationRes(localRes);
-    setMessage({ ...verifyRes });
+    setMessage("已经发送过去啦，请耐心等待验证...");
+    const verifyRes = await vAuthResAction(localRes);
+    setMessage(verifyRes.message);
   }
 
   return (
@@ -106,7 +101,7 @@ const AuthRegForm = () => {
         <AuthButton Auth={Auth} />
       </div>
       <div className="flex basis-96 flex-wrap gap-2">
-        <div className="basis-[19rem] grow">
+        <div className="grow basis-[19rem]">
           {/* <label
             htmlFor="username"
             className="block text-base font-semibold text-primary"
@@ -125,9 +120,7 @@ const AuthRegForm = () => {
           />
         </div>
         <RegButton Reg={Reg} />
-        <p className="py-2.5 font-medium text-primary flex-1">
-          {message.message}
-        </p>
+        <p className="flex-1 py-2.5 font-medium text-primary">{message}</p>
       </div>
     </form>
   );

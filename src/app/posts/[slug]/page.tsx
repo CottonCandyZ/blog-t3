@@ -1,5 +1,5 @@
 import PostContent from "~/components/posts/post-content";
-import { getAllPostsSlug, getPostFrontmatter } from "~/lib/posts";
+import { getAllPostsSlug, getPostFrontmatter } from "~/server/fetch/posts";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import PostContentSkeleton from "~/components/posts/post-content-skeleton";

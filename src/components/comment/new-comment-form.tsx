@@ -1,7 +1,7 @@
 "use client";
 import clsx from "clsx";
 import { useFormState, useFormStatus } from "react-dom";
-import { createTodo } from "~/lib/comments/comments";
+import { createCommentAction } from "~/server/action/comments-list";
 function Submit() {
   const { pending } = useFormStatus();
   return (
@@ -20,7 +20,7 @@ focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 foc
   );
 }
 const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
-  const [state, formAction] = useFormState(createTodo.bind(null, slug), {
+  const [state, formAction] = useFormState(createCommentAction.bind(null, slug), {
     message: "",
   });
   return (

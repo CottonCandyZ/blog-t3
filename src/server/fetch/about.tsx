@@ -6,21 +6,8 @@ import remarkUnwrapImages from "remark-unwrap-images";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
-
-const cache = new Map<
-  string,
-  PostFrontmatter | string 
->();
-
-export async function getAboutContent() {
-  const cacheCodeKey = `post:code`;
-  const cacheFrontmatterKey = `post:frontmatter`;
-  if (cache.has(cacheCodeKey) && cache.has(cacheFrontmatterKey)) {
-    return {
-      code: cache.get(cacheCodeKey) as string,
-      frontmatter: cache.get(cacheFrontmatterKey) as PostFrontmatter,
-    };
-  }
+import { cache } from "react";
+export const getAboutContent = cache(async () => {
   const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
     file: path.join(process.cwd(), `src/config/about.mdx`),
     cwd: path.join(process.cwd(), "./src/config"),
@@ -41,7 +28,5 @@ export async function getAboutContent() {
       return options;
     },
   });
-  cache.set(cacheCodeKey, code);
-  cache.set(cacheFrontmatterKey, frontmatter);
   return { code, frontmatter };
-}
+});
