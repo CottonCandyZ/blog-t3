@@ -68,7 +68,8 @@ const AuthRegForm = () => {
     let localRes;
     try {
       localRes = await startRegistration(optionRes.data);
-    } catch {
+    } catch(e) {
+      console.error(e)
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
       return;
     }
@@ -86,7 +87,8 @@ const AuthRegForm = () => {
     let localRes;
     try {
       localRes = await startAuthentication(optionRes.data);
-    } catch {
+    } catch(e) {
+      console.error(e);
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
       return;
     }
