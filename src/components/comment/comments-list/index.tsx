@@ -1,8 +1,14 @@
-import CommentBlock from "~/components/comment/comment-block";
-import { getComments } from "~/lib/comments/comments";
+import CommentBlock from "~/components/comment/comments-list/comment-block";
+import { fetchComments } from "~/server/fetch/comments-list";
 
 const CommentsList: React.FC<{ slug: string }> = async ({ slug }) => {
-  const comments = await getComments(slug);
+  const result = await fetchComments(slug);
+  if (!result.data)  {
+    return (
+      <p className="text-base font-medium text-primary">{result.message}</p>
+    );
+  }
+  const comments = result.data;
   return comments.length == 0 ? (
     <p className="text-base font-medium text-primary">还没有评论哦...</p>
   ) : (

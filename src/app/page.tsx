@@ -1,5 +1,5 @@
 import HomeList from "~/components/home-list";
-import { getAllTags, getLatestPostsListInfo } from "~/lib/posts";
+import { getAllTags, getLatestPostsListInfo } from "~/server/fetch/posts";
 
 export const metadata = {
   title: "棉花糖",

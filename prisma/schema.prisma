@@ -9,13 +9,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model User {
   id       String    @id
   createAt DateTime  @default(now())
+  label    Int       @unique @default(autoincrement())
   name     String
   comments Comment[]
   device   Device[]
@@ -38,8 +40,8 @@ model Session {
 }
 
 model AuthSession {
-  id               String @id @default(uuid())
-  userId           String
+  id               String  @id @default(uuid())
+  userId           String?
   userName         String?
   currentChallenge String
 }
@@ -52,4 +54,6 @@ model Device {
   credentialPublicKey String
   counter             Int
   transports          String?
+  removed             Boolean @default(false)
+  aaguid              String
 }

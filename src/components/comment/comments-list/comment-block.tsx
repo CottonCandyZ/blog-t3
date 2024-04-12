@@ -1,6 +1,4 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import TimeFromNow from "~/components/comment/time-from-now";
+import TimeFromNow from "~/components/comment/comments-list/time-from-now";
 
 interface CommentBlockProps {
   content: string;
@@ -13,7 +11,6 @@ const CommentBlock: React.FC<CommentBlockProps> = ({
   authorName,
   createAt,
 }) => {
-  dayjs.extend(relativeTime);
   return (
     <div className="border-b border-primary-extralight p-2">
       <div>
