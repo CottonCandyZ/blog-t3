@@ -42,7 +42,10 @@ export const ERROR_MESSAGE = {
 
   // DB
   DB_COMMENTS_LOAD_ERROR: "评论区加载失败",
-  DB_ERROR: "数据库连接错误"
+  DB_ERROR: "数据库连接错误",
+
+  // Fetch
+  FETCH_AAGUID_LIST_ERROR: "获取 AAGUID LIST 失败"
 };
 
 export const SUCCEED_MESSAGE = {
@@ -55,6 +58,8 @@ export const SUCCEED_MESSAGE = {
 
   // DB
   DB_READ_SUCCEED: "查找成功",
+  // FETCH
+  FETCH_SUCCESS: "获取成功",
 };
 
 export function resMessageError(errorKey: keyof typeof ERROR_MESSAGE) {

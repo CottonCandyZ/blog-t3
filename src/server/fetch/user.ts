@@ -22,3 +22,22 @@ export const fetchUserDevice = async (userId: string) => {
   }
   return resMessageSuccess("DB_READ_SUCCEED", authenticators)
 }
+
+export interface aaguid {
+  name: string,
+  icon_dark: string,
+  icon_light: string,
+}
+export const fetchAaguid = async () => {
+  try {
+    const aaguid = (await (
+      await fetch(
+        "https://raw.githubusercontent.com/passkeydeveloper/passkey-authenticator-aaguids/main/aaguid.json",
+      )
+    ).json()) as Record<string, aaguid>;
+    return resMessageSuccess("FETCH_SUCCESS", aaguid)
+  } catch(e) {
+    console.error(e);
+    return resMessageError('FETCH_AAGUID_LIST_ERROR');
+  }
+}

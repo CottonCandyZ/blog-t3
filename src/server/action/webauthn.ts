@@ -55,6 +55,7 @@ interface AuthenticatorInfoCreAndTrans {
 export interface AuthenticatorInfo extends AuthenticatorInfoCreAndTrans {
   credentialPublicKey: string;
   counter: number;
+  aaguid: string;
 }
 
 async function getCurrentAuthSession() {
@@ -159,15 +160,17 @@ async function verifyRegistrationRes(
     return resMessageError("VERIFY_REG_RESPONSE_PROCESS_FAILED");
   }
   const { verified, registrationInfo } = verification;
+  
   if (!verified || !registrationInfo) {
     return resMessageError("VERIFY_REG_RESPONSE_FAILED");
   }
-  const { credentialPublicKey, credentialID, counter } = registrationInfo;
+  const { credentialPublicKey, credentialID, counter, aaguid } = registrationInfo;
   const newAuthenticator = {
     credentialID: isoBase64URL.fromBuffer(credentialID),
     credentialPublicKey: isoBase64URL.fromBuffer(credentialPublicKey),
     counter,
     transports: JSON.stringify(localResponse.response.transports),
+    aaguid,
   };
   return newAuthenticator;
 }

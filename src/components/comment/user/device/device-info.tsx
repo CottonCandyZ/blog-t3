@@ -2,11 +2,11 @@
 
 import clsx from "clsx";
 import dayjs from "dayjs";
+import Image from "next/image";
 import type { Dispatch, SetStateAction } from "react";
 import { useFormStatus } from "react-dom";
 import { removeUserDeviceAction } from "~/server/action/webauthn";
-
-
+import type { aaguid } from "~/server/fetch/user";
 
 function RemoveButton() {
   const { pending } = useFormStatus();
@@ -32,20 +32,40 @@ function RemoveButton() {
 }
 
 const DeviceInfo: React.FC<{
-  index: number,
   credentialID: string;
   createAt: Date;
+  aaguidInfo: aaguid | undefined;
   setMessage: Dispatch<SetStateAction<string>>;
-}> = ({ index, credentialID, createAt, setMessage }) => {
+}> = ({ credentialID, createAt, setMessage, aaguidInfo }) => {
   async function removeDevice() {
     setMessage((await removeUserDeviceAction(credentialID)).message);
   }
   return (
-    <div className="flex flex-row justify-between items-center">
-      <div className="text-primary font-medium ">
-        <span >设备 {index + 1} 创建于 </span>
-        <time suppressHydrationWarning>{dayjs(createAt.toISOString()).format("YY.MM.DD HH:mm")}</time>
+    <div className="flex flex-row items-center justify-between border-b border-primary-extralight py-2">
+      <div className="flex flex-row items-center gap-2">
+      {aaguidInfo ? (
+        <Image
+          className="h-8 w-8"
+          src={aaguidInfo.icon_light}
+          alt="Authenticator Icon"
+          width={32}
+          height={32}
+        />
+      ) : null}
+      <div className="font-medium text-primary">
+        <div>
+          {aaguidInfo ? <span>{aaguidInfo.name}</span> : <span>Unknown</span>}
+        </div>
+        <div>
+          <span>创建于 </span>
+          <time suppressHydrationWarning>
+            {dayjs(createAt.toISOString()).format("YY.MM.DD HH:mm")}
+          </time>
+        </div>
       </div>
+      </div>
+      
+
       <form action={removeDevice}>
         <RemoveButton />
       </form>

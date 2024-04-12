@@ -55,4 +55,5 @@ model Device {
   counter             Int
   transports          String?
   removed             Boolean @default(false)
+  aaguid              String
 }

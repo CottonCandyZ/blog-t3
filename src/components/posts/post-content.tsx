@@ -12,7 +12,7 @@ export default async function PostContent({ slug }: { slug: string }) {
         </h2>
         <MDXComponent code={code} />
       </article>
-      <aside className="sticky top-28 hidden max-h-[calc(-112px+100vh)] w-full overflow-auto p-2 lg:block lg:gap-4">
+      <aside className="sticky top-28 hidden max-h-[calc(-112px+100vh)] w-full overflow-auto p-2 lg:block lg:gap-4 h-max">
         <nav className="flex flex-col gap-2">
           <h2 className="text-2xl font-medium tracking-wider text-primary">
             目录
