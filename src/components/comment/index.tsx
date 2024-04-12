@@ -29,7 +29,7 @@ const Comments: React.FC<{ slug: string }> = async ({ slug }) => {
   }
   return (
     <div className="w-full">
-      <h2 className="text- text-3xl font-semibold text-primary">Comments</h2>
+      <h2 className="text-3xl font-semibold text-primary">Comments</h2>
       <div className="mt-3">
         {userInfo ? (
           <UserInfo user={userInfo}>
