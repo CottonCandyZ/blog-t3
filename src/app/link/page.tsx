@@ -1,6 +1,10 @@
 import LinkCard from "~/components/link/link-card";
 import { CONFIG } from "~/config";
 
+export const metadata = {
+  title: "Friends Link",
+};
+
 export default function page() {
   return (
     <div className="mt-2 flex flex-row flex-wrap content-start gap-5">
