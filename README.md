@@ -1,8 +1,8 @@
 # 棉花糖的 Blog
 
-使用 Next.js 创建，TS & Tailwind，Responsive design。
+使用 Next.js 创建，TS & Tailwind。Prisma & Pstgresql 管理评论，使用 WebAuthn 认证登录。
 
-项目实际上使用 t3 创建的，存有 tRPC 和 Prisma 的配置，主要是为了后期可以转移存储的方式和添加一些互动元素，比如评论区。
+还用到了一些实验性的东西，比如 Server Action, Partial Prerendering 等。
 
 - [x] 主页设计
 - [x] 文章页面渲染
