@@ -1,6 +1,6 @@
 # 棉花糖的 Blog
 
-使用 Next.js 创建，TS & Tailwind。Prisma & Pstgresql 管理评论，使用 WebAuthn 认证登录。
+使用 Next.js 创建，TS & Tailwind。Prisma & Postgresql 管理评论，使用 WebAuthn 认证登录。
 
 还用到了一些实验性的东西，比如 Server Action, Partial Prerendering 等。
 
