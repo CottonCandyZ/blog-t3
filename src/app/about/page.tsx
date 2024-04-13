@@ -1,5 +1,10 @@
 import AboutContent from "~/components/about/about-content";
 import dynamic from "next/dynamic";
+
+export const metadata = {
+  title: "About",
+};
+
 const Comments = dynamic(() => import("~/components/comment"), {
   loading: () => (
     <div className="flex items-center justify-center">
