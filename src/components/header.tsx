@@ -17,7 +17,7 @@ const Header = () => {
   const saveTheme = (number: number) => {
     setThemeNumber(availableThemeNumber[number]!);
     document.cookie = `theme=${availableThemeNumber[number]!}`;
-  }
+  };
   useEffect(() => {
     const tog = () => {
       setToggle(false);
@@ -42,19 +42,16 @@ const Header = () => {
             setToggle((toggle) => !toggle);
           }}
         >
-          <span className="text-2xl font-semibold text-primary drop-shadow-sm">
-            Cotton
-          </span>
+          <span className="text-2xl font-semibold text-primary">Cotton</span>
           <span className="group relative flex items-center justify-center">
             <CottonCandy
               className={clsx(
                 `theme-${availableThemeNumber[0]} absolute
           -z-10 h-10 w-10 transition-all duration-200`,
                 {
-                  "-translate-x-[100%] translate-y-[110%] drop-shadow-md md:-translate-x-8 md:-translate-y-10 md:-rotate-45":
+                  "-translate-x-[100%] translate-y-[110%] md:-translate-x-8 md:-translate-y-10 md:-rotate-45":
                     toggle && !useList,
-                  "-translate-x-[100%] translate-y-[110%] drop-shadow-md":
-                    toggle && useList,
+                  "-translate-x-[100%] translate-y-[110%]": toggle && useList,
                 },
               )}
               onClick={() => {
@@ -66,9 +63,8 @@ const Header = () => {
                 `theme-${availableThemeNumber[1]} absolute 
           -z-10 h-10 w-10 transition-all duration-400`,
                 {
-                  "translate-y-[110%] drop-shadow-md md:-translate-y-12":
-                    toggle && !useList,
-                  "translate-y-[110%] drop-shadow-md": toggle && useList,
+                  "translate-y-[110%] md:-translate-y-12": toggle && !useList,
+                  "translate-y-[110%]": toggle && useList,
                 },
               )}
               onClick={() => {
@@ -80,24 +76,19 @@ const Header = () => {
                 `theme-${availableThemeNumber[2]} absolute  
           -z-10 h-10 w-10 transition-all duration-600`,
                 {
-                  "translate-x-[100%] translate-y-[110%] drop-shadow-md md:-translate-y-10 md:translate-x-8 md:rotate-45":
+                  "translate-x-[100%] translate-y-[110%] md:-translate-y-10 md:translate-x-8 md:rotate-45":
                     toggle && !useList,
-                  "translate-x-[100%] translate-y-[110%] drop-shadow-md":
-                    toggle && useList,
+                  "translate-x-[100%] translate-y-[110%]": toggle && useList,
                 },
               )}
               onClick={() => {
                 saveTheme(2);
               }}
             />
-            <CottonCandy
-              className={`h-10 w-10 animate-move-show drop-shadow-md group-hover:drop-shadow-lg`}
-            />
+            <CottonCandy className={`h-10 w-10 animate-move-show`} />
           </span>
 
-          <span className="text-2xl font-semibold text-primary drop-shadow-sm">
-            Candy
-          </span>
+          <span className="text-2xl font-semibold text-primary">Candy</span>
         </div>
         <div className="hidden text-lg font-medium tracking-wider text-primary md:block">
           <NavigationBar />

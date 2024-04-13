@@ -6,6 +6,19 @@ import ThemeWrapper from "~/components/theme-wrapper";
 import HeaderWithWrapper from "~/components/header-with-wrapper";
 import MainWrapper from "~/components/main-wrapper";
 import { cookies } from "next/headers";
+import { Noto_Sans, Noto_Sans_Mono, Noto_Sans_SC } from "next/font/google";
+const noto_sans = Noto_Sans({
+  subsets: ["latin"],
+  variable: "--font-noto-sans",
+});
+const noto_sans_sc = Noto_Sans_SC({
+  subsets: ["latin"],
+  variable: "--font-noto-sans-sc",
+});
+const noto_sans_mono = Noto_Sans_Mono({
+  subsets: ["latin"],
+  variable: "--font-noto-sans-mono",
+});
 export default function RootLayout({
   children,
 }: {
@@ -13,7 +26,10 @@ export default function RootLayout({
 }) {
   const theme = cookies().get("theme")?.value;
   return (
-    <html lang="en" className={`scroll-smooth antialiased`}>
+    <html
+      lang="en"
+      className={`scroll-smooth antialiased ${noto_sans.variable} ${noto_sans_sc.variable} ${noto_sans_mono.variable}`}
+    >
       <ThemeWrapper theme={theme}>
         <HeaderWithWrapper />
         <MobileNav />
