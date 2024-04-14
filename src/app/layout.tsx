@@ -9,14 +9,17 @@ import { cookies } from "next/headers";
 import { Noto_Sans, Noto_Sans_Mono, Noto_Sans_SC } from "next/font/google";
 const noto_sans = Noto_Sans({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-noto-sans",
 });
 const noto_sans_sc = Noto_Sans_SC({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-noto-sans-sc",
 });
 const noto_sans_mono = Noto_Sans_Mono({
   subsets: ["latin"],
+  weight: ["500", "600"],
   variable: "--font-noto-sans-mono",
 });
 export default function RootLayout({
