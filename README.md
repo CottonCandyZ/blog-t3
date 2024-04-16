@@ -4,6 +4,10 @@
 
 还用到了一些实验性的东西，比如 Server Action, Partial Prerendering 等。
 
+我用 FigJam 画了一个数据流向，以便维护：
+
+![DataFlowPic](./DataFlow.png)
+
 - [x] 主页设计
 - [x] 文章页面渲染
 - [x] Tags
