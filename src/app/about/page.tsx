@@ -15,13 +15,13 @@ const Comments = dynamic(() => import("~/components/comment"), {
 
 export default function page() {
   return (
-    <div className="lg:justify-normal">
-      <article className="markdown-body relative mx-auto w-full max-w-3xl lg:mx-0">
+    <>
+      <article className="markdown-body mt-4 rounded-2xl bg-white px-8 py-10 shadow-cxs">
         <AboutContent />
-        <div className="mt-4">
-          <Comments slug="about" />
-        </div>
       </article>
-    </div>
+      <div className="mt-4 rounded-2xl bg-white px-8 py-5 shadow-cxs">
+        <Comments slug="about" />
+      </div>
+    </>
   );
 }

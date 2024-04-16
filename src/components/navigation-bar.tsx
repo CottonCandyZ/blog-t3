@@ -42,7 +42,8 @@ function ListItem({
         className={clsx(
           `relative z-0 mx-auto flex w-max items-center
           leading-8 transition-all duration-300 before:absolute before:bottom-0
-           before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light`,
+           before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light
+           `,
           {
             [`pointer-events-none px-3 text-white before:h-full before:bg-primary-medium before:shadow-sm`]:
               current === true,
@@ -55,7 +56,7 @@ function ListItem({
         <Icon
           className={clsx(`text-white`, {
             [`mr-1 text-[1em]`]: current === true,
-            [`mr-0 text-[0px] transition-all duration-300 group-hover:mr-1 group-hover:animate-backshake group-hover:text-[1em]`]:
+            [`group-hover:animate-backshake mr-0 text-[0px] transition-all duration-300 group-hover:mr-1 group-hover:text-[1em]`]:
               current === false,
           })}
         ></Icon>

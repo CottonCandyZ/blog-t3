@@ -9,10 +9,10 @@ interface LinkCardProps {
 const LinkCard: React.FC<LinkCardProps> = (props) => {
   return (
     <a
-      className="before: relative flex w-full flex-row gap-4 rounded-2xl bg-primary-extralight
-        p-4 before:absolute before:bottom-2 before:left-2 before:right-2 
+      className="relative flex w-full flex-row gap-4 rounded-2xl bg-white p-4 
+        shadow-cxs before:absolute before:bottom-2 before:left-2 before:right-2 
         before:top-2 before:rounded-3xl before:border-4
-        before:border-primary-extralight before:transition-all hover:before:absolute hover:before:-bottom-2 hover:before:-left-2 hover:before:-right-2 hover:before:-top-2"
+        before:border-white before:transition-all hover:before:absolute hover:before:-bottom-2 hover:before:-left-2 hover:before:-right-2 hover:before:-top-2"
       href="https://google.com"
       target="_blank"
     >

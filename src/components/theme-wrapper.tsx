@@ -11,15 +11,16 @@ interface themeContext {
   setThemeNumber: Dispatch<SetStateAction<number>>;
 }
 export const ThemeContext = createContext({} as themeContext);
-const ThemeWrapper: React.FC<PropsWithChildren<{ theme: string | undefined}>> = ({
-  children,
-  theme,
-}) => {
+const ThemeWrapper: React.FC<
+  PropsWithChildren<{ theme: string | undefined }>
+> = ({ children, theme }) => {
   const initThemeNumber = theme ? Number(theme) : 1;
   const [themeNumber, setThemeNumber] = useState(initThemeNumber);
   return (
     <ThemeContext.Provider value={{ themeNumber, setThemeNumber }}>
-      <body className={`theme-${themeNumber}`}>{children}</body>
+      <body className={`theme-${themeNumber} bg-primary-extralight`}>
+        {children}
+      </body>
     </ThemeContext.Provider>
   );
 };

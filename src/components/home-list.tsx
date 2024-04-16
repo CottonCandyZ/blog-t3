@@ -109,9 +109,16 @@ const HomeList: React.FC<homeListProps> = ({
 
   return (
     <>
-      <section className="col-span-full row-start-1 h-min md:sticky md:top-24 md:col-start-2 md:block">
+      <section
+        className="md:top- col-span-full
+      row-start-1 mt-4 h-min rounded-2xl bg-white p-4 shadow-cxs md:sticky md:col-start-2 md:block"
+      >
         <search>
-          <h2 className="text-xl font-medium tracking-widest text-primary">
+          <h2
+            className="relative pl-3 text-xl font-medium text-primary
+            before:absolute before:left-0 before:top-1.5 before:h-4 before:w-1 before:rounded-md
+            before:bg-primary-light"
+          >
             Tags
           </h2>
           <div className="mt-1 h-min">
@@ -125,14 +132,8 @@ const HomeList: React.FC<homeListProps> = ({
           </div>
         </search>
       </section>
-      <section className="col-span-full row-start-2 md:col-start-1 md:col-end-1 md:row-start-1">
-        <h2 className="text-xl font-medium tracking-widest text-primary">
-          最新序
-        </h2>
-        <div className="h-10"></div>
-        <div className="flex flex-col gap-8">
-          <PostsList posts={latestPostsListInfo} toggledTags={toggledTags} />
-        </div>
+      <section className="col-span-full row-start-2 md:col-start-1 md:col-end-1 md:row-start-1 md:mt-4">
+        <PostsList posts={latestPostsListInfo} toggledTags={toggledTags} />
       </section>
     </>
   );

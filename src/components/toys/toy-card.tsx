@@ -10,11 +10,7 @@ interface ToyCardProps {
 
 const ToyCard: React.FC<ToyCardProps> = (props) => {
   return (
-    <a
-      className="block w-full rounded-xl border-2 border-primary-light p-4 hover:border-primary"
-      href={props.href}
-      target="_blank"
-    >
+    <a className="block" href={props.href} target="_blank">
       <h3 className="text-lg font-semibold text-primary">{props.title}</h3>
       <p className="mt-2 text-primary-dark">{props.description}</p>
       <Image

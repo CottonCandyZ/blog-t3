@@ -1,6 +1,5 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
 
@@ -13,7 +12,7 @@ $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
   --color-primary: #{getColorValue($primary-color)};
   --color-primary-medium: #{getColorValue(mix($primary-color, white, 70%))};
   --color-primary-light: #{getColorValue(mix($primary-color, white, 35%))};
-  --color-primary-extralight: #{getColorValue(mix($primary-color, white, 15%))};
+  --color-primary-extralight: #{getColorValue(mix($primary-color, white, 7%))};
 }
 @for $i from 1 through length($themeColorList) {
   $color: nth($themeColorList, $i);
@@ -21,3 +20,8 @@ $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
     @include theme-primary-map($color);
   }
 }
+
+@tailwind utilities;
+
+@import "animation.scss";
+@import "markdown.scss"

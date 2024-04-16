@@ -23,30 +23,34 @@ const PostsList: React.FC<PostListProps> = ({ posts, toggledTags }) => {
     });
   }
 
-  return posts.map(({ slug, frontmatter }) => (
-    <article key={slug}>
-      <Link href={`/posts/${slug}`} className="group">
-        <div className="flex flex-row items-start justify-between gap-4">
-          <h1 className="text-xl font-semibold group-hover:text-primary">
-            {frontmatter.title}
-          </h1>
-          <h2 className="mt-[2px] min-w-max font-medium">
-            <time dateTime={frontmatter.date} suppressHydrationWarning>
-              {dayjs(frontmatter.date).format("YYYY.M.D")}
-            </time>
-          </h2>
-        </div>
-        <p className="mt-5 leading-relaxed">{frontmatter.abstract}</p>
-        <div className="mt-3 flex flex-row items-center gap-1">
-          <h2 className="text-base font-medium">Read More</h2>
-          <ArrowRight
-            className="mt-[2px] text-2xl transition-transform 
+  return (
+    <div className="flex flex-col gap-4">
+      {posts.map(({ slug, frontmatter }) => (
+        <article key={slug} className="rounded-2xl bg-white p-4 shadow-cxs">
+          <Link href={`/posts/${slug}`} className="group">
+            <div className="flex flex-row items-start justify-between gap-4">
+              <h1 className="text-xl font-semibold group-hover:text-primary">
+                {frontmatter.title}
+              </h1>
+              <h2 className="mt-[2px] min-w-max font-medium">
+                <time dateTime={frontmatter.date} suppressHydrationWarning>
+                  {dayjs(frontmatter.date).format("YYYY.M.D")}
+                </time>
+              </h2>
+            </div>
+            <p className="mt-5 leading-relaxed">{frontmatter.abstract}</p>
+            <div className="mt-3 flex flex-row items-center gap-1">
+              <h2 className="text-base font-medium">Read More</h2>
+              <ArrowRight
+                className="mt-[2px] text-2xl transition-transform 
       duration-200 ease-in-out group-hover:translate-x-1 group-hover:text-primary"
-          />
-        </div>
-      </Link>
-    </article>
-  ));
+              />
+            </div>
+          </Link>
+        </article>
+      ))}
+    </div>
+  );
 };
 
 export default PostsList;
