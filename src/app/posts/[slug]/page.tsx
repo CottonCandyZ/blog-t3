@@ -18,21 +18,6 @@ export async function generateMetadata({
     title: frontmatter.title,
   };
 }
-export default async function Page({ params }: { params: { slug: string } }) {
-  const frontmatter = await getPostFrontmatter(decodeURIComponent(params.slug));
-  return (
-    <>
-      <div className="relative col-span-full h-64 bg-primary-extralight">
-        <div className="absolute -top-[4rem] h-16 w-full bg-primary-extralight"></div>
-        <div className="sticky top-0 z-[4] h-20 bg-primary-extralight md:h-14"></div>
-        <h1 className="relative z-[2] mx-auto mt-10 max-w-6xl px-5 text-4xl font-bold text-primary md:px-10">
-          {frontmatter.title}
-        </h1>
-      </div>
-      <div className="sticky top-0 z-[4] h-16 bg-white"></div>
-      <main className="mx-auto min-h-[calc(-300px+100dvh)] max-w-6xl px-5 pb-20 md:px-10">
-        <PostContent slug={params.slug} />
-      </main>
-    </>
-  );
+export default function Page({ params }: { params: { slug: string } }) {
+  return <PostContent slug={params.slug} />;
 }

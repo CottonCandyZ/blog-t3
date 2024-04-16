@@ -3,7 +3,9 @@ import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import { CottonCandy } from "~/components/icons";
+import MobileNav from "~/components/mobile-nav";
 import NavigationBar from "~/components/navigation-bar";
+import SocialLinks from "~/components/social-links";
 import { ThemeContext } from "~/components/theme-wrapper";
 
 const Header = () => {
@@ -42,12 +44,12 @@ const Header = () => {
             setToggle((toggle) => !toggle);
           }}
         >
-          <span className="text-2xl font-semibold text-primary">Cotton</span>
+          <span className="text-xl font-semibold text-primary">Cotton</span>
           <span className="group relative flex items-center justify-center">
             <CottonCandy
               className={clsx(
                 `theme-${availableThemeNumber[0]} absolute
-          -z-10 h-10 w-10 transition-all duration-200`,
+          h-10 w-10 transition-all duration-200`,
                 {
                   "-translate-x-[100%] translate-y-[110%] md:-translate-x-8 md:-translate-y-10 md:-rotate-45":
                     toggle && !useList,
@@ -61,7 +63,7 @@ const Header = () => {
             <CottonCandy
               className={clsx(
                 `theme-${availableThemeNumber[1]} absolute 
-          -z-10 h-10 w-10 transition-all duration-400`,
+          h-10 w-10 transition-all duration-400`,
                 {
                   "translate-y-[110%] md:-translate-y-12": toggle && !useList,
                   "translate-y-[110%]": toggle && useList,
@@ -74,7 +76,7 @@ const Header = () => {
             <CottonCandy
               className={clsx(
                 `theme-${availableThemeNumber[2]} absolute  
-          -z-10 h-10 w-10 transition-all duration-600`,
+          h-10 w-10 transition-all duration-600`,
                 {
                   "translate-x-[100%] translate-y-[110%] md:-translate-y-10 md:translate-x-8 md:rotate-45":
                     toggle && !useList,
@@ -85,16 +87,18 @@ const Header = () => {
                 saveTheme(2);
               }}
             />
-            <CottonCandy className={`h-10 w-10 animate-move-show`} />
+            <CottonCandy className={`animate-move-show z-10 h-10 w-10`} />
           </span>
 
-          <span className="text-2xl font-semibold text-primary">Candy</span>
+          <span className="text-xl font-semibold text-primary">Candy</span>
         </div>
         <div className="hidden text-lg font-medium tracking-wider text-primary md:block">
           <NavigationBar />
         </div>
       </div>
-      <div></div>
+      <div className="hidden md:block">
+        <SocialLinks />
+      </div>
     </header>
   );
 };

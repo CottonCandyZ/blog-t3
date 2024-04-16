@@ -9,7 +9,7 @@ export default async function Page() {
   const latestPostsListInfo = await getLatestPostsListInfo();
   const { uniqueTags, oTags } = await getAllTags();
   return (
-    <div className="relative grid auto-rows-max grid-cols-[2fr_1fr] gap-10 ">
+    <div className="relative grid auto-rows-max grid-cols-[2fr_1fr] gap-4">
       <HomeList
         latestPostsListInfo={latestPostsListInfo}
         uniqueTags={uniqueTags}

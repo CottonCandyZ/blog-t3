@@ -1,5 +1,4 @@
 import "~/styles/globals.scss";
-import "~/styles/markdown.scss";
 import Footer from "~/components/footer";
 import MobileNav from "~/components/mobile-nav";
 import ThemeWrapper from "~/components/theme-wrapper";

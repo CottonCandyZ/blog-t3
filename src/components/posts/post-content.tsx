@@ -14,14 +14,17 @@ export default async function PostContent({ slug }: { slug: string }) {
   const { code, frontmatter } = await getPostContent(decodeURIComponent(slug));
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
-      <div className="relative w-full max-w-3xl shrink-0">
-        <article className="markdown-body">
+      <div className="relative w-full max-w-3xl shrink-0 ">
+        <article className="markdown-body mt-4 rounded-2xl bg-white px-8 py-10 shadow-cxs">
+          <h1 className="text-4xl font-bold text-primary">
+            {frontmatter.title}
+          </h1>
           <h2 className="anchor invisible absolute top-4" id="Introduction">
             {frontmatter.title}
           </h2>
           <MDXComponent code={code} />
         </article>
-        <div className="mt-4">
+        <div className="mt-4 rounded-2xl bg-white px-8 py-5 shadow-cxs">
           <Comments slug={slug} />
         </div>
       </div>

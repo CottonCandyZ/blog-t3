@@ -1,132 +1,134 @@
-.markdown-body {
-  @apply break-words text-base;
-
-  // Heading
-  .anchor {
-    @apply scroll-mt-20;
-
-  }
-  .mdx-h1,
-  .mdx-h2,
-  .mdx-h3,
-  .mdx-h4,
-  .mdx-h5,
-  .mdx-h6 {
-    @apply relative mb-4 font-bold text-primary;
-    &:hover {
-      @apply underline decoration-primary/20 decoration-2;
-      @media (min-width: 768px) {
-        &::before {
-          @apply absolute -left-5 font-normal text-primary;
-          content: "#";
+@layer utilities {
+  .markdown-body {
+    @apply break-words text-base;
+  
+    // Heading
+    .anchor {
+      @apply scroll-mt-20;
+  
+    }
+    .mdx-h1,
+    .mdx-h2,
+    .mdx-h3,
+    .mdx-h4,
+    .mdx-h5,
+    .mdx-h6 {
+      @apply relative mb-4 font-bold text-primary;
+      &:hover {
+        @apply underline decoration-primary/20 decoration-2;
+        @media (min-width: 768px) {
+          &::before {
+            @apply absolute -left-5 font-normal text-primary;
+            content: "#";
+          }
+        }
+      }
+      
+    }
+    .mdx-h1 {
+      @apply mt-4 text-3xl;
+    }
+    .mdx-h2 {
+      @apply mt-4 text-2xl;
+    }
+    .mdx-h3 {
+      @apply mt-4 text-xl;
+    }
+    .mdx-h4 {
+      @apply mt-2 text-lg;
+    }
+    .mdx-h5 {
+      @apply mt-2 text-base;
+    }
+    .mdx-h6 {
+      @apply mt-1 text-sm;
+    }
+  
+    // Paragraph
+    .mdx-p {
+      @apply mb-4 leading-7 text-base;
+    }
+  
+    // Blockquote
+    .mdx-blockquote {
+      @apply relative my-12 px-8
+      before:absolute before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-light;
+      p {
+        @apply font-medium text-primary;
+      }
+    }
+  
+    // Table
+    .mdx-table {
+      @apply my-8 w-full border-collapse text-left;
+      .mdx-thead,
+      .mdx-tbody .mdx-tr:not(:last-child) {
+        @apply border-b border-primary-dark;
+      }
+      .mdx-th {
+        @apply whitespace-nowrap p-2.5;
+      }
+      .mdx-td {
+        @apply p-2.5;
+      }
+    }
+  
+    // Emphasis
+    .mdx-em {
+      @apply font-bold not-italic;
+    }
+  
+    // Strong
+    .mdx-strong {
+      @apply font-bold text-primary-medium;
+    }
+  
+    // Image
+    .mdx-img {
+      @apply my-6 rounded-md;
+    }
+  
+    // List
+    .mdx-ul,
+    .mdx-ol {
+      @apply my-6 leading-7;
+      .mdx-p {
+        @apply m-0;
+      }
+      .mdx-ul .mdx-ol {
+        @apply my-0;
+        .mdx-li:last-child {
+          @apply my-0;
         }
       }
     }
-    
-  }
-  .mdx-h1 {
-    @apply mt-4 text-3xl;
-  }
-  .mdx-h2 {
-    @apply mt-4 text-2xl;
-  }
-  .mdx-h3 {
-    @apply mt-4 text-xl;
-  }
-  .mdx-h4 {
-    @apply mt-2 text-lg;
-  }
-  .mdx-h5 {
-    @apply mt-2 text-base;
-  }
-  .mdx-h6 {
-    @apply mt-1 text-sm;
-  }
-
-  // Paragraph
-  .mdx-p {
-    @apply mb-4 leading-7 text-base;
-  }
-
-  // Blockquote
-  .mdx-blockquote {
-    @apply relative my-12 px-8
-    before:absolute before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-light;
-    p {
-      @apply font-medium text-primary;
-    }
-  }
-
-  // Table
-  .mdx-table {
-    @apply my-8 w-full border-collapse text-left;
-    .mdx-thead,
-    .mdx-tbody .mdx-tr:not(:last-child) {
-      @apply border-b border-primary-dark;
-    }
-    .mdx-th {
-      @apply whitespace-nowrap p-2.5;
-    }
-    .mdx-td {
-      @apply p-2.5;
-    }
-  }
-
-  // Emphasis
-  .mdx-em {
-    @apply font-bold not-italic;
-  }
-
-  // Strong
-  .mdx-strong {
-    @apply font-bold text-primary-medium;
-  }
-
-  // Image
-  .mdx-img {
-    @apply my-6 rounded-md;
-  }
-
-  // List
-  .mdx-ul,
-  .mdx-ol {
-    @apply my-6 leading-7;
-    .mdx-p {
-      @apply m-0;
-    }
-    .mdx-ul .mdx-ol {
-      @apply my-0;
-      .mdx-li:last-child {
-        @apply my-0;
+  
+    .mdx-ol > .mdx-li {
+      counter-increment: list-item;
+      &::before {
+        @apply mr-2 font-medium text-primary;
+        content: counter(list-item) ". ";
+        min-width: 20px;
+        font-feature-settings: "tnum";
       }
     }
-  }
-
-  .mdx-ol > .mdx-li {
-    counter-increment: list-item;
-    &::before {
-      @apply mr-2 font-medium text-primary;
-      content: counter(list-item) ". ";
-      min-width: 20px;
-      font-feature-settings: "tnum";
-    }
-  }
-
-  // Inline Code
-  .mdx-inline-code {
-    @apply inline-block rounded bg-zinc-400/10 px-1 text-sm font-semibold text-primary-dark;
-  }
-
-  // CodeBlock
-  .mdx-fenced-codeblock {
-    @apply p-6 text-base font-medium leading-7;
-  }
-
-  //link
-  .mdx-a:not([class~="anchor"]) {
-    @apply text-primary font-medium underline decoration-primary/20 underline-offset-4 transition hover:decoration-primary;
+  
+    // Inline Code
     .mdx-inline-code {
-      @apply text-current;
+      @apply inline-block rounded bg-zinc-400/10 px-1 text-sm font-semibold text-primary-dark;
+    }
+  
+    // CodeBlock
+    .mdx-fenced-codeblock {
+      @apply p-6 text-base font-medium leading-7;
+    }
+  
+    //link
+    .mdx-a:not([class~="anchor"]) {
+      @apply text-primary font-medium underline decoration-primary/20 underline-offset-4 transition hover:decoration-primary;
+      .mdx-inline-code {
+        @apply text-current;
+      }
     }
   }
 }

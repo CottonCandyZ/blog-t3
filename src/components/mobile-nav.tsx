@@ -12,13 +12,13 @@ const MobileNav: React.FC = () => {
   return (
     <div className="relative h-0 md:hidden">
       <button
-        className="fixed right-8 top-4 z-20 text-primary-dark"
+        className="fixed right-8 top-[18px] z-20 text-primary"
         onClick={() => setExpend(!expend)}
       >
         {expend ? (
-          <CloseIcon className="h-9 w-9 text-primary" />
+          <CloseIcon className="h-9 w-9" />
         ) : (
-          <NavIcon className="h-9 w-9 text-primary-dark" />
+          <NavIcon className="h-9 w-9" />
         )}
       </button>
       <div

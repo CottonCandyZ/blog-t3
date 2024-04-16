@@ -3,7 +3,7 @@ import { CONFIG } from "~/config";
 export default function SocialLinks() {
   const social_link = CONFIG.social_link;
   return (
-    <ul className="flex justify-center w-max space-x-4">
+    <ul className="flex w-max justify-center sm:gap-2">
       {social_link.map((item, index) => (
         <ListItem
           key={index}
@@ -35,11 +35,11 @@ function ListItem({
       border-primary-light transition-all duration-500 after:absolute
       after:-bottom-5 after:rounded-2xl after:bg-primary-medium after:px-1.5
       after:py-1 after:text-xs after:text-white after:opacity-0
-      after:transition after:duration-500
-      md:after:content-[attr(after-content)] hover:bg-primary-medium
-      hover:after:translate-y-2 hover:after:opacity-100 hover:shadow-md after:shadow-md"
+      after:shadow-md after:transition
+      after:duration-500 hover:bg-primary-medium
+      hover:shadow-md hover:after:translate-y-2 hover:after:opacity-100 md:after:content-[attr(after-content)]"
       >
-        <Icon className="h-6 w-6 transition-all duration-500 ease-out text-primary group-hover:text-white" />
+        <Icon className="h-6 w-6 text-primary transition-all duration-500 ease-out group-hover:text-white" />
       </a>
     </li>
   );

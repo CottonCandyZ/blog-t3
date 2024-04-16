@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function page() {
   return (
-    <div className="flex max-w-6xl flex-col gap-6">
+    <div className="mt-4 flex max-w-6xl flex-col gap-6">
       {CONFIG.toy_cards.map((info, index) => {
         return (
           <div key={index}>
@@ -20,7 +20,10 @@ export default function page() {
             </h2>
             <div className="flex-wap mt-4 flex flex-row flex-wrap gap-5">
               {info.project_list.map((project_info, index) => (
-                <div key={index} className="md:w-80">
+                <div
+                  key={index}
+                  className="h-min rounded-2xl bg-white p-4 shadow-cxs md:w-80"
+                >
                   <ToyCard {...project_info} />
                 </div>
               ))}
