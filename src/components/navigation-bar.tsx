@@ -40,7 +40,7 @@ function ListItem({
       <Link
         href={href}
         className={clsx(
-          `mx-auto w-max relative z-0 flex items-center
+          `relative z-0 mx-auto flex w-max items-center
           leading-8 transition-all duration-300 before:absolute before:bottom-0
            before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light`,
           {
