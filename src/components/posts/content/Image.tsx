@@ -8,6 +8,13 @@ export default function NextImage({
   title?: string;
 }) {
   return (
-      <Image className="mdx-img w-full h-auto" width={0} height={0} sizes="100vw" src={src} alt={alt} />
+    <Image
+      className="mdx-img aspect-video h-auto w-full object-cover"
+      width={0}
+      height={0}
+      sizes="100vw"
+      src={src}
+      alt={alt}
+    />
   );
 }
