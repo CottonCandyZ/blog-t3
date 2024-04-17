@@ -7,6 +7,5 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const tags = await getAllTags();
-
   return <ClientWrapper tags={tags}>{children}</ClientWrapper>;
 }
