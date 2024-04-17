@@ -1,10 +1,9 @@
 import { type Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+
 export default {
+  darkMode: 'selector',
   content: ["./src/**/*.tsx"],
-  future: {
-    hoverOnlyWhenSupported: true,
-  },
   theme: {
     extend: {
       fontFamily: {
@@ -25,8 +24,10 @@ export default {
         "600": "600ms",
       },
       colors: {
+        "primary-bg": "rgb(var(--color-primary-bg) / <alpha-value>)",
         primary: "rgb(var(--color-primary) / <alpha-value>)",
         "primary-dark": "rgb(var(--color-primary-dark) / <alpha-value>)",
+        "primary-small": "rgb(var(--color-primary-small) / <alpha-value>)",
         "primary-medium": "rgb(var(--color-primary-medium) / <alpha-value>)",
         "primary-light": "rgb(var(--color-primary-light) / <alpha-value>)",
         "primary-extralight":

@@ -24,7 +24,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
     >
       <button
         onClick={onCopy}
-        className="relative h-8 w-8 rounded-md hover:border-2 hover:border-primary-medium"
+        className="relative h-8 w-8 rounded-md hover:border-2 hover:border-primary-small"
       >
         {copied ? (
           <CopyFinishIcon className="m-auto h-5 w-5" />

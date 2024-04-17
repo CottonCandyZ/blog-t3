@@ -1,8 +1,8 @@
 import "~/styles/globals.scss";
 import Footer from "~/components/footer";
-import MobileNav from "~/components/mobile-nav";
+import MobileNav from "~/components/nav/mobile-nav";
 import ThemeWrapper from "~/components/theme-wrapper";
-import HeaderWithWrapper from "~/components/header-with-wrapper";
+import HeaderWithWrapper from "~/components/header/header-with-wrapper";
 import MainWrapper from "~/components/main-wrapper";
 import { cookies } from "next/headers";
 import { Noto_Sans, Noto_Sans_Mono, Noto_Sans_SC } from "next/font/google";
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`antialiased ${noto_sans.variable} ${noto_sans_sc.variable} ${noto_sans_mono.variable}`}
+      className={`scroll-smooth antialiased ${noto_sans.variable} ${noto_sans_sc.variable} ${noto_sans_mono.variable}`}
     >
       <ThemeWrapper theme={theme}>
         <HeaderWithWrapper />

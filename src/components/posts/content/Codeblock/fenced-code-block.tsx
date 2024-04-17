@@ -30,17 +30,17 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
       language={props.language}
     >
       {({ style, tokens, getLineProps, getTokenProps }) => (
-        <div className="relative mt-10 mb-5">
+        <div className="relative mb-5 mt-10">
           <div
             className="absolute -top-7 right-10 h-fit w-fit rounded-t-lg 
-            bg-[#faf8f5] px-3 pt-1 font-semibold text-primary-medium"
+            bg-[#faf8f5] px-3 pt-1 font-semibold text-primary-small"
           >
             {props.language.toUpperCase()}
           </div>
           <div className="flex flex-row">
             <pre
               style={style}
-              className="mdx-fenced-codeblock relative overflow-x-auto z-0 w-full rounded-l-2xl"
+              className="mdx-fenced-codeblock relative z-0 w-full overflow-x-auto rounded-l-2xl"
             >
               {tokens.map((line, i) => (
                 <div key={i} {...getLineProps({ line })}>
@@ -53,11 +53,10 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
               ))}
             </pre>
             <div>
-              <div className="bg-[#faf8f5] h-full rounded-r-2xl w-12">
-                <div className="fill-primary inline-block mt-4 ml-1">
+              <div className="h-full w-12 rounded-r-2xl bg-[#faf8f5]">
+                <div className="ml-1 mt-4 inline-block fill-primary">
                   <CopyButton copied={copied} onCopy={onCopy} />
                 </div>
-                
               </div>
             </div>
           </div>

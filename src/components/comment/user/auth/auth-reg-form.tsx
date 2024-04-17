@@ -7,7 +7,12 @@ import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import clsx from "clsx";
 import { ERROR_MESSAGE } from "~/server/message";
-import { AuthOptAction, RegOptAction, vAuthResAction, vRegResAction } from "~/server/action/webauthn";
+import {
+  AuthOptAction,
+  RegOptAction,
+  vAuthResAction,
+  vRegResAction,
+} from "~/server/action/webauthn";
 
 function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
   const { pending } = useFormStatus();
@@ -22,7 +27,7 @@ function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
     ring-1 ring-inset ring-primary-light 
     hover:bg-primary-extralight hover:shadow-inner
     focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-medium`,
+    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           "bg-primary-extralight shadow-inner": pending,
         },
@@ -45,7 +50,7 @@ function RegButton({ Reg }: { Reg: (formData: FormData) => Promise<void> }) {
     ring-1 ring-inset ring-primary-light 
     hover:bg-primary-extralight hover:shadow-inner
     focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-medium`,
+    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           "bg-primary-extralight shadow-inner": pending,
         },
@@ -68,8 +73,8 @@ const AuthRegForm = () => {
     let localRes;
     try {
       localRes = await startRegistration(optionRes.data);
-    } catch(e) {
-      console.error(e)
+    } catch (e) {
+      console.error(e);
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
       return;
     }
@@ -87,7 +92,7 @@ const AuthRegForm = () => {
     let localRes;
     try {
       localRes = await startAuthentication(optionRes.data);
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
       return;
@@ -116,9 +121,9 @@ const AuthRegForm = () => {
             name="username"
             placeholder="名字，别太长，验证可以不用填哦"
             autoComplete="username webauthn"
-            className="block w-full rounded-md border-0 px-3.5 py-2.5
+            className="block w-full rounded-md border-0 bg-primary-bg px-3.5 py-2.5
       shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light 
-      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-medium"
+      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small"
           />
         </div>
         <RegButton Reg={Reg} />

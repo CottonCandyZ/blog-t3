@@ -1,16 +1,20 @@
 import {
-  ArticleIcon,
   LinkIcon,
   AboutIcon,
   GithubIcon,
   TwitterIcon,
   BgmIcon,
   ToysIcon,
+  HomeIcon,
 } from "~/components/icons";
 
 const BASE = {
+  profile_card: {
+    name: "CottonCZ",
+    description: "Just For Fun!",
+  },
   nav_router: [
-    { name: "Home", href: "/", icon: ArticleIcon },
+    { name: "Home", href: "/", icon: HomeIcon },
     { name: "Toys", href: "/toys", icon: ToysIcon },
     { name: "Links", href: "/link", icon: LinkIcon },
     { name: "About", href: "/about", icon: AboutIcon },
