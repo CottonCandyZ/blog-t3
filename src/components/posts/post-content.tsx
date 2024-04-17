@@ -21,8 +21,7 @@ export default async function PostContent({ slug }: { slug: string }) {
               <PostInfo date={frontmatter.date} tags={frontmatter.tags} />
             </div>
           </header>
-
-          <hr className="border-t border-dotted border-primary-medium"></hr>
+          <hr className="mb-8 border-t border-dotted border-primary-medium"></hr>
           <h2 className="anchor invisible absolute -top-4" id="Introduction">
             {frontmatter.title}
           </h2>

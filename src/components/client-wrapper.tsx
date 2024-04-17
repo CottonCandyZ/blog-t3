@@ -9,6 +9,7 @@ import {
 } from "react";
 import ProfileCard from "~/components/profile/profile-card";
 import { usePathname } from "next/navigation";
+import clsx from "clsx";
 interface TagsContext {
   toggledTags: Set<string>;
   setToggledTags: Dispatch<SetStateAction<Set<string>>>;
@@ -19,15 +20,19 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
   children,
 }) => {
   const [toggledTags, setToggledTags] = useState(new Set<string>());
-  const pathname = usePathname();
+  const home = usePathname() === "/";
   return (
     <div className="relative mt-4 grid auto-rows-max grid-cols-[3fr_1fr] gap-4">
       <TagsContext.Provider value={{ toggledTags, setToggledTags }}>
-        <section className="col-span-full h-full md:col-start-2 md:block">
+        <section
+          className={clsx(`col-span-full h-full md:col-start-2 md:block`, {
+            hidden: !home,
+          })}
+        >
           <div className="hidden rounded-2xl bg-primary-bg shadow-cxs md:block">
             <ProfileCard />
           </div>
-          {pathname === "/" && (
+          {home && (
             <search
               className="relative row-start-1 h-min rounded-2xl bg-primary-bg p-4 shadow-cxs 
               md:sticky md:top-[104px] md:mt-4 "
@@ -45,7 +50,15 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
             </search>
           )}
         </section>
-        <section className="col-span-full row-start-2 md:col-start-1 md:col-end-1 md:row-start-1">
+        <section
+          className={clsx(
+            `col-span-full md:col-start-1 md:col-end-1 md:row-start-1`,
+            {
+              "row-start-2": home,
+              "row-start-1": !home,
+            },
+          )}
+        >
           {children}
         </section>
       </TagsContext.Provider>
