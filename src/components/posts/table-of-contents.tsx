@@ -7,7 +7,7 @@ interface heading {
   id: string;
   text: string;
   level: number;
-};
+}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface headings extends Array<heading> {}
 
@@ -37,18 +37,18 @@ function useScrollSpy(ids: string[]) {
     const element = ids
       .map((id) => document.getElementById(id))
       .filter(Boolean);
-      const handleScroll = () => {
-        element.forEach((item, index) => {
-          if (index == 0 && item!.getBoundingClientRect().top > 85) {
-            setActiveId('');
-          }
-          if (item!.getBoundingClientRect().top < 85) {
-            setActiveId(item!.id);
-          }
-        });
-      }
+    const handleScroll = () => {
+      element.forEach((item, index) => {
+        if (index == 0 && item!.getBoundingClientRect().top > 98) {
+          setActiveId("");
+        }
+        if (item!.getBoundingClientRect().top < 98) {
+          setActiveId(item!.id);
+        }
+      });
+    };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [ids]);
   return activeId;
 }
@@ -60,14 +60,14 @@ const TableOfContents: React.FC = () => {
     <ul className="flex list-none flex-col gap-2">
       {headings.map((heading, index) => {
         return (
-          <li key={index}>
+          <li key={index} className="active:scale-95">
             <a
               href={`#${heading.id}`}
-              className={clsx(`hover:text-primary-dark hover:font-semibold`, {
+              className={clsx(`hover:font-semibold hover:text-primary-dark`, {
                 "ml-4 text-sm": heading.level > 2,
                 "text-base font-medium": heading.level === 2,
-                "text-primary-dark font-semibold": activeId === heading.id,
-                "text-primary-light": activeId !== heading.id,
+                "font-semibold text-primary-dark": activeId === heading.id,
+                "text-primary-medium": activeId !== heading.id,
               })}
             >
               {heading.text}

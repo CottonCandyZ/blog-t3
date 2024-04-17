@@ -22,7 +22,7 @@ function AddButton() {
     ring-1 ring-inset ring-primary-light 
     hover:bg-primary-extralight hover:shadow-inner
     focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-medium`,
+    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           "bg-primary-extralight shadow-inner": pending,
         },

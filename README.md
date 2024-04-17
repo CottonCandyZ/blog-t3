@@ -28,3 +28,4 @@
 - [DouLog](https://im.daidr.me/)
 - [xiaojun Blog](https://github.com/xiaojundebug/xiaojun.im)
 - [JoshWComeau](https://www.joshwcomeau.com/)
+- [fuwari](https://github.com/saicaca/fuwari)

@@ -20,7 +20,7 @@ function RemoveButton() {
     ring-1 ring-inset ring-primary-light 
     hover:bg-primary-extralight hover:shadow-inner
     focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-medium`,
+    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           "bg-primary-extralight shadow-inner": pending,
         },
@@ -43,28 +43,27 @@ const DeviceInfo: React.FC<{
   return (
     <div className="flex flex-row items-center justify-between border-b border-primary-extralight py-2">
       <div className="flex flex-row items-center gap-2">
-      {aaguidInfo ? (
-        <Image
-          className="h-8 w-8"
-          src={aaguidInfo.icon_light}
-          alt="Authenticator Icon"
-          width={32}
-          height={32}
-        />
-      ) : null}
-      <div className="font-medium text-primary">
-        <div>
-          {aaguidInfo ? <span>{aaguidInfo.name}</span> : <span>Unknown</span>}
-        </div>
-        <div>
-          <span>创建于 </span>
-          <time suppressHydrationWarning>
-            {dayjs(createAt.toISOString()).format("YY.MM.DD HH:mm")}
-          </time>
+        {aaguidInfo ? (
+          <Image
+            className="h-8 w-8"
+            src={aaguidInfo.icon_light}
+            alt="Authenticator Icon"
+            width={32}
+            height={32}
+          />
+        ) : null}
+        <div className="font-medium text-primary">
+          <div>
+            {aaguidInfo ? <span>{aaguidInfo.name}</span> : <span>Unknown</span>}
+          </div>
+          <div>
+            <span>创建于 </span>
+            <time suppressHydrationWarning>
+              {dayjs(createAt.toISOString()).format("YY.MM.DD HH:mm")}
+            </time>
+          </div>
         </div>
       </div>
-      </div>
-      
 
       <form action={removeDevice}>
         <RemoveButton />

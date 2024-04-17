@@ -1,4 +1,5 @@
 "use client";
+import clsx from "clsx";
 import {
   useState,
   type PropsWithChildren,
@@ -9,6 +10,8 @@ import {
 interface themeContext {
   themeNumber: number;
   setThemeNumber: Dispatch<SetStateAction<number>>;
+  darkMode: boolean;
+  setDarkMode: Dispatch<SetStateAction<boolean>>;
 }
 export const ThemeContext = createContext({} as themeContext);
 const ThemeWrapper: React.FC<
@@ -16,9 +19,19 @@ const ThemeWrapper: React.FC<
 > = ({ children, theme }) => {
   const initThemeNumber = theme ? Number(theme) : 1;
   const [themeNumber, setThemeNumber] = useState(initThemeNumber);
+  const [darkMode, setDarkMode] = useState(false);
   return (
-    <ThemeContext.Provider value={{ themeNumber, setThemeNumber }}>
-      <body className={`theme-${themeNumber} bg-primary-extralight`}>
+    <ThemeContext.Provider
+      value={{ themeNumber, setThemeNumber, darkMode, setDarkMode }}
+    >
+      <body
+        className={clsx(
+          `theme-${themeNumber} bg-primary-extralight dark:bg-black dark:text-white`,
+          {
+            dark: darkMode,
+          },
+        )}
+      >
         {children}
       </body>
     </ThemeContext.Provider>

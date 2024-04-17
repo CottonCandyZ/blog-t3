@@ -12,7 +12,7 @@ const MobileNav: React.FC = () => {
   return (
     <div className="relative h-0 md:hidden">
       <button
-        className="fixed right-8 top-[18px] z-20 text-primary"
+        className="fixed right-8 top-[26px] z-20 text-primary"
         onClick={() => setExpend(!expend)}
       >
         {expend ? (
@@ -36,7 +36,7 @@ const MobileNav: React.FC = () => {
             },
           )}
         ></button>
-        <nav className="absolute bottom-20 left-0 z-20 flex h-2/4 w-max flex-col justify-between text-primary-medium">
+        <nav className="absolute bottom-20 left-0 z-20 flex h-2/4 w-max flex-col justify-between text-primary-small">
           <ul className="flex flex-col gap-5">
             {CONFIG.nav_router.map((item, index) => {
               return (
@@ -61,7 +61,7 @@ const MobileNav: React.FC = () => {
                     before:right-0 before:-z-10 
                     before:rounded-xl before:bg-primary-light `,
                       {
-                        "pointer-events-none text-white before:h-full before:bg-primary-medium before:shadow-sm":
+                        "pointer-events-none text-white before:h-full before:bg-primary-small before:shadow-sm":
                           pathname == item.href,
                       },
                     )}

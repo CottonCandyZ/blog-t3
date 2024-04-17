@@ -4,8 +4,7 @@
   
     // Heading
     .anchor {
-      @apply scroll-mt-20;
-  
+      @apply scroll-mt-24;
     }
     .mdx-h1,
     .mdx-h2,
@@ -80,7 +79,7 @@
   
     // Strong
     .mdx-strong {
-      @apply font-bold text-primary-medium;
+      @apply font-bold text-primary-small;
     }
   
     // Image

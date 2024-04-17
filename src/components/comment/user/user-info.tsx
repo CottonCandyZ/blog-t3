@@ -22,7 +22,7 @@ function LogOutButton({
     ring-1 ring-inset ring-primary-light 
     hover:bg-primary-extralight hover:shadow-inner
     focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-medium`,
+    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           "bg-primary-extralight shadow-inner": pending,
         },
@@ -32,9 +32,9 @@ function LogOutButton({
     </button>
   );
 }
-const UserInfo: React.FC<PropsWithChildren<{ user: { label: number; name: string, id:string } }>> = ({
-  user, children
-}) => {
+const UserInfo: React.FC<
+  PropsWithChildren<{ user: { label: number; name: string; id: string } }>
+> = ({ user, children }) => {
   const [toggleDevice, setToggleDevice] = useState(false);
   const [message, setMessage] = useState("");
   return (
@@ -52,7 +52,7 @@ const UserInfo: React.FC<PropsWithChildren<{ user: { label: number; name: string
             </form>
           </div>
           <div className="shrink-0">
-            <AddDevice setMessage={setMessage}/>
+            <AddDevice setMessage={setMessage} />
           </div>
           <button
             className={clsx(
@@ -61,7 +61,7 @@ const UserInfo: React.FC<PropsWithChildren<{ user: { label: number; name: string
     ring-1 ring-inset ring-primary-light 
     hover:bg-primary-extralight hover:shadow-inner
     focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-medium`,
+    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
               {
                 "bg-primary-extralight shadow-inner": toggleDevice,
               },
@@ -77,11 +77,7 @@ const UserInfo: React.FC<PropsWithChildren<{ user: { label: number; name: string
       {message == "" ? null : (
         <p className="py-2.5 font-medium text-primary">{message}</p>
       )}
-      {toggleDevice ? (
-        <div className="mt-4">
-          {children}
-        </div>
-      ) : null}
+      {toggleDevice ? <div className="mt-4">{children}</div> : null}
     </div>
   );
 };

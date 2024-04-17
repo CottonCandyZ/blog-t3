@@ -8,7 +8,6 @@ const ListItem: React.FC<JSX.IntrinsicElements["li"]> = (props) => {
   const { children, className, ...rest } = props;
   const { type } = useContext(ListContext);
   const childrenList = Children.toArray(children);
-  // const childrenList = useMemo(() => Children.toArray(children), [children]);
   const getMarker = {
     ul: () => (
       <span className="pr-2 pt-[4px]">

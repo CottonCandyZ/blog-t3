@@ -42,13 +42,13 @@ function ListItem({
         className={clsx(
           `relative z-0 mx-auto flex w-max items-center
           leading-8 transition-all duration-300 before:absolute before:bottom-0
-           before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light
+           before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light active:scale-90 active:duration-0
            `,
           {
-            [`pointer-events-none px-3 text-white before:h-full before:bg-primary-medium before:shadow-sm`]:
+            [`pointer-events-none px-3 text-white before:h-full before:bg-primary-small before:shadow-sm`]:
               current === true,
             [`group before:h-1 before:bg-primary-light before:transition-all before:duration-300 hover:px-3 hover:text-white
-            hover:before:h-full hover:before:bg-primary-medium hover:before:shadow-sm`]:
+            hover:before:h-full hover:before:bg-primary-small hover:before:shadow-sm`]:
               current == false,
           },
         )}

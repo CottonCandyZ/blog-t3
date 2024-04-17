@@ -3,7 +3,7 @@ import { CONFIG } from "~/config";
 export default function SocialLinks() {
   const social_link = CONFIG.social_link;
   return (
-    <ul className="flex w-max justify-center sm:gap-2">
+    <ul className="flex w-max justify-center gap-1">
       {social_link.map((item, index) => (
         <ListItem
           key={index}
@@ -26,20 +26,20 @@ function ListItem({
   href: string;
 }) {
   return (
-    <li>
+    <li className="active:scale-95">
       <a
         href={href}
         target="_blank"
         after-content={content}
-        className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full
+        className="group relative flex size-10 cursor-pointer items-center justify-center rounded-full 
       border-primary-light transition-all duration-500 after:absolute
-      after:-bottom-5 after:rounded-2xl after:bg-primary-medium after:px-1.5
+      after:-bottom-5 after:rounded-2xl after:bg-primary-small after:px-1.5
       after:py-1 after:text-xs after:text-white after:opacity-0
       after:shadow-md after:transition
-      after:duration-500 hover:bg-primary-medium
-      hover:shadow-md hover:after:translate-y-2 hover:after:opacity-100 md:after:content-[attr(after-content)]"
+      after:duration-500 after:content-[attr(after-content)]
+      hover:bg-primary-small hover:shadow-md hover:after:translate-y-2 hover:after:opacity-100"
       >
-        <Icon className="h-6 w-6 text-primary transition-all duration-500 ease-out group-hover:text-white" />
+        <Icon className="size-6 text-primary transition-all duration-500 ease-out group-hover:text-white" />
       </a>
     </li>
   );
