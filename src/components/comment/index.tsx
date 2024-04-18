@@ -16,8 +16,13 @@ const CommentsList = dynamic(
 
 const Comments: React.FC<{ slug: string }> = ({ slug }) => {
   return (
-    <div className="w-full">
-      <h2 className="text-3xl font-semibold text-primary">Comments</h2>
+    <div className="w-full ">
+      <div className="markdown-body">
+        <h2 id="Comments" className="mdx-h1">
+          <a href="#Comments">Comments</a>
+        </h2>
+      </div>
+
       <div className="mt-5">
         <User slug={slug} />
       </div>

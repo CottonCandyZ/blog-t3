@@ -51,7 +51,7 @@ model Device {
   createAt            DateTime @default(now())
   user                User     @relation(fields: [userId], references: [id])
   userId              String
-  credentialPublicKey String
+  credentialPublicKey Bytes
   counter             Int
   transports          String?
   removed             Boolean @default(false)
