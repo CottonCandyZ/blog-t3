@@ -45,16 +45,16 @@ function ListItem({
            before:left-0 before:right-0 before:-z-10 before:rounded-xl before:bg-primary-light active:scale-90 active:duration-0
            `,
           {
-            [`pointer-events-none px-3 text-white before:h-full before:bg-primary-small before:shadow-sm`]:
+            [`pointer-events-none px-3 text-primary before:h-full before:bg-primary-light before:shadow-sm`]:
               current === true,
-            [`group before:h-1 before:bg-primary-light before:transition-all before:duration-300 hover:px-3 hover:text-white
-            hover:before:h-full hover:before:bg-primary-small hover:before:shadow-sm`]:
+            [`group before:h-1 before:bg-primary-light before:transition-all before:duration-300 hover:px-3
+            hover:before:h-full hover:before:bg-primary-light hover:before:shadow-sm`]:
               current == false,
           },
         )}
       >
         <Icon
-          className={clsx(`text-white`, {
+          className={clsx(`text-primary`, {
             [`mr-1 text-[1em]`]: current === true,
             [`group-hover:animate-backshake mr-0 text-[0px] transition-all duration-300 group-hover:mr-1 group-hover:text-[1em]`]:
               current === false,

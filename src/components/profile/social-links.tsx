@@ -33,13 +33,13 @@ function ListItem({
         after-content={content}
         className="group relative flex size-10 cursor-pointer items-center justify-center rounded-full 
       border-primary-light transition-all duration-500 after:absolute
-      after:-bottom-5 after:rounded-2xl after:bg-primary-small after:px-1.5
-      after:py-1 after:text-xs after:text-white after:opacity-0
-      after:shadow-md after:transition
+      after:-bottom-5 after:z-10 after:rounded-2xl after:bg-primary-light
+      after:px-1.5 after:py-1 after:text-xs after:text-primary
+      after:opacity-0 after:shadow-md after:transition
       after:duration-500 after:content-[attr(after-content)]
-      hover:bg-primary-small hover:shadow-md hover:after:translate-y-2 hover:after:opacity-100"
+      hover:bg-primary-light hover:shadow-md hover:after:translate-y-2 hover:after:opacity-100"
       >
-        <Icon className="size-6 text-primary transition-all duration-500 ease-out group-hover:text-white" />
+        <Icon className="size-6 text-primary transition-all duration-500 ease-out" />
       </a>
     </li>
   );
