@@ -61,7 +61,7 @@ const MobileNav: React.FC = () => {
                     before:right-0 before:-z-10 
                     before:rounded-xl before:bg-primary-light `,
                       {
-                        "pointer-events-none text-white before:h-full before:bg-primary-small before:shadow-sm":
+                        "pointer-events-none before:h-full before:bg-primary-light before:shadow-sm":
                           pathname == item.href,
                       },
                     )}
