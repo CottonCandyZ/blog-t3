@@ -52,7 +52,7 @@ model Device {
   user                User     @relation(fields: [userId], references: [id])
   userId              String
   credentialPublicKey Bytes
-  counter             BigInt
+  counter             Int
   transports          String?
   removed             Boolean @default(false)
   aaguid              String
