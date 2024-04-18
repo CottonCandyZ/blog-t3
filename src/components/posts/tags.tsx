@@ -113,7 +113,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
               className={clsx(
                 `flex flex-row items-center rounded-xl px-2 py-0.5 font-medium transition-all `,
                 {
-                  "bg-primary-extralight text-primary md:hover:bg-primary-small md:hover:text-white md:hover:shadow-md":
+                  "bg-primary-light/60 text-primary md:hover:bg-primary-small md:hover:text-white md:hover:shadow-md":
                     !isToggled && currentTags.has(tagName),
                   "bg-primary-small text-white shadow-md": isToggled,
                   "cursor-not-allowed text-primary ": !currentTags.has(tagName),
@@ -130,7 +130,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
       </div>
       <button
         className={clsx(
-          `mr-auto rounded-xl bg-primary-extralight px-2 py-0.5 font-semibold text-primary 
+          `mr-auto rounded-xl bg-primary-light/60 px-2 py-0.5 font-semibold text-primary 
           md:hover:bg-primary-small md:hover:text-white md:hover:shadow-md`,
           {
             hidden: noToggled,
