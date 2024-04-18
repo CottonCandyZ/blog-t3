@@ -118,7 +118,7 @@
 
     // CodeBlock
     .mdx-fenced-codeblock {
-      @apply p-6 text-sm font-medium leading-7;
+      @apply p-6 text-sm font-medium leading-7 max-h-[36rem];
     }
 
     //link
