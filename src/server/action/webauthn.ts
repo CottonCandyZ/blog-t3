@@ -54,7 +54,7 @@ interface AuthenticatorInfoCreAndTrans {
 }
 
 export interface AuthenticatorInfo extends AuthenticatorInfoCreAndTrans {
-  credentialPublicKey: string;
+  credentialPublicKey: Buffer;
   counter: number;
   aaguid: string;
 }
@@ -169,7 +169,7 @@ async function verifyRegistrationRes(
     registrationInfo;
   const newAuthenticator = {
     credentialID: isoBase64URL.fromBuffer(credentialID),
-    credentialPublicKey: isoBase64URL.fromBuffer(credentialPublicKey),
+    credentialPublicKey: Buffer.from(credentialPublicKey),
     counter,
     transports: JSON.stringify(localResponse.response.transports),
     aaguid,
@@ -260,9 +260,7 @@ export async function vAuthResAction(options: AuthenticationResponseJSON) {
       authenticator: {
         ...authenticator,
         credentialID: isoBase64URL.toBuffer(authenticator.credentialID),
-        credentialPublicKey: isoBase64URL.toBuffer(
-          authenticator.credentialPublicKey,
-        ),
+        credentialPublicKey: new Uint8Array(authenticator.credentialPublicKey),
         transports: authenticator.transports
           ? (JSON.parse(
               authenticator.transports,
