@@ -15,7 +15,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
     if (saveTags) {
       setToggledTags(new Set(JSON.parse(saveTags) as Array<string>));
     }
-  }, []);
+  }, [setToggledTags]);
 
   const otherTagsSet = new Set<string>();
   oTags.forEach((tags) => {
