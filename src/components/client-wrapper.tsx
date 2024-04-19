@@ -38,7 +38,7 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
               md:sticky md:top-[104px] md:mt-4 "
             >
               <h2
-                className="relative pl-3 text-xl font-medium
+                className="relative pl-3 text-xl font-semibold
                 before:absolute before:left-0 before:top-1.5 before:h-4 before:w-1 before:rounded-md
                 before:bg-primary-medium"
               >

@@ -19,7 +19,7 @@ const ProfileCard = () => {
       </Link>
 
       <span
-        className="relative text-lg font-bold text-primary
+        className="relative text-lg font-bold
       after:absolute after:-bottom-1 after:left-7 after:right-7 after:h-1 after:rounded-xl after:bg-primary-small"
       >
         {CONFIG.profile_card.name}

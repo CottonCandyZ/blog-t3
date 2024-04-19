@@ -34,7 +34,7 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
         >
           <Link href={`/posts/${slug}`}>
             <h1
-              className="relative text-2xl font-semibold
+              className="relative text-2xl font-bold
               before:absolute before:-left-3 before:bottom-2 before:top-2 
               before:w-1 before:rounded-md before:bg-primary-medium
               group-hover:text-primary"
@@ -44,7 +44,7 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
             <div className="mt-4">
               <PostInfo date={frontmatter.date} tags={frontmatter.tags} />
             </div>
-            <p className="mt-5 text-sm leading-relaxed">
+            <p className="mt-5 text-base leading-relaxed">
               {frontmatter.abstract}
             </p>
             <div className="mt-3 flex flex-row items-center gap-1">
