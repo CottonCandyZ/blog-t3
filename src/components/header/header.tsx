@@ -87,7 +87,7 @@ const Header = () => {
 
           <span className="text-xl font-semibold text-primary">Candy</span>
         </div>
-        <div className="hidden text-lg font-medium tracking-wider text-primary md:block">
+        <div className="hidden text-lg font-semibold tracking-wider text-primary md:block">
           <NavigationBar />
         </div>
       </div>

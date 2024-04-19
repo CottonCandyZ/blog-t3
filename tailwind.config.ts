@@ -8,8 +8,6 @@ export default {
     extend: {
       fontFamily: {
         sans: [
-          "SF Pro SC",
-          "PingFang SC",
           "var(--font-noto-sans)",
           "var(--font-noto-sans-sc)",
           ...defaultTheme.fontFamily.sans,

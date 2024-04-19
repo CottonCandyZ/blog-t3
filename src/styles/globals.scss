@@ -14,7 +14,7 @@ $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
   --color-primary-small: #{getColorValue(mix($primary-color, white, 65%))};
   --color-primary-medium: #{getColorValue(mix($primary-color, white, 40%))};
   --color-primary-light: #{getColorValue(mix($primary-color, white, 15%))};
-  --color-primary-extralight: #{getColorValue(mix($primary-color, white, 5%))};
+  --color-primary-extralight: #{getColorValue(mix($primary-color, white, 10%))};
 }
 
 
