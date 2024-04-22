@@ -25,13 +25,7 @@
 
 关于性能:
 
-主页：
-
-![Lighthouse-home](./doc/Lighthouse-home.png)
-
-文章页：
-
-![Lighthouse-post](./doc/Lighthouse-post.png)
+![lighthouse](./doc/lighthouse.png)
 
 ## Thanks
 
