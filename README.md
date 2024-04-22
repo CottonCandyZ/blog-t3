@@ -6,7 +6,7 @@
 
 我用 FigJam 画了一个数据流向，以便维护：
 
-![DataFlowPic](./DataFlow.png)
+![DataFlowPic](./doc/DataFlow.png)
 
 - [x] 主页设计
 - [x] 文章页面渲染
@@ -22,6 +22,16 @@
 - [ ] 支持 Embedding
 
 上面的列表可能不全，会在[这里](https://cottoncandyz.notion.site/Blog-Project-1c0160f383824ff9bd9315c470ecc309)做项目管理。
+
+关于性能:
+
+主页：
+
+![Lighthouse](./doc/Lighthouse-home.png)
+
+文章页：
+
+![Lighthouse](./doc/Lighthouse-post.png)
 
 ## Thanks
 
