@@ -23,10 +23,6 @@
 
 上面的列表可能不全，会在[这里](https://cottoncandyz.notion.site/Blog-Project-1c0160f383824ff9bd9315c470ecc309)做项目管理。
 
-关于性能:
-
-![lighthouse](./doc/lighthouse.png)
-
 ## Thanks
 
 - [DouLog](https://im.daidr.me/)
