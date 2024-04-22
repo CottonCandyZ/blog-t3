@@ -27,11 +27,11 @@
 
 主页：
 
-![Lighthouse](./doc/Lighthouse-home.png)
+![Lighthouse-home](./doc/lighthouse-home.png)
 
 文章页：
 
-![Lighthouse](./doc/Lighthouse-post.png)
+![Lighthouse-post](./doc/lighthouse-post.png)
 
 ## Thanks
 
