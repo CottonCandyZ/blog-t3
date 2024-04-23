@@ -12,7 +12,7 @@
     .mdx-h4,
     .mdx-h5,
     .mdx-h6 {
-      @apply relative mb-4 font-bold text-primary;
+      @apply relative mb-4 font-bold;
       &:hover {
         @apply underline decoration-primary/20 decoration-2;
         @media (min-width: 768px) {
@@ -50,9 +50,9 @@
     // Blockquote
     .mdx-blockquote {
       @apply relative my-12 px-8
-      before:absolute before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-light;
+      before:absolute before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-medium;
       p {
-        @apply font-medium text-primary;
+        @apply font-medium text-primary-dark;
       }
     }
 
@@ -78,7 +78,7 @@
 
     // Strong
     .mdx-strong {
-      @apply font-bold text-primary-small;
+      @apply font-bold text-primary;
     }
 
     // Image

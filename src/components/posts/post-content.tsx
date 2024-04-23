@@ -9,11 +9,11 @@ export default async function PostContent({ slug }: { slug: string }) {
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
       <div className="relative w-full max-w-[50rem] shrink-0 ">
-        <article className="markdown-body mt-4 rounded-2xl bg-primary-bg px-8 py-10 shadow-cxs">
+        <article className="markdown-body mt-4 rounded-2xl bg-primary-bg px-5 py-6 shadow-cxs md:px-8 md:py-10">
           <header className="mb-5">
             <h1
               className="relative text-4xl font-bold
-          before:absolute before:-left-3 before:top-2 before:h-6 before:w-1 before:rounded-md before:bg-primary-medium"
+          before:absolute before:-left-2 before:top-2 before:h-6 before:w-1 before:rounded-md before:bg-primary-medium md:before:-left-3"
             >
               {frontmatter.title}
             </h1>
