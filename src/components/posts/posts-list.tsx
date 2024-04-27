@@ -30,21 +30,21 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
       {posts.map(({ slug, frontmatter }) => (
         <article
           key={slug}
-          className="group cursor-pointer rounded-2xl bg-primary-bg px-8 py-5 shadow-cxs"
+          className="group cursor-pointer rounded-2xl bg-primary-bg px-5 py-3 shadow-cxs md:px-8 md:py-5"
         >
           <Link href={`/posts/${slug}`}>
             <h1
-              className="relative text-2xl font-bold
-              before:absolute before:-left-3 before:bottom-2 before:top-2 
-              before:w-1 before:rounded-md before:bg-primary-medium
-              group-hover:text-primary"
+              className="relative text-2xl font-semibold
+              before:absolute before:-left-2 before:top-2 before:h-4 before:w-1
+              before:rounded-md before:bg-primary-medium group-hover:text-primary
+              md:before:-left-3"
             >
               {frontmatter.title}
             </h1>
             <div className="mt-4">
               <PostInfo date={frontmatter.date} tags={frontmatter.tags} />
             </div>
-            <p className="mt-5 text-base leading-relaxed">
+            <p className="mt-5 text-sm leading-relaxed">
               {frontmatter.abstract}
             </p>
             <div className="mt-3 flex flex-row items-center gap-1">

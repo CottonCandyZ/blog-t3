@@ -44,7 +44,9 @@ const Header = () => {
             setToggle((toggle) => !toggle);
           }}
         >
-          <span className="text-xl font-semibold text-primary">Cotton</span>
+          <span className="text-xl font-semibold text-primary-dark">
+            Cotton
+          </span>
           <span className="relative flex items-center justify-center">
             <CottonCandy
               className={clsx(
@@ -85,9 +87,9 @@ const Header = () => {
             <CottonCandy className={`animate-move-show z-10 size-10`} />
           </span>
 
-          <span className="text-xl font-semibold text-primary">Candy</span>
+          <span className="text-xl font-semibold text-primary-dark">Candy</span>
         </div>
-        <div className="hidden text-lg font-semibold tracking-wider text-primary md:block">
+        <div className="hidden text-lg font-semibold tracking-wider text-primary-dark md:block">
           <NavigationBar />
         </div>
       </div>

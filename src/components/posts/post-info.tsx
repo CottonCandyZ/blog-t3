@@ -15,7 +15,7 @@ const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({
         <div className="rounded-lg bg-primary-light/60 p-1.5 text-primary-small">
           <IcOutlineCalendarTodayReact className="size-5" />
         </div>
-        <h2 className="min-w-max font-semibold text-primary-small">
+        <h2 className="min-w-max font-semibold text-primary-dark">
           <time dateTime={date} suppressHydrationWarning>
             {dayjs(date).format("YYYY-MM-DD")}
           </time>
@@ -26,7 +26,7 @@ const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({
           <div className="rounded-lg bg-primary-light/60 p-1.5 text-primary-small">
             <MaterialSymbolsTagRounded className="size-5" />
           </div>
-          <div className="flex min-w-max flex-row gap-1 font-semibold text-primary-small">
+          <div className="flex min-w-max flex-row gap-1 font-semibold text-primary-dark">
             {tags.map((item, index) => (
               <Fragment key={index}>
                 <span>{item}</span>

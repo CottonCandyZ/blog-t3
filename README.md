@@ -6,7 +6,7 @@
 
 我用 FigJam 画了一个数据流向，以便维护：
 
-![DataFlowPic](./DataFlow.png)
+![DataFlowPic](./doc/DataFlow.png)
 
 - [x] 主页设计
 - [x] 文章页面渲染
