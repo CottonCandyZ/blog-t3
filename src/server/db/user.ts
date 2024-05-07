@@ -26,6 +26,11 @@ export const dbReadAuthenticatorById = async (credentialID: string) => {
 
 export const dbReadAuthenticatorsByUserId = cache(async (userId: string) => {
   return await prisma.device.findMany({
+    select: {
+      createAt: true,
+      credentialID: true,
+      aaguid: true,
+    },
     where: {
       userId: userId,
       removed: false,
