@@ -217,6 +217,7 @@ export async function AuthOptAction() {
   try {
     options = await generateAuthenticationOptions({
       rpID,
+      userVerification: "required"
     });
   } catch (e) {
     console.error(e);
