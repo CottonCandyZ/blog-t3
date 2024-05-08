@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function page() {
   return (
-    <div className="mt-4 flex flex-row flex-wrap content-start gap-5">
+    <div className="mt-4 flex flex-row flex-wrap content-start gap-5 md:after:flex-grow-[999]">
       {CONFIG.friend_link.map((info, index) => (
         <div key={index} className="flex-auto">
           <LinkCard {...info} />
