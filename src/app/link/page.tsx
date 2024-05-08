@@ -9,7 +9,7 @@ export default function page() {
   return (
     <div className="mt-4 flex flex-row flex-wrap content-start gap-5">
       {CONFIG.friend_link.map((info, index) => (
-        <div key={index} className="grow md:max-w-sm">
+        <div key={index} className="flex-auto">
           <LinkCard {...info} />
         </div>
       ))}
