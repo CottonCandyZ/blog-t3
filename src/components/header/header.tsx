@@ -19,7 +19,7 @@ const Header = () => {
   const pathname = usePathname();
   const saveTheme = (number: number) => {
     setThemeNumber(availableThemeNumber[number]!);
-    document.cookie = `theme=${availableThemeNumber[number]!} max-age=34560000`;
+    document.cookie = `theme=${availableThemeNumber[number]!}; max-age=34560000`;
   };
   useEffect(() => {
     const tog = () => {
