@@ -41,6 +41,14 @@ const rpID = domain!;
 const origin =
   process.env.NODE_ENV !== "production" ? `http://${host}` : `https://${host}`;
 
+const setCookie = (key: string, value: string) => {
+  cookies().set(key, value, {
+    httpOnly: true,
+    secure: true,
+    maxAge: 2592000,
+  });
+};
+
 // LOGOUT
 export async function LogoutAction() {
   await Promise.resolve(cookies().delete("session-id"));
@@ -119,7 +127,7 @@ async function generateRegistrationOpt(
     console.error(e);
     return resMessageError("DB_ERROR");
   }
-  cookies().set("auth-session-id", session.id);
+  setCookie("auth-session-id", session.id);
   return resMessageSuccess("OPTION_GENERATE", options);
 }
 
@@ -203,7 +211,7 @@ export async function vRegResAction(localResponse: RegistrationResponseJSON) {
   try {
     cookies().delete("auth-session-id");
     const session = await dbCreateSession(user.id);
-    cookies().set("session-id", session.id);
+    setCookie("session-id", session.id);
   } catch (e) {
     console.error(e);
     return resMessageError("DB_ERROR");
@@ -217,7 +225,7 @@ export async function AuthOptAction() {
   try {
     options = await generateAuthenticationOptions({
       rpID,
-      userVerification: "required"
+      userVerification: "required",
     });
   } catch (e) {
     console.error(e);
@@ -230,7 +238,7 @@ export async function AuthOptAction() {
     console.error(e);
     return resMessageError("GENERATE_NEW_AUTH_SESSION_FAILED");
   }
-  cookies().set("auth-session-id", session.id);
+  setCookie("auth-session-id", session.id);
   return resMessageSuccess("OPTION_GENERATE", options);
 }
 
@@ -289,7 +297,7 @@ export async function vAuthResAction(options: AuthenticationResponseJSON) {
   try {
     cookies().delete("auth-session-id");
     const session = await dbCreateSession(authenticator.userId);
-    cookies().set("session-id", session.id);
+    setCookie("session-id", session.id);
   } catch (e) {
     console.error(e);
     return resMessageError("DB_ERROR");
