@@ -11,6 +11,7 @@ import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import { cache } from "react";
+import remarkImageInfo from "~/server/fetch/posts/custom-remark-plugin/remark-image-info";
 
 /**
  * Get sorted and filtered posts info.
@@ -69,6 +70,7 @@ export const getPostContent = cache(async (slug: string) => {
         ...(options.remarkPlugins ?? []),
         remarkGfm,
         remarkUnwrapImages,
+        remarkImageInfo,
       ];
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),

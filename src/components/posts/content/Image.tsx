@@ -2,17 +2,24 @@ import Image from "next/image";
 export default function NextImage({
   src,
   alt,
+  width,
+  height,
+  // base64,
 }: {
   src: string;
   alt: string;
-  title?: string;
+  width: number;
+  height: number;
+  // base64: string;
+  // title?: string;
 }) {
   return (
     <Image
-      className="mdx-img aspect-video h-auto w-full object-cover"
-      width={0}
-      height={0}
-      sizes="100vw"
+      className="mdx-img w-full"
+      width={width}
+      height={height}
+      // placeholder="blur"
+      // blurDataURL={base64}
       src={src}
       alt={alt}
     />
