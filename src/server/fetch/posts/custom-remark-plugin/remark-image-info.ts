@@ -8,12 +8,12 @@ const remarkImageInfo: Plugin<[], Root> = () => {
     const promises: (() => Promise<void>)[] = [];
     visit(tree, "image", (node: Image) => {
       promises.push(async () => {
-        const { src, width, height, base64 } = await getImageMetaAndPlaceHolder(
+        const { src, width, height } = await getImageMetaAndPlaceHolder(
           node.url,
         );
 
         node.data = {
-          hProperties: { src, width, height, base64 },
+          hProperties: { src, width, height },
         };
       });
     });
