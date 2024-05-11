@@ -9,7 +9,7 @@ export const getImageMetaAndPlaceHolder = cache(async (src: string) => {
   const {
     metadata: { height, width },
     base64,
-  } = await getPlaiceholder(buffer);
+  } = await getPlaiceholder(buffer, {size: 32});
 
   return {
     src,
