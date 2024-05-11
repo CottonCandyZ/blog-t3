@@ -1,25 +1,19 @@
 import Image from "next/image";
+import { type ImageProps } from "~/server/fetch/posts/custom-remark-plugin/remark-image-info";
 export default function NextImage({
   src,
   alt,
   width,
   height,
-  // base64,
-}: {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-  // base64: string;
-  // title?: string;
-}) {
+  blurDataURL,
+}: ImageProps) {
   return (
     <Image
       className="mdx-img w-full"
       width={width}
       height={height}
-      // placeholder="blur"
-      // blurDataURL={base64}
+      placeholder="blur"
+      blurDataURL={blurDataURL}
       src={src}
       alt={alt}
     />
