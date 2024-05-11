@@ -12,6 +12,7 @@ const BASE = {
   profile_card: {
     name: "CottonCZ",
     description: "Just For Fun!",
+    image: "/profile/AvatarSample.webp"
   },
   nav_router: [
     { name: "Home", href: "/", icon: HomeIcon },

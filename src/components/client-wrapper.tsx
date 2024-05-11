@@ -10,15 +10,15 @@ import {
 import ProfileCard from "~/components/profile/profile-card";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { type ImageProps } from "~/server/fetch/posts/custom-remark-plugin/remark-image-info";
 interface TagsContext {
   toggledTags: Set<string>;
   setToggledTags: Dispatch<SetStateAction<Set<string>>>;
 }
 export const TagsContext = createContext({} as TagsContext);
-const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
-  tags,
-  children,
-}) => {
+const ClientWrapper: React.FC<
+  PropsWithChildren<{ tags: tagProps; profilePic: ImageProps }>
+> = ({ tags, profilePic, children }) => {
   const [toggledTags, setToggledTags] = useState(new Set<string>());
   const home = usePathname() === "/";
   return (
@@ -30,7 +30,7 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
           })}
         >
           <div className="hidden rounded-2xl bg-primary-bg shadow-cxs md:block">
-            <ProfileCard />
+            <ProfileCard  profilePic={profilePic}/>
           </div>
           {home && (
             <search
@@ -64,7 +64,7 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
       </TagsContext.Provider>
       <section className="col-span-full md:hidden">
         <div className="rounded-2xl bg-primary-bg shadow-cxs">
-          <ProfileCard />
+          <ProfileCard profilePic={profilePic} />
         </div>
       </section>
     </div>

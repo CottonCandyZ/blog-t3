@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getImageMetaAndPlaceHolder } from "~/server/tools/image";
 interface LinkCardProps {
   name: string;
   href: string;
@@ -6,10 +7,11 @@ interface LinkCardProps {
   description: string;
 }
 
-const LinkCard: React.FC<LinkCardProps> = (props) => {
+const LinkCard: React.FC<LinkCardProps> = async (props) => {
+  const avatar_img = await getImageMetaAndPlaceHolder(props.avatar_src);
   return (
     <a
-      className="relative min-w-80 flex flex-row gap-4 rounded-2xl bg-primary-bg p-4 
+      className="relative flex min-w-80 flex-row gap-4 rounded-2xl bg-primary-bg p-4 
         shadow-cxs before:absolute before:bottom-2 before:left-2 before:right-2 
         before:top-2 before:rounded-3xl before:border-4
         before:border-primary-bg before:transition-all hover:before:absolute hover:before:-bottom-2 hover:before:-left-2 hover:before:-right-2 hover:before:-top-2"
@@ -19,9 +21,11 @@ const LinkCard: React.FC<LinkCardProps> = (props) => {
       <Image
         alt={`${props.name} Avatar`}
         className="h-14 w-14 rounded-xl"
-        height={60}
-        width={60}
-        src={props.avatar_src}
+        blurDataURL={avatar_img.blurDataURL}
+        placeholder="blur"
+        height={avatar_img.height}
+        width={avatar_img.width}
+        src={avatar_img.src}
       />
       <div>
         <h1 className="text-lg font-bold text-primary">{props.name}</h1>

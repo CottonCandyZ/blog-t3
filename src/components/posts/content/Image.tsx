@@ -6,7 +6,7 @@ export default function NextImage({
   width,
   height,
   blurDataURL,
-}: ImageProps) {
+}: ImageProps & {alt: string}) {
   return (
     <Image
       className="mdx-img w-full"
