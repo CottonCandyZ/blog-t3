@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { getMDXComponent } from "mdx-bundler/client";
 import type { MDXContentProps } from "mdx-bundler/dist/types";
-import NextImage from "~/components/posts/content/Image";
+import NextImage from "~/components/Image";
 import tagRenderer from "~/components/posts/tag-render";
 import UnorderedList from "~/components/posts/content/lists/unordered-list";
 import OrderedList from "~/components/posts/content/lists/ordered-list";

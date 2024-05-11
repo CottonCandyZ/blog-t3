@@ -8,14 +8,13 @@ export const getImageMetaAndPlaceHolder = cache(async (src: string) => {
 
   const {
     metadata: { height, width },
-    base64,
-  } = await getPlaiceholder(buffer, {size: 32});
+    css,
+  } = await getPlaiceholder(buffer, { size: 10 });
 
   return {
     src,
     width,
     height,
-    blurDataURL: base64,
+    ...css,
   };
 });
-

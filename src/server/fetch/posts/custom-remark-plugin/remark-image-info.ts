@@ -7,7 +7,10 @@ export interface ImageProps {
   src: string;
   width: number;
   height: number;
-  blurDataURL: string;
+  backgroundImage: string;
+  backgroundPosition: string;
+  backgroundSize: string;
+  backgroundRepeat: string;
 }
 
 const remarkImageInfo: Plugin<[], Root> = () => {
@@ -15,12 +18,11 @@ const remarkImageInfo: Plugin<[], Root> = () => {
     const promises: (() => Promise<void>)[] = [];
     visit(tree, "image", (node: Image) => {
       promises.push(async () => {
-        const { src, width, height, blurDataURL } = await getImageMetaAndPlaceHolder(
-          node.url,
-        );
+        const { src, width, height, ...BlurCss } =
+          await getImageMetaAndPlaceHolder(node.url);
 
         node.data = {
-          hProperties: { src, width, height, blurDataURL },
+          hProperties: { src, width, height, ...BlurCss },
         };
       });
     });
