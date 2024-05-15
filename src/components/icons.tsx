@@ -91,8 +91,8 @@ export function GithubIcon(props: SVGProps<SVGSVGElement>) {
 export function TwitterIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      width="1rem"
-      height="1rem"
+      width="1em"
+      height="1em"
       viewBox="0 0 1500 1534"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
@@ -213,8 +213,8 @@ export const Unchecked: React.FC<SVGProps<SVGSVGElement>> = (props) => {
 export const CottonCandy: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
-      width="1rem"
-      height="1rem"
+      width="1em"
+      height="1em"
       viewBox="0 0 534 534"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
