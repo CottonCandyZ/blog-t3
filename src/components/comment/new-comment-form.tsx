@@ -1,5 +1,6 @@
 "use client";
 import clsx from "clsx";
+import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { createCommentAction } from "~/server/action/comments-list";
 function Submit() {
@@ -23,12 +24,19 @@ focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 foc
   );
 }
 const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
-  const [state, formAction] = useFormState(
+  const [formState, formAction] = useFormState(
     createCommentAction.bind(null, slug),
     {
       message: "",
+      success: false,
+      data: undefined,
     },
   );
+  const [content, setContent] = useState("");
+  if (formState.success) {
+    formState.success = false;
+    setContent("");
+  }
   return (
     <form className="flex flex-row flex-wrap gap-2" action={formAction}>
       <div className="w-full">
@@ -41,15 +49,18 @@ const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
         <textarea
           id="content"
           name="content"
+          value={content}
+          onChange={e => setContent(e.target.value)}
           rows={4}
           placeholder="请保持友善"
+          required
           className="mt-2 block w-full rounded-md border-0 px-3.5 py-2
       shadow-sm ring-1 ring-inset ring-primary-light placeholder:text-primary-light 
       focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small"
         />
       </div>
       <Submit />
-      <p className="p-2 font-medium text-primary">{state.message}</p>
+      <p className="p-2 font-medium text-primary">{formState.message}</p>
     </form>
   );
 };

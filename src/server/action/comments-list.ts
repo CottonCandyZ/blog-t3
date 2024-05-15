@@ -7,6 +7,7 @@ import { dbCreateNewComment } from "~/server/db/comments-list";
 import {
   SUCCEED_MESSAGE,
   resMessageError,
+  resMessageSuccess,
 } from "~/server/message";
 
 export async function createCommentAction(
@@ -58,5 +59,5 @@ export async function createCommentAction(
   } catch (e) {
     return resMessageError("DB_ERROR");
   }
-  return { message: SUCCEED_MESSAGE.COMMENT_SUCCEED };
+  return resMessageSuccess('COMMENT_SUCCEED');
 }
