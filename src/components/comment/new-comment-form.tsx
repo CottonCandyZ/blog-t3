@@ -1,6 +1,6 @@
 "use client";
 import clsx from "clsx";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { createCommentAction } from "~/server/action/comments-list";
 function Submit() {
@@ -32,10 +32,9 @@ const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
       data: undefined,
     },
   );
-  const [content, setContent] = useState("");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   if (formState.success) {
-    formState.success = false;
-    setContent("");
+    textAreaRef.current!.value = "";
   }
   return (
     <form className="flex flex-row flex-wrap gap-2" action={formAction}>
@@ -47,10 +46,9 @@ const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
           发送一个评论吧！
         </label>
         <textarea
+          ref={textAreaRef}
           id="content"
           name="content"
-          value={content}
-          onChange={e => setContent(e.target.value)}
           rows={4}
           placeholder="请保持友善"
           required
