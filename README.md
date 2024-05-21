@@ -22,7 +22,7 @@ A DataFlow Pic drawn with FigJam:
 - [ ] Support KaTeX
 - [ ] Support link embedding
 
-Abrove list may not be complete; I will manage the project [here](https://cottoncandyz.notion.site/Blog-Project-1c0160f383824ff9bd9315c470ecc309). May move to GitHub Projects recently.
+~~Abrove list may not be complete; I will manage the project [here](https://cottoncandyz.notion.site/Blog-Project-1c0160f383824ff9bd9315c470ecc309). May move to GitHub Projects recently.~~ [Moved](https://github.com/users/CottonCandyZ/projects/3).
 
 ## Thanks
 
