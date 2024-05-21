@@ -1,11 +1,11 @@
-import { getPostContent } from "~/server/fetch/posts";
-import MDXComponent from "~/components/posts/mdx-component";
-import TableOfContents from "~/components/posts/table-of-contents";
-import PostInfo from "~/components/posts/post-info";
-import Comments from "~/components/comment";
+import { getPostContent } from '~/server/fetch/posts'
+import MDXComponent from '~/components/posts/mdx-component'
+import TableOfContents from '~/components/posts/table-of-contents'
+import PostInfo from '~/components/posts/post-info'
+import Comments from '~/components/comment'
 
 export default async function PostContent({ slug }: { slug: string }) {
-  const { code, frontmatter } = await getPostContent(decodeURIComponent(slug));
+  const { code, frontmatter } = await getPostContent(decodeURIComponent(slug))
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
       <div className="relative w-full max-w-[50rem] shrink-0 ">
@@ -40,5 +40,5 @@ export default async function PostContent({ slug }: { slug: string }) {
         </nav>
       </aside>
     </div>
-  );
+  )
 }

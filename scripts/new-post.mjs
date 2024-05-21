@@ -1,9 +1,10 @@
-import dayjs from "dayjs"
-import fs from 'fs/promises'
-import path from 'path'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import process from 'node:process'
+import dayjs from 'dayjs'
 
 // npm run new:post filename title [tag1] [tag2] ...
-const createPost = async () => {
+async function createPost() {
   const [, , filename, title, ...tags] = process.argv
 
   await fs.writeFile(

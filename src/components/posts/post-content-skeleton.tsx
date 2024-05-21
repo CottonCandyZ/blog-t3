@@ -29,7 +29,7 @@ const PostContentSkeleton: React.FC = () => {
         </nav>
       </aside>
     </div>
-  );
-};
+  )
+}
 
-export default PostContentSkeleton;
+export default PostContentSkeleton

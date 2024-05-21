@@ -1,63 +1,61 @@
-"use server";
-import z from "zod";
-import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
-import { dbReadLoggedInUserInfoBySession } from "~/server/db/user";
-import { dbCreateNewComment } from "~/server/db/comments-list";
+'use server'
+import z from 'zod'
+import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
+import { dbReadLoggedInUserInfoBySession } from '~/server/db/user'
+import { dbCreateNewComment } from '~/server/db/comments-list'
 import {
-  SUCCEED_MESSAGE,
   resMessageError,
   resMessageSuccess,
-} from "~/server/message";
+} from '~/server/message'
 
 export async function createCommentAction(
   slug: string,
   prevState: { message: string },
   formData: FormData,
 ) {
-
   // DATA CHECK
   const schema = z.object({
     content: z.string(),
-  });
-  let data;
+  })
+  let data
   try {
     data = schema.parse({
-      content: formData.get("content"),
-    });
-  } catch (e) {
-    console.error(e);
-    return resMessageError("ZOD_FORM_DATA_TYPE_ERROR");
+      content: formData.get('content'),
+    })
   }
-  if (data.content == "") {
-    return resMessageError("NEW_COMMENT_COMMENT_EMPTY");
+  catch (e) {
+    console.error(e)
+    return resMessageError('ZOD_FORM_DATA_TYPE_ERROR')
   }
+  if (data.content === '')
+    return resMessageError('NEW_COMMENT_COMMENT_EMPTY')
 
   // SESSION CHECK
-  const sessionId = cookies().get("session-id")?.value;
-  if (!sessionId) {
-    return resMessageError("SESSION_NOT_FOUND");
-  }
+  const sessionId = cookies().get('session-id')?.value
+  if (!sessionId)
+    return resMessageError('SESSION_NOT_FOUND')
 
   // USER CHECK
-  let userInfo;
+  let userInfo
   try {
-    userInfo = await dbReadLoggedInUserInfoBySession(sessionId);
-  } catch(e) {
-    console.error(e);
-    return resMessageError("DB_ERROR")
+    userInfo = await dbReadLoggedInUserInfoBySession(sessionId)
   }
-  if (!userInfo) {
-    return resMessageError("SESSION_EXPIRE");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
+  if (!userInfo)
+    return resMessageError('SESSION_EXPIRE')
 
   // CREATE
   try {
     await dbCreateNewComment(data.content, slug, userInfo.id)
-    revalidatePath("/posts/[slug]", "page");
-    revalidatePath("/about");
-  } catch (e) {
-    return resMessageError("DB_ERROR");
+    revalidatePath('/posts/[slug]', 'page')
+    revalidatePath('/about')
   }
-  return resMessageSuccess('COMMENT_SUCCEED');
+  catch (e) {
+    return resMessageError('DB_ERROR')
+  }
+  return resMessageSuccess('COMMENT_SUCCEED')
 }

@@ -1,7 +1,8 @@
-"use client";
-import Image from "next/image";
-import { useState } from "react";
-import { type ImageProps } from "~/server/fetch/posts/custom-remark-plugin/remark-image-info";
+'use client'
+import Image from 'next/image'
+import { useState } from 'react'
+import type { ImageProps } from '~/server/fetch/posts/custom-remark-plugin/remark-image-info'
+
 export default function NextImage({
   src,
   alt,
@@ -9,13 +10,13 @@ export default function NextImage({
   height,
   className,
   ...BlurCss
-}: ImageProps & { alt: string; className?: string }) {
-  const [load, setLoad] = useState(false);
+}: ImageProps & { alt: string, className?: string }) {
+  const [load, setLoad] = useState(false)
   return (
     <div className="mdx-img relative w-full overflow-hidden">
       {!load && (
         <div
-          className="absolute inset-0 h-full w-full scale-150 transform blur-2xl filter"
+          className="absolute inset-0 size-full scale-150 blur-2xl"
           style={BlurCss}
         />
       )}
@@ -28,5 +29,5 @@ export default function NextImage({
         alt={alt}
       />
     </div>
-  );
+  )
 }

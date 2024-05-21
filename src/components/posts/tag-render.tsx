@@ -1,20 +1,20 @@
-import clsx from "clsx";
-import React, { type PropsWithChildren } from "react";
+import clsx from 'clsx'
+import React, { type PropsWithChildren } from 'react'
 
-const tagRenderer = (name: string) => {
+function tagRenderer(name: string) {
   return ((props) => {
-    const { children, className, ...rest } = props;
+    const { children, className, ...rest } = props
     return React.createElement(
       name,
       {
         ...rest,
         className: clsx(`mdx-${name}`, className, {
-          "anchor": rest.id,
+          anchor: rest.id,
         }),
       },
       children,
-    );
-  }) as React.FC<PropsWithChildren<HTMLElement>>;
-};
+    )
+  }) as React.FC<PropsWithChildren<HTMLElement>>
+}
 
-export default tagRenderer;
+export default tagRenderer

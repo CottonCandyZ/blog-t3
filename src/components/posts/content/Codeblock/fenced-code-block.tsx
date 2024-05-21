@@ -1,52 +1,52 @@
-"use client";
-import { Highlight, themes } from "prism-react-renderer";
-import { useEffect, useState } from "react";
-import CopyButton from "~/components/posts/content/Codeblock/copy-button";
-import { copyToClipboard } from "~/server/tools/clipboard";
+'use client'
+import { Highlight, themes } from 'prism-react-renderer'
+import { useEffect, useState } from 'react'
+import CopyButton from '~/components/posts/content/Codeblock/copy-button'
+import { copyToClipboard } from '~/server/tools/clipboard'
 
 interface FencedCodeBlockProps {
-  language: string;
-  codeContent: string;
+  language: string
+  codeContent: string
 }
 
-const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
-  const [copied, setCopied] = useState(false);
+const FencedCodeBlock: React.FC<FencedCodeBlockProps> = ({ codeContent, language }) => {
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (copied) {
-      setTimeout(() => setCopied(false), 1500);
-    }
-  }, [copied]);
+    if (copied)
+      setTimeout(() => setCopied(false), 1500)
+  }, [copied])
 
   async function onCopy() {
-    await copyToClipboard(props.codeContent);
-    setCopied(true);
+    await copyToClipboard(codeContent)
+    setCopied(true)
   }
 
   return (
     <Highlight
       theme={themes.duotoneLight}
-      code={props.codeContent}
-      language={props.language}
+      code={codeContent}
+      language={language}
     >
       {({ style, tokens, getLineProps, getTokenProps }) => (
         <div className="relative mb-5 mt-10">
           <div
-            className="absolute -top-7 right-10 h-fit w-fit rounded-t-lg 
-            bg-[#faf8f5] px-3 pt-1 font-semibold text-primary-small"
+            className="absolute -top-7 right-10 size-fit rounded-t-lg bg-[#faf8f5]
+            px-3 pt-1 font-semibold text-primary-small"
           >
-            {props.language.toUpperCase()}
+            {language.toUpperCase()}
           </div>
           <div className="flex flex-row">
             <pre
               style={style}
               className="mdx-fenced-codeblock relative z-0 w-full overflow-x-auto rounded-l-2xl"
             >
+
               {tokens.map((line, i) => (
                 <div key={i} {...getLineProps({ line })}>
                   <span>
-                    {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token })} />
+                    {line.map(token => (
+                      <span key={token.content} {...getTokenProps({ token })} />
                     ))}
                   </span>
                 </div>
@@ -63,7 +63,7 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = (props) => {
         </div>
       )}
     </Highlight>
-  );
-};
+  )
+}
 
-export default FencedCodeBlock;
+export default FencedCodeBlock

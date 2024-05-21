@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
-import { Fragment } from "react";
+import dayjs from 'dayjs'
+import { Fragment } from 'react'
 import {
   IcOutlineCalendarTodayReact,
   MaterialSymbolsTagRounded,
-} from "~/components/icons";
+} from '~/components/icons'
 
-const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({
+const PostInfo: React.FC<{ date: string, tags: string[] | undefined }> = ({
   date,
   tags,
 }) => {
@@ -17,7 +17,7 @@ const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({
         </div>
         <h2 className="min-w-max font-semibold text-primary-dark">
           <time dateTime={date} suppressHydrationWarning>
-            {dayjs(date).format("YYYY-MM-DD")}
+            {dayjs(date).format('YYYY-MM-DD')}
           </time>
         </h2>
       </div>
@@ -28,16 +28,16 @@ const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({
           </div>
           <div className="flex min-w-max flex-row gap-1 font-semibold text-primary-dark">
             {tags.map((item, index) => (
-              <Fragment key={index}>
+              <Fragment key={item}>
                 <span>{item}</span>
-                <span>{index != tags.length - 1 ? "/" : ""}</span>
+                <span>{index !== tags.length - 1 ? '/' : ''}</span>
               </Fragment>
             ))}
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PostInfo;
+export default PostInfo

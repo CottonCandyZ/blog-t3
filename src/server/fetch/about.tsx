@@ -1,32 +1,34 @@
-import remarkGfm from "remark-gfm";
-import path from "path";
-import type { PostFrontmatter } from "~/components/posts";
-import { bundleMDX } from "mdx-bundler";
-import remarkUnwrapImages from "remark-unwrap-images";
-import rehypeMdxCodeProps from "rehype-mdx-code-props";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeSlug from "rehype-slug";
-import { cache } from "react";
+import path from 'node:path'
+import process from 'node:process'
+import remarkGfm from 'remark-gfm'
+import { bundleMDX } from 'mdx-bundler'
+import remarkUnwrapImages from 'remark-unwrap-images'
+import rehypeMdxCodeProps from 'rehype-mdx-code-props'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeSlug from 'rehype-slug'
+import { cache } from 'react'
+import type { PostFrontmatter } from '~/components/posts'
+
 export const getAboutContent = cache(async () => {
   const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
     file: path.join(process.cwd(), `src/config/about.mdx`),
-    cwd: path.join(process.cwd(), "./src/config"),
+    cwd: path.join(process.cwd(), './src/config'),
     mdxOptions(options) {
       // Fix: bundle-MDX type error
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),
         remarkGfm,
         remarkUnwrapImages,
-      ];
+      ]
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),
         rehypeSlug,
-        [rehypeAutolinkHeadings, { behavior: "wrap" }],
-        [rehypeMdxCodeProps, { tagName: "code" }],
-      ];
+        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+        [rehypeMdxCodeProps, { tagName: 'code' }],
+      ]
 
-      return options;
+      return options
     },
-  });
-  return { code, frontmatter };
-});
+  })
+  return { code, frontmatter }
+})

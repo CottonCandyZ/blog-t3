@@ -1,38 +1,36 @@
-"use client";
-import clsx from "clsx";
-import { usePathname } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+'use client'
+import clsx from 'clsx'
+import { usePathname } from 'next/navigation'
+import { useContext, useEffect, useRef, useState } from 'react'
 import {
   CottonCandy,
-  IcOutlineDarkMode,
-  IcOutlineLightMode,
-} from "~/components/icons";
-import NavigationBar from "~/components/nav/navigation-bar";
-import { ThemeContext } from "~/components/theme-wrapper";
+} from '~/components/icons'
+import NavigationBar from '~/components/nav/navigation-bar'
+import { ThemeContext } from '~/components/theme-wrapper'
 
-const Header = () => {
-  const [toggle, setToggle] = useState(false);
-  const { themeNumber, setThemeNumber, darkMode, setDarkMode } =
-    useContext(ThemeContext);
-  const switchRef = useRef<HTMLDivElement>(null);
-  const availableThemeNumber = [1, 2, 3, 4].filter((i) => i != themeNumber);
-  const pathname = usePathname();
+function Header() {
+  const [toggle, setToggle] = useState(false)
+  const { themeNumber, setThemeNumber }
+    = useContext(ThemeContext)
+  const switchRef = useRef<HTMLDivElement>(null)
+  const availableThemeNumber = [1, 2, 3, 4].filter(i => i !== themeNumber)
+  const pathname = usePathname()
   const saveTheme = (number: number) => {
-    setThemeNumber(availableThemeNumber[number]!);
-    document.cookie = `theme=${availableThemeNumber[number]!}; max-age=34560000`;
-  };
+    setThemeNumber(availableThemeNumber[number]!)
+    document.cookie = `theme=${availableThemeNumber[number]!}; max-age=34560000`
+  }
   useEffect(() => {
     const tog = () => {
-      setToggle(false);
-    };
-    window.addEventListener("scroll", tog);
+      setToggle(false)
+    }
+    window.addEventListener('scroll', tog)
     return () => {
-      window.removeEventListener("scroll", tog);
-    };
-  }, []);
+      window.removeEventListener('scroll', tog)
+    }
+  }, [])
   useEffect(() => {
-    setToggle(false);
-  }, [pathname]);
+    setToggle(false)
+  }, [pathname])
   return (
     <header className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center gap-7">
@@ -41,7 +39,7 @@ const Header = () => {
           active:scale-95 active:bg-primary-light/20"
           ref={switchRef}
           onClick={() => {
-            setToggle((toggle) => !toggle);
+            setToggle(toggle => !toggle)
           }}
         >
           <span className="text-xl font-semibold text-primary-dark">
@@ -53,11 +51,11 @@ const Header = () => {
                 `theme-${availableThemeNumber[0]} absolute
           size-10 transition-all duration-200`,
                 {
-                  "-translate-x-[100%] translate-y-[130%]": toggle,
+                  '-translate-x-[100%] translate-y-[130%]': toggle,
                 },
               )}
               onClick={() => {
-                saveTheme(0);
+                saveTheme(0)
               }}
             />
             <CottonCandy
@@ -65,11 +63,11 @@ const Header = () => {
                 `theme-${availableThemeNumber[1]} absolute 
           size-10 transition-all duration-400`,
                 {
-                  "translate-y-[130%]": toggle,
+                  'translate-y-[130%]': toggle,
                 },
               )}
               onClick={() => {
-                saveTheme(1);
+                saveTheme(1)
               }}
             />
             <CottonCandy
@@ -77,14 +75,14 @@ const Header = () => {
                 `theme-${availableThemeNumber[2]} absolute  
           size-10 transition-all duration-600`,
                 {
-                  "translate-x-[100%] translate-y-[130%]": toggle,
+                  'translate-x-[100%] translate-y-[130%]': toggle,
                 },
               )}
               onClick={() => {
-                saveTheme(2);
+                saveTheme(2)
               }}
             />
-            <CottonCandy className={`animate-move-show z-10 size-10`} />
+            <CottonCandy className="animate-move-show z-10 size-10" />
           </span>
 
           <span className="text-xl font-semibold text-primary-dark">Candy</span>
@@ -107,7 +105,7 @@ const Header = () => {
         </button>
       </div> */}
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

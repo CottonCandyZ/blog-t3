@@ -1,17 +1,17 @@
-"use client";
-import { startRegistration } from "@simplewebauthn/browser";
-import clsx from "clsx";
-import type { Dispatch, SetStateAction } from "react";
-import { useFormStatus } from "react-dom";
+'use client'
+import { startRegistration } from '@simplewebauthn/browser'
+import clsx from 'clsx'
+import type { Dispatch, SetStateAction } from 'react'
+import { useFormStatus } from 'react-dom'
 import {
   addDeviceOptAction,
   addDeviceVResAction,
-} from "~/server/action/webauthn";
+} from '~/server/action/webauthn'
 
-import { ERROR_MESSAGE } from "~/server/message";
+import { ERROR_MESSAGE } from '~/server/message'
 
 function AddButton() {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
   return (
     <button
       type="submit"
@@ -24,13 +24,13 @@ function AddButton() {
     focus-visible:outline focus-visible:outline-2 
     focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
-          "bg-primary-extralight shadow-inner": pending,
+          'bg-primary-extralight shadow-inner': pending,
         },
       )}
     >
       添加设备
     </button>
-  );
+  )
 }
 
 const AddDevice: React.FC<{ setMessage: Dispatch<SetStateAction<string>> }> = ({
@@ -38,27 +38,28 @@ const AddDevice: React.FC<{ setMessage: Dispatch<SetStateAction<string>> }> = ({
 }) => {
   async function add() {
     // setMessage("请等待认证框弹出"); // 这个暂时不会工作！！
-    const optionRes = await addDeviceOptAction();
-    setMessage(optionRes.message);
-    if (!optionRes.data) {
-      return;
-    }
-    let localRes;
+    const optionRes = await addDeviceOptAction()
+    setMessage(optionRes.message)
+    if (!optionRes.data)
+      return
+
+    let localRes
     try {
-      localRes = await startRegistration(optionRes.data);
-    } catch (e) {
-      setMessage(ERROR_MESSAGE.ADD_DEVICE_CANCELED);
-      return;
+      localRes = await startRegistration(optionRes.data)
     }
-    setMessage("已经发送过去啦，请耐心等待服务器认证...");
-    const verifyRes = await addDeviceVResAction(localRes);
-    setMessage(verifyRes.message);
+    catch (e) {
+      setMessage(ERROR_MESSAGE.ADD_DEVICE_CANCELED)
+      return
+    }
+    setMessage('已经发送过去啦，请耐心等待服务器认证...')
+    const verifyRes = await addDeviceVResAction(localRes)
+    setMessage(verifyRes.message)
   }
   return (
     <form action={add}>
       <AddButton />
     </form>
-  );
-};
+  )
+}
 
-export default AddDevice;
+export default AddDevice

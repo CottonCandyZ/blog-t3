@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import clsx from "clsx";
-import dayjs from "dayjs";
-import Image from "next/image";
-import type { Dispatch, SetStateAction } from "react";
-import { useFormStatus } from "react-dom";
-import { removeUserDeviceAction } from "~/server/action/webauthn";
-import type { aaguid } from "~/server/fetch/user";
+import clsx from 'clsx'
+import dayjs from 'dayjs'
+import Image from 'next/image'
+import type { Dispatch, SetStateAction } from 'react'
+import { useFormStatus } from 'react-dom'
+import { removeUserDeviceAction } from '~/server/action/webauthn'
+import type { aaguid } from '~/server/fetch/user'
 
 function RemoveButton() {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
   return (
     <button
       type="submit"
@@ -22,36 +22,38 @@ function RemoveButton() {
     focus-visible:outline focus-visible:outline-2 
     focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
-          "bg-primary-extralight shadow-inner": pending,
+          'bg-primary-extralight shadow-inner': pending,
         },
       )}
     >
       移除
     </button>
-  );
+  )
 }
 
 const DeviceInfo: React.FC<{
-  credentialID: string;
-  createAt: Date;
-  aaguidInfo: aaguid | undefined;
-  setMessage: Dispatch<SetStateAction<string>>;
+  credentialID: string
+  createAt: Date
+  aaguidInfo: aaguid | undefined
+  setMessage: Dispatch<SetStateAction<string>>
 }> = ({ credentialID, createAt, setMessage, aaguidInfo }) => {
   async function removeDevice() {
-    setMessage((await removeUserDeviceAction(credentialID)).message);
+    setMessage((await removeUserDeviceAction(credentialID)).message)
   }
   return (
     <div className="flex flex-row items-center justify-between border-b border-primary-extralight py-2">
       <div className="flex flex-row items-center gap-2">
-        {aaguidInfo ? (
-          <Image
-            className="h-8 w-8"
-            src={aaguidInfo.icon_light}
-            alt="Authenticator Icon"
-            width={32}
-            height={32}
-          />
-        ) : null}
+        {aaguidInfo
+          ? (
+            <Image
+              className="size-8"
+              src={aaguidInfo.icon_light}
+              alt="Authenticator Icon"
+              width={32}
+              height={32}
+            />
+            )
+          : null}
         <div className="font-medium text-primary">
           <div>
             {aaguidInfo ? <span>{aaguidInfo.name}</span> : <span>Unknown</span>}
@@ -59,7 +61,7 @@ const DeviceInfo: React.FC<{
           <div>
             <span>创建于 </span>
             <time suppressHydrationWarning>
-              {dayjs(createAt.toISOString()).format("YY.MM.DD HH:mm")}
+              {dayjs(createAt.toISOString()).format('YY.MM.DD HH:mm')}
             </time>
           </div>
         </div>
@@ -69,6 +71,6 @@ const DeviceInfo: React.FC<{
         <RemoveButton />
       </form>
     </div>
-  );
-};
-export default DeviceInfo;
+  )
+}
+export default DeviceInfo

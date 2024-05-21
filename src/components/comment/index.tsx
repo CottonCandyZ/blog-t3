@@ -1,18 +1,19 @@
-import dynamic from "next/dynamic";
-const User = dynamic(() => import("~/components/comment/user"), {
+import dynamic from 'next/dynamic'
+
+const User = dynamic(() => import('~/components/comment/user'), {
   loading: () => (
     <div className="h-11 w-full animate-pulse rounded-2xl bg-primary-light"></div>
   ),
-});
+})
 
 const CommentsList = dynamic(
-  () => import("~/components/comment/comments-list"),
+  () => import('~/components/comment/comments-list'),
   {
     loading: () => (
       <div className="h-11 w-full animate-pulse rounded-2xl bg-primary-light"></div>
     ),
   },
-);
+)
 
 const Comments: React.FC<{ slug: string }> = ({ slug }) => {
   return (
@@ -30,7 +31,7 @@ const Comments: React.FC<{ slug: string }> = ({ slug }) => {
         <CommentsList slug={slug} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Comments;
+export default Comments

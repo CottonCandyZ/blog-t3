@@ -1,23 +1,24 @@
 'use client'
-import { type PropsWithChildren, createContext } from "react";
+import { type PropsWithChildren, createContext, useMemo } from 'react'
 
 interface ListProviderProps {
-  type: "ul" | "ol" | "tl";
+  type: 'ul' | 'ol' | 'tl'
 }
 
-interface ListContext {
-  type: ListProviderProps["type"];
+interface ListContextType {
+  type: ListProviderProps['type']
 }
 
-export const ListContext = createContext({} as ListContext);
+export const ListContext = createContext({} as ListContextType)
 
 const ListProvider: React.FC<PropsWithChildren<ListProviderProps>> = (
   props,
 ) => {
-  const { children, type } = props;
+  const { children, type } = props
+  const value = useMemo(() => ({ type }), [type])
   return (
-    <ListContext.Provider value={{ type }}>{children}</ListContext.Provider>
-  );
-};
+    <ListContext.Provider value={value}>{children}</ListContext.Provider>
+  )
+}
 
-export default ListProvider;
+export default ListProvider

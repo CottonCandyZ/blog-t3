@@ -1,22 +1,23 @@
-"use server";
-import { cookies, headers } from "next/headers";
-import { resMessageError, resMessageSuccess } from "~/server/message";
-import z from "zod";
-import crypto from "crypto";
-import { isoBase64URL } from "@simplewebauthn/server/helpers";
-import { ERROR_MESSAGE, SUCCEED_MESSAGE } from "~/server/message";
-import { revalidatePath } from "next/cache";
+'use server'
+import crypto from 'node:crypto'
+import process from 'node:process'
+import { Buffer } from 'node:buffer'
+import z from 'zod'
+import { cookies, headers } from 'next/headers'
+import { isoBase64URL } from '@simplewebauthn/server/helpers'
+import { revalidatePath } from 'next/cache'
 import {
   generateAuthenticationOptions,
   generateRegistrationOptions,
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
-} from "@simplewebauthn/server";
+} from '@simplewebauthn/server'
 import type {
   AuthenticationResponseJSON,
   AuthenticatorTransportFuture,
   RegistrationResponseJSON,
-} from "@simplewebauthn/types";
+} from '@simplewebauthn/types'
+import { ERROR_MESSAGE, SUCCEED_MESSAGE, resMessageError, resMessageSuccess } from '~/server/message'
 import {
   dbCreateAuthSession,
   dbCreateAuthenticatorForUser,
@@ -28,61 +29,62 @@ import {
   dbReadLoggedInUserInfoBySession,
   dbRemoveAuthenticatorCounter,
   dbUpdateAuthenticatorCounter,
-} from "~/server/db/user";
+} from '~/server/db/user'
 
-const host = headers().get("host")!;
-const [domain] = host.split(":");
+const host = headers().get('host')!
+const [domain] = host.split(':')
 
 // Human-readable title for your website
-const rpName = "Cotton Blog";
+const rpName = 'Cotton Blog'
 // A unique identifier for your website
-const rpID = domain!;
+const rpID = domain!
 // The URL at which registrations and authentications should occur
-const origin =
-  process.env.NODE_ENV !== "production" ? `http://${host}` : `https://${host}`;
+const origin
+  = process.env.NODE_ENV !== 'production' ? `http://${host}` : `https://${host}`
 
-const setCookie = (key: string, value: string) => {
+function setCookie(key: string, value: string) {
   cookies().set(key, value, {
     httpOnly: true,
     secure: true,
     maxAge: 2592000,
-  });
-};
+  })
+}
 
 // LOGOUT
 export async function LogoutAction() {
-  await Promise.resolve(cookies().delete("session-id"));
+  await Promise.resolve(cookies().delete('session-id'))
 }
 
 // REG
 interface AuthenticatorInfoCreAndTrans {
-  credentialID: string;
-  createAt?: Date;
-  transports?: string | null;
+  credentialID: string
+  createAt?: Date
+  transports?: string | null
 }
 
 export interface AuthenticatorInfo extends AuthenticatorInfoCreAndTrans {
-  credentialPublicKey: Buffer;
-  counter: number;
-  aaguid: string;
+  credentialPublicKey: Buffer
+  counter: number
+  aaguid: string
 }
 
 async function getCurrentAuthSession() {
-  const sessionId = cookies().get("auth-session-id")?.value;
-  if (!sessionId) {
-    return resMessageError("AUTH_SESSION_NOT_FOND");
-  }
-  let currentSession;
+  const sessionId = cookies().get('auth-session-id')?.value
+  if (!sessionId)
+    return resMessageError('AUTH_SESSION_NOT_FOND')
+
+  let currentSession
   try {
-    currentSession = await dbReadAuthSessionData(sessionId);
-  } catch (e) {
-    console.log(e);
-    return resMessageError("DB_ERROR");
+    currentSession = await dbReadAuthSessionData(sessionId)
   }
-  if (!currentSession) {
-    return resMessageError("AUTH_SESSION_EXPIRE");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
-  return currentSession;
+  if (!currentSession)
+    return resMessageError('AUTH_SESSION_EXPIRE')
+
+  return currentSession
 }
 
 async function generateRegistrationOpt(
@@ -90,19 +92,19 @@ async function generateRegistrationOpt(
   userId?: string,
   userAuthenticators?: AuthenticatorInfoCreAndTrans[],
 ) {
-  if (!userId) {
-    userId = crypto.randomUUID();
-  }
-  let options;
+  if (!userId)
+    userId = crypto.randomUUID()
+
+  let options
   try {
     options = await generateRegistrationOptions({
       rpName,
       rpID,
       userID: userId,
-      userName: userName,
-      excludeCredentials: userAuthenticators?.map((authenticator) => ({
+      userName,
+      excludeCredentials: userAuthenticators?.map(authenticator => ({
         id: isoBase64URL.toBuffer(authenticator.credentialID),
-        type: "public-key",
+        type: 'public-key',
         // Optional
         transports: authenticator.transports
           ? (JSON.parse(
@@ -112,50 +114,53 @@ async function generateRegistrationOpt(
       })),
       authenticatorSelection: {
         // Defaults
-        residentKey: "preferred",
-        userVerification: "preferred",
+        residentKey: 'preferred',
+        userVerification: 'preferred',
       },
-    });
-  } catch (e) {
-    console.error(e);
-    return resMessageError("GENERATE_REG_OPTIONS_FAILED");
+    })
   }
-  let session;
+  catch (e) {
+    console.error(e)
+    return resMessageError('GENERATE_REG_OPTIONS_FAILED')
+  }
+  let session
   try {
-    session = await dbCreateAuthSession(options.challenge, userId, userName);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    session = await dbCreateAuthSession(options.challenge, userId, userName)
   }
-  setCookie("auth-session-id", session.id);
-  return resMessageSuccess("OPTION_GENERATE", options);
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
+  }
+  setCookie('auth-session-id', session.id)
+  return resMessageSuccess('OPTION_GENERATE', options)
 }
 
 export async function RegOptAction(formData: FormData) {
   const schema = z.object({
     userName: z.string(),
-  });
-  let data;
+  })
+  let data
   try {
     data = schema.parse({
-      userName: formData.get("username"),
-    });
-  } catch {
-    return resMessageError("ZOD_FORM_DATA_TYPE_ERROR");
+      userName: formData.get('username'),
+    })
   }
-  if (data.userName == "") {
-    return resMessageError("USER_ID_CAN_NOT_BE_EMPTY");
+  catch {
+    return resMessageError('ZOD_FORM_DATA_TYPE_ERROR')
   }
-  return await generateRegistrationOpt(data.userName);
+  if (data.userName === '')
+    return resMessageError('USER_ID_CAN_NOT_BE_EMPTY')
+
+  return await generateRegistrationOpt(data.userName)
 }
 
 async function verifyRegistrationRes(
   localResponse: RegistrationResponseJSON,
   currentSession: {
-    currentChallenge: string;
+    currentChallenge: string
   },
 ) {
-  let verification;
+  let verification
   try {
     verification = await verifyRegistrationResponse({
       response: localResponse,
@@ -163,103 +168,107 @@ async function verifyRegistrationRes(
       expectedOrigin: origin,
       expectedRPID: rpID,
       requireUserVerification: false,
-    });
-  } catch (e) {
-    console.error(e);
-    return resMessageError("VERIFY_REG_RESPONSE_PROCESS_FAILED");
+    })
   }
-  const { verified, registrationInfo } = verification;
+  catch (e) {
+    console.error(e)
+    return resMessageError('VERIFY_REG_RESPONSE_PROCESS_FAILED')
+  }
+  const { verified, registrationInfo } = verification
 
-  if (!verified || !registrationInfo) {
-    return resMessageError("VERIFY_REG_RESPONSE_FAILED");
-  }
-  const { credentialPublicKey, credentialID, counter, aaguid } =
-    registrationInfo;
+  if (!verified || !registrationInfo)
+    return resMessageError('VERIFY_REG_RESPONSE_FAILED')
+
+  const { credentialPublicKey, credentialID, counter, aaguid }
+    = registrationInfo
   const newAuthenticator = {
     credentialID: isoBase64URL.fromBuffer(credentialID),
     credentialPublicKey: Buffer.from(credentialPublicKey),
     counter,
     transports: JSON.stringify(localResponse.response.transports),
     aaguid,
-  };
-  return newAuthenticator;
+  }
+  return newAuthenticator
 }
 
 export async function vRegResAction(localResponse: RegistrationResponseJSON) {
-  const currentSession = await getCurrentAuthSession();
-  if ("message" in currentSession) {
-    return currentSession;
-  }
+  const currentSession = await getCurrentAuthSession()
+  if ('message' in currentSession)
+    return currentSession
+
   const newAuthenticator = await verifyRegistrationRes(
     localResponse,
     currentSession,
-  );
-  if ("message" in newAuthenticator) {
-    return newAuthenticator;
-  }
-  let user;
+  )
+  if ('message' in newAuthenticator)
+    return newAuthenticator
+
+  let user
   try {
     user = await dbCreateUser(
       currentSession.userId!,
       currentSession.userName!,
       newAuthenticator,
-    );
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    )
+  }
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
   try {
-    cookies().delete("auth-session-id");
-    const session = await dbCreateSession(user.id);
-    setCookie("session-id", session.id);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    cookies().delete('auth-session-id')
+    const session = await dbCreateSession(user.id)
+    setCookie('session-id', session.id)
   }
-  return resMessageSuccess("REGISTER_FINISH");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
+  }
+  return resMessageSuccess('REGISTER_FINISH')
 }
 
 // Auth
 export async function AuthOptAction() {
-  let options;
+  let options
   try {
     options = await generateAuthenticationOptions({
       rpID,
-      userVerification: "required",
-    });
-  } catch (e) {
-    console.error(e);
-    return resMessageError("GENERATE_AUTH_OPTIONS_FAILED");
+      userVerification: 'required',
+    })
   }
-  let session;
+  catch (e) {
+    console.error(e)
+    return resMessageError('GENERATE_AUTH_OPTIONS_FAILED')
+  }
+  let session
   try {
-    session = await dbCreateAuthSession(options.challenge);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("GENERATE_NEW_AUTH_SESSION_FAILED");
+    session = await dbCreateAuthSession(options.challenge)
   }
-  setCookie("auth-session-id", session.id);
-  return resMessageSuccess("OPTION_GENERATE", options);
+  catch (e) {
+    console.error(e)
+    return resMessageError('GENERATE_NEW_AUTH_SESSION_FAILED')
+  }
+  setCookie('auth-session-id', session.id)
+  return resMessageSuccess('OPTION_GENERATE', options)
 }
 
 export async function vAuthResAction(options: AuthenticationResponseJSON) {
-  const currentSession = await getCurrentAuthSession();
-  if ("message" in currentSession) {
-    return currentSession;
-  }
+  const currentSession = await getCurrentAuthSession()
+  if ('message' in currentSession)
+    return currentSession
 
-  let authenticator;
+  let authenticator
   try {
-    authenticator = await dbReadAuthenticatorById(options.rawId);
-  } catch (e) {
-    return resMessageError("DB_ERROR");
+    authenticator = await dbReadAuthenticatorById(options.rawId)
+  }
+  catch (e) {
+    return resMessageError('DB_ERROR')
   }
 
-  if (!authenticator) {
-    return resMessageError("AUTHENTICATOR_NOT_FOUND");
-  }
+  if (!authenticator)
+    return resMessageError('AUTHENTICATOR_NOT_FOUND')
 
-  let verification;
+  let verification
   try {
     verification = await verifyAuthenticationResponse({
       response: options,
@@ -276,137 +285,142 @@ export async function vAuthResAction(options: AuthenticationResponseJSON) {
             ) as AuthenticatorTransportFuture[])
           : undefined,
       },
-    });
-  } catch (e) {
-    console.error(e);
-    return resMessageError("VERIFY_AUTH_RESPONSE_PROCESS_FAILED");
+    })
   }
-  if (!verification.verified) {
-    return resMessageError("VERIFY_AUTH_RESPONSE_FAILED");
+  catch (e) {
+    console.error(e)
+    return resMessageError('VERIFY_AUTH_RESPONSE_PROCESS_FAILED')
   }
+  if (!verification.verified)
+    return resMessageError('VERIFY_AUTH_RESPONSE_FAILED')
+
   try {
     await dbUpdateAuthenticatorCounter(
       authenticator.credentialID,
       verification.authenticationInfo.newCounter,
-    );
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    )
+  }
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
 
   try {
-    cookies().delete("auth-session-id");
-    const session = await dbCreateSession(authenticator.userId);
-    setCookie("session-id", session.id);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    cookies().delete('auth-session-id')
+    const session = await dbCreateSession(authenticator.userId)
+    setCookie('session-id', session.id)
+  }
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
 
-  return resMessageSuccess("AUTH_FINISH");
+  return resMessageSuccess('AUTH_FINISH')
 }
 
 // ADD DEVICE
 
 export async function addDeviceOptAction() {
   // SESSION CHECK
-  const sessionId = cookies().get("session-id")?.value;
-  if (!sessionId) {
-    return resMessageError("SESSION_NOT_FOUND");
-  }
+  const sessionId = cookies().get('session-id')?.value
+  if (!sessionId)
+    return resMessageError('SESSION_NOT_FOUND')
 
   // USER CHECK
-  let userInfo;
+  let userInfo
   try {
-    userInfo = await dbReadLoggedInUserInfoBySession(sessionId);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    userInfo = await dbReadLoggedInUserInfoBySession(sessionId)
   }
-  if (!userInfo) {
-    return resMessageError("SESSION_EXPIRE");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
-  let authenticators;
+  if (!userInfo)
+    return resMessageError('SESSION_EXPIRE')
+
+  let authenticators
   try {
-    authenticators = await dbReadAuthenticatorsByUserId(userInfo.id);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    authenticators = await dbReadAuthenticatorsByUserId(userInfo.id)
   }
-  if (!authenticators) {
-    return resMessageError("NO_DEVICE_REGISTER_BEFORE");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
+  if (!authenticators)
+    return resMessageError('NO_DEVICE_REGISTER_BEFORE')
+
   return await generateRegistrationOpt(
     userInfo.name,
     userInfo.id,
     authenticators,
-  );
+  )
 }
 
 export async function addDeviceVResAction(
   localResponse: RegistrationResponseJSON,
 ) {
-  const currentSession = await getCurrentAuthSession();
-  if ("message" in currentSession) {
-    return currentSession;
-  }
+  const currentSession = await getCurrentAuthSession()
+  if ('message' in currentSession)
+    return currentSession
 
   const newAuthenticator = await verifyRegistrationRes(
     localResponse,
     currentSession,
-  );
+  )
 
-  if ("message" in newAuthenticator) {
-    return newAuthenticator;
-  }
+  if ('message' in newAuthenticator)
+    return newAuthenticator
 
   try {
     await dbCreateAuthenticatorForUser(
       currentSession.userId!,
       newAuthenticator,
-    );
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    )
   }
-  revalidatePath("/posts/[slug]", "page");
-  revalidatePath("/about");
-  return resMessageSuccess("ADD_DEVICE_SUCCEED");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
+  }
+  revalidatePath('/posts/[slug]', 'page')
+  revalidatePath('/about')
+  return resMessageSuccess('ADD_DEVICE_SUCCEED')
 }
 
 export async function removeUserDeviceAction(credentialID: string) {
   // SESSION CHECK
-  const sessionId = cookies().get("session-id")?.value;
-  if (!sessionId) {
-    return resMessageError("SESSION_NOT_FOUND");
-  }
+  const sessionId = cookies().get('session-id')?.value
+  if (!sessionId)
+    return resMessageError('SESSION_NOT_FOUND')
 
   // USER CHECK
-  let userInfo;
+  let userInfo
   try {
-    userInfo = await dbReadLoggedInUserInfoBySession(sessionId);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    userInfo = await dbReadLoggedInUserInfoBySession(sessionId)
   }
-  if (!userInfo) {
-    return resMessageError("SESSION_EXPIRE");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
   }
-  let authenticators;
+  if (!userInfo)
+    return resMessageError('SESSION_EXPIRE')
+
+  let authenticators
   try {
-    authenticators = await dbReadAuthenticatorsByUserId(userInfo.id);
-  } catch (e) {
-    console.error(e);
-    return resMessageError("DB_ERROR");
+    authenticators = await dbReadAuthenticatorsByUserId(userInfo.id)
   }
-  if (authenticators.length == 1)
-    return resMessageError("ONLY_ONE_DEVICE_REMAIN");
+  catch (e) {
+    console.error(e)
+    return resMessageError('DB_ERROR')
+  }
+  if (authenticators.length === 1)
+    return resMessageError('ONLY_ONE_DEVICE_REMAIN')
   try {
-    await dbRemoveAuthenticatorCounter(userInfo.id, credentialID);
-    revalidatePath("/posts/[slug]", "page");
-    revalidatePath("/about");
-    return { message: SUCCEED_MESSAGE.REMOVE_DEVICE_SUCCEED };
-  } catch (e) {
-    return { message: ERROR_MESSAGE.REMOVE_DEVICE_SQL_ERROR };
+    await dbRemoveAuthenticatorCounter(userInfo.id, credentialID)
+    revalidatePath('/posts/[slug]', 'page')
+    revalidatePath('/about')
+    return { message: SUCCEED_MESSAGE.REMOVE_DEVICE_SUCCEED }
+  }
+  catch (e) {
+    return { message: ERROR_MESSAGE.REMOVE_DEVICE_SQL_ERROR }
   }
 }

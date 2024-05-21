@@ -9,7 +9,7 @@ const AboutSkeleton: React.FC = () => {
       <div className="h-2 max-w-[360px] rounded-full bg-gray-200"></div>
       <span className="sr-only">Loading...</span>
     </div>
-  );
-};
+  )
+}
 
-export default AboutSkeleton;
+export default AboutSkeleton

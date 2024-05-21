@@ -1,5 +1,5 @@
-import { cache } from "react";
-import prisma from "~/server/db";
+import { cache } from 'react'
+import prisma from '~/server/db'
 
 // READ
 export const dbReadAllCommentsDecBySlug = cache(async (slug: string) => {
@@ -8,7 +8,7 @@ export const dbReadAllCommentsDecBySlug = cache(async (slug: string) => {
       postSlug: slug,
     },
     orderBy: {
-      createAt: "desc",
+      createAt: 'desc',
     },
     select: {
       id: true,
@@ -20,20 +20,16 @@ export const dbReadAllCommentsDecBySlug = cache(async (slug: string) => {
         },
       },
     },
-  });
-});
+  })
+})
 
 // CREATE
-export const dbCreateNewComment = async (
-  content: string,
-  slug: string,
-  authorId: string,
-) => {
+export async function dbCreateNewComment(content: string, slug: string, authorId: string) {
   return await prisma.comment.create({
     data: {
-      content: content,
+      content,
       postSlug: slug,
-      authorId: authorId,
+      authorId,
     },
-  });
-};
+  })
+}

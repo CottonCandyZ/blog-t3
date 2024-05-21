@@ -1,29 +1,32 @@
-"use client";
-import Tags, { type tagProps } from "~/components/posts/tags";
+'use client'
 import {
   type Dispatch,
+  type PropsWithChildren,
   type SetStateAction,
   createContext,
+  useMemo,
   useState,
-  type PropsWithChildren,
-} from "react";
-import ProfileCard from "~/components/profile/profile-card";
-import { usePathname } from "next/navigation";
-import clsx from "clsx";
-interface TagsContext {
-  toggledTags: Set<string>;
-  setToggledTags: Dispatch<SetStateAction<Set<string>>>;
+} from 'react'
+import { usePathname } from 'next/navigation'
+import clsx from 'clsx'
+import ProfileCard from '~/components/profile/profile-card'
+import Tags, { type tagProps } from '~/components/posts/tags'
+
+interface TagsContextType {
+  toggledTags: Set<string>
+  setToggledTags: Dispatch<SetStateAction<Set<string>>>
 }
-export const TagsContext = createContext({} as TagsContext);
+export const TagsContext = createContext({} as TagsContextType)
 const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
   tags,
   children,
 }) => {
-  const [toggledTags, setToggledTags] = useState(new Set<string>());
-  const home = usePathname() === "/";
+  const [toggledTags, setToggledTags] = useState(new Set<string>())
+  const value = useMemo(() => ({ toggledTags, setToggledTags }), [toggledTags, setToggledTags])
+  const home = usePathname() === '/'
   return (
     <div className="relative mt-4 grid auto-rows-max grid-cols-[3fr_1fr] gap-4">
-      <TagsContext.Provider value={{ toggledTags, setToggledTags }}>
+      <TagsContext.Provider value={value}>
         <section
           className={clsx(`col-span-full h-full md:col-start-2 md:block`, {
             hidden: !home,
@@ -34,7 +37,7 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
           </div>
           {home && (
             <search
-              className="relative row-start-1 h-min rounded-2xl bg-primary-bg p-4 shadow-cxs 
+              className="relative row-start-1 h-min rounded-2xl bg-primary-bg p-4 shadow-cxs
               md:sticky md:top-[104px] md:mt-4 "
             >
               <h2
@@ -54,8 +57,8 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
           className={clsx(
             `col-span-full md:col-start-1 md:col-end-1 md:row-start-1`,
             {
-              "row-start-2": home,
-              "row-start-1": !home,
+              'row-start-2': home,
+              'row-start-1': !home,
             },
           )}
         >
@@ -68,7 +71,7 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default ClientWrapper;
+export default ClientWrapper

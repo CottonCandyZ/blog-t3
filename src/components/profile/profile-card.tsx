@@ -1,11 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
-import { AboutIcon } from "~/components/icons";
-import SocialLinks from "~/components/profile/social-links";
-import { CONFIG } from "~/config";
-import profileImage from "~/config/profile-image.webp"
+import Image from 'next/image'
+import Link from 'next/link'
+import { AboutIcon } from '~/components/icons'
+import SocialLinks from '~/components/profile/social-links'
+import { CONFIG } from '~/config'
+import profileImage from '~/config/profile-image.webp'
 
-const ProfileCard = () => {
+function ProfileCard() {
   return (
     <div className="flex flex-col items-center gap-2 p-3 ">
       <Link
@@ -24,7 +24,7 @@ const ProfileCard = () => {
 
       <span
         className="relative text-lg font-bold
-      after:absolute after:-bottom-1 after:left-7 after:right-7 after:h-1 after:rounded-xl after:bg-primary-small"
+      after:absolute after:inset-x-7 after:-bottom-1 after:h-1 after:rounded-xl after:bg-primary-small"
       >
         {CONFIG.profile_card.name}
       </span>
@@ -35,7 +35,7 @@ const ProfileCard = () => {
         <SocialLinks />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProfileCard;
+export default ProfileCard

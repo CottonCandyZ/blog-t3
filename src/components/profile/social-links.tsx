@@ -1,19 +1,19 @@
-import { CONFIG } from "~/config";
+import { CONFIG } from '~/config'
 
 export default function SocialLinks() {
-  const social_link = CONFIG.social_link;
+  const social_link = CONFIG.social_link
   return (
     <ul className="flex w-max justify-center gap-1">
-      {social_link.map((item, index) => (
+      {social_link.map(item => (
         <ListItem
-          key={index}
+          key={item.name}
           content={item.name}
           Icon={item.icon}
           href={item.href}
         />
       ))}
     </ul>
-  );
+  )
 }
 
 function ListItem({
@@ -21,9 +21,9 @@ function ListItem({
   Icon,
   href,
 }: {
-  content: string;
-  Icon: React.FC<{ className?: string; color?: string }>;
-  href: string;
+  content: string
+  Icon: React.FC<{ className?: string, color?: string }>
+  href: string
 }) {
   return (
     <li className="active:scale-95">
@@ -31,7 +31,7 @@ function ListItem({
         href={href}
         target="_blank"
         after-content={content}
-        className="group relative flex size-10 cursor-pointer items-center justify-center rounded-full 
+        className="group relative flex size-10 cursor-pointer items-center justify-center rounded-full
       border-primary-light transition-all duration-500 after:absolute
       after:-bottom-5 after:z-10 after:rounded-2xl after:bg-primary-light
       after:px-1.5 after:py-1 after:text-xs after:text-primary
@@ -42,5 +42,5 @@ function ListItem({
         <Icon className="size-6 text-primary transition-all duration-500 ease-out" />
       </a>
     </li>
-  );
+  )
 }

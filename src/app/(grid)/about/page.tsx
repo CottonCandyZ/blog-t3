@@ -1,9 +1,9 @@
-import AboutContent from "~/components/about/about-content";
-import Comments from "~/components/comment";
+import AboutContent from '~/components/about/about-content'
+import Comments from '~/components/comment'
 
 export const metadata = {
-  title: "About",
-};
+  title: 'About',
+}
 
 export default function page() {
   return (
@@ -15,5 +15,5 @@ export default function page() {
         <Comments slug="about" />
       </div>
     </>
-  );
+  )
 }

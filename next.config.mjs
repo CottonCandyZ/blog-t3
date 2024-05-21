@@ -8,6 +8,6 @@ const config = {
   experimental: {
     ppr: true,
   },
-};
+}
 
-export default config;
+export default config

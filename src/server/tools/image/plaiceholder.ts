@@ -6,7 +6,8 @@
 
 // And Some Type error is fixed here, compared to https://github.com/joe-bell/plaiceholder/blob/main/packages/plaiceholder/src/index.ts
 
-import sharp, { type Sharp, type Metadata, type OutputInfo } from "sharp";
+import type { Buffer } from 'node:buffer'
+import sharp, { type Metadata, type OutputInfo, type Sharp } from 'sharp'
 
 /* Utils
    =========================================== */
@@ -16,153 +17,155 @@ import sharp, { type Sharp, type Metadata, type OutputInfo } from "sharp";
  * @param size Split chunk size
  * @returns Splitted Array
  */
-const arrayChunk = <T>(arr: T[], size: number): (T | T[])[] =>
-  arr.length > size
+function arrayChunk<T>(arr: T[], size: number): (T | T[])[] {
+  return arr.length > size
     ? [arr.slice(0, size), ...arrayChunk(arr.slice(size), size)]
-    : [arr];
+    : [arr]
+}
 
-type ToRGBAStringOptions = { r: number; g: number; b: number; a?: number };
+interface ToRGBAStringOptions { r: number, g: number, b: number, a?: number }
 
-const toRGBAString = ({ r, g, b, a }: ToRGBAStringOptions) => {
-  if (typeof a === "undefined") return `rgb(${[r, g, b].join(",")})`;
+function toRGBAString({ r, g, b, a }: ToRGBAStringOptions) {
+  if (typeof a === 'undefined')
+    return `rgb(${[r, g, b].join(',')})`
 
-  return `rgba(${[r, g, b, a].join(",")})`;
-};
+  return `rgba(${[r, g, b, a].join(',')})`
+}
 
 /* getPixels
    =========================================== */
 
 interface GetPixelsOptions {
-  data: Buffer;
-  info: sharp.OutputInfo;
+  data: Buffer
+  info: sharp.OutputInfo
 }
 
-type GetPixelsReturn = ReturnType<typeof getPixels>;
+type GetPixelsReturn = ReturnType<typeof getPixels>
 
-const getPixels = ({ data, info }: GetPixelsOptions) => {
-  const { channels, width } = info;
+function getPixels({ data, info }: GetPixelsOptions) {
+  const { channels, width } = info
 
-  const rawBuffer = [...data];
-  const allPixels = arrayChunk(rawBuffer, channels) as number[][];
-  const rows = arrayChunk(allPixels, width) as number[][][];
+  const rawBuffer = [...data]
+  const allPixels = arrayChunk(rawBuffer, channels) as number[][]
+  const rows = arrayChunk(allPixels, width) as number[][][]
 
-  const pixels = rows.map((row) =>
+  const pixels = rows.map(row =>
     row.map((pixel) => {
-      const [r, g, b, a] = pixel;
+      const [r, g, b, a] = pixel
 
       return {
         r,
         g,
         b,
-        ...(typeof a === "undefined"
+        ...(typeof a === 'undefined'
           ? {}
           : { a: Math.round((a / 255) * 1000) / 1000 }),
-      };
+      }
     }),
-  );
+  )
 
-  return pixels;
-};
+  return pixels
+}
 
 /* getCSS
    =========================================== */
 
 interface GetCSSOptions {
-  info: OutputInfo;
-  pixels: GetPixelsReturn;
+  info: OutputInfo
+  pixels: GetPixelsReturn
 }
 
-type GetCSSReturn = ReturnType<typeof getCSS>;
+type GetCSSReturn = ReturnType<typeof getCSS>
 
-const getCSS = ({ pixels, info }: GetCSSOptions) => {
+function getCSS({ pixels, info }: GetCSSOptions) {
   const linearGradients = pixels.map((row) => {
-    const rowPixels = row.map((pixel) =>
+    const rowPixels = row.map(pixel =>
       toRGBAString(pixel as ToRGBAStringOptions),
-    );
+    )
 
     const gradient = rowPixels
       .map((pixel, i) => {
-        const start = i === 0 ? "" : ` ${(i / rowPixels.length) * 100}%`;
-        const end =
-          i === rowPixels.length
-            ? ""
-            : ` ${((i + 1) / rowPixels.length) * 100}%`;
+        const start = i === 0 ? '' : ` ${(i / rowPixels.length) * 100}%`
+        const end
+          = i === rowPixels.length
+            ? ''
+            : ` ${((i + 1) / rowPixels.length) * 100}%`
 
-        return `${pixel}${start}${end}`;
+        return `${pixel}${start}${end}`
       })
-      .join(",");
+      .join(',')
 
-    return `linear-gradient(90deg, ${gradient})`;
-  });
+    return `linear-gradient(90deg, ${gradient})`
+  })
 
   if (linearGradients.length !== info.height) {
     console.error(
-      "Woops! Something went wrong here and caused the color height to differ from the source height.",
-    );
+      'Woops! Something went wrong here and caused the color height to differ from the source height.',
+    )
   }
 
   const backgroundPosition = linearGradients
     .map((_, i) =>
-      i === 0 ? "0 0 " : `0 ${(i / (linearGradients.length - 1)) * 100}%`,
+      i === 0 ? '0 0 ' : `0 ${(i / (linearGradients.length - 1)) * 100}%`,
     )
-    .join(",");
+    .join(',')
 
-  const backgroundSize = `100% ${100 / linearGradients.length}%`;
+  const backgroundSize = `100% ${100 / linearGradients.length}%`
 
   return {
-    backgroundImage: linearGradients.join(","),
+    backgroundImage: linearGradients.join(','),
     backgroundPosition,
     backgroundSize,
-    backgroundRepeat: "no-repeat",
-  };
-};
+    backgroundRepeat: 'no-repeat',
+  }
+}
 
 /* getSVG
    =========================================== */
 
 type TRects = [
-  "rect",
-  Record<"width" | "height" | "x" | "y" | "fillOpacity", object & number> &
-    Record<"fill", object & string>,
-];
+  'rect',
+  Record<'width' | 'height' | 'x' | 'y' | 'fillOpacity', object & number> &
+  Record<'fill', object & string>,
+]
 
 interface IGetSVGOptions {
-  info: OutputInfo;
-  pixels: GetPixelsReturn;
+  info: OutputInfo
+  pixels: GetPixelsReturn
 }
 
 type GetSVGReturn = [
-  "svg",
+  'svg',
   {
-    viewBox: string;
-    width: string;
-    height: string;
-    shapeRendering: string;
-    preserveAspectRatio: string;
-    style: Record<string, string | number>;
-    xmlns: string;
+    viewBox: string
+    width: string
+    height: string
+    shapeRendering: string
+    preserveAspectRatio: string
+    style: Record<string, string | number>
+    xmlns: string
   },
   TRects[],
-];
+]
 
-type IGetSVG = (options: IGetSVGOptions) => GetSVGReturn;
+type IGetSVG = (options: IGetSVGOptions) => GetSVGReturn
 
 const getSVG: IGetSVG = ({ pixels, info }) => {
   const chunkRects = pixels.map((row, y) =>
     row.map(({ a, ...rgb }, x) => {
-      const colorProps =
-        typeof a !== "undefined"
+      const colorProps
+        = typeof a !== 'undefined'
           ? {
-              fill: toRGBAString(rgb as ToRGBAStringOptions),
-              "fill-opacity": a,
+              'fill': toRGBAString(rgb as ToRGBAStringOptions),
+              'fill-opacity': a,
             }
           : {
-              fill: toRGBAString(rgb as ToRGBAStringOptions),
-              "fill-opacity": 1,
-            };
+              'fill': toRGBAString(rgb as ToRGBAStringOptions),
+              'fill-opacity': 1,
+            }
 
       return [
-        "rect",
+        'rect',
         {
           ...colorProps,
           width: 1,
@@ -170,111 +173,107 @@ const getSVG: IGetSVG = ({ pixels, info }) => {
           x,
           y,
         },
-      ];
+      ]
     }),
-  );
+  )
 
   if (chunkRects.length !== info.height) {
     console.error(
-      "Woops! Something went wrong here and caused the color height to differ from the source height.",
-    );
+      'Woops! Something went wrong here and caused the color height to differ from the source height.',
+    )
   }
-  const rects = ([] as TRects[]).concat(...(chunkRects as TRects[][]));
+  const rects = ([] as TRects[]).concat(...(chunkRects as TRects[][]))
 
   return [
-    "svg",
+    'svg',
     {
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "100%",
-      height: "100%",
-      shapeRendering: "crispEdges",
-      preserveAspectRatio: "none",
+      xmlns: 'http://www.w3.org/2000/svg',
+      width: '100%',
+      height: '100%',
+      shapeRendering: 'crispEdges',
+      preserveAspectRatio: 'none',
       viewBox: `0 0 ${info.width} ${info.height}`,
       style: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transformOrigin: "top left",
-        transform: "translate(-50%, -50%)",
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transformOrigin: 'top left',
+        transform: 'translate(-50%, -50%)',
         right: 0,
         bottom: 0,
       },
     },
     rects,
-  ];
-};
+  ]
+}
 
 /* getPlaiceholder
    =========================================== */
 
-type SharpFormatOptions = Parameters<Sharp["toFormat"]>;
-type SharpModulateOptions = NonNullable<Parameters<Sharp["modulate"]>[0]>;
+type SharpFormatOptions = Parameters<Sharp['toFormat']>
+type SharpModulateOptions = NonNullable<Parameters<Sharp['modulate']>[0]>
 
-export type GetPlaiceholderSrc = Buffer;
+export type GetPlaiceholderSrc = Buffer
 
 export interface GetPlaiceholderOptions extends SharpModulateOptions {
-  autoOrient?: boolean;
-  size?: number;
-  format?: SharpFormatOptions;
-  removeAlpha?: boolean;
+  autoOrient?: boolean
+  size?: number
+  format?: SharpFormatOptions
+  removeAlpha?: boolean
 }
 
 export interface GetPlaiceholderReturn {
-  metadata: Omit<Metadata, "width" | "height"> &
-    Required<Pick<Metadata, "width" | "height">>;
-  base64: string;
+  metadata: Omit<Metadata, 'width' | 'height'> &
+  Required<Pick<Metadata, 'width' | 'height'>>
+  base64: string
   color: {
-    hex: string;
-    r: number;
-    g: number;
-    b: number;
-  };
-  pixels: GetPixelsReturn;
-  css: GetCSSReturn;
-  svg: GetSVGReturn;
+    hex: string
+    r: number
+    g: number
+    b: number
+  }
+  pixels: GetPixelsReturn
+  css: GetCSSReturn
+  svg: GetSVGReturn
 }
 
-export const getPlaiceholder = async (
-  src: GetPlaiceholderSrc,
-  {
-    autoOrient = false,
-    size = 4,
-    format = ["png"],
-    brightness = 1,
-    saturation = 1.2,
-    removeAlpha = false,
-    ...options
-  }: GetPlaiceholderOptions = {},
-) => {
+export async function getPlaiceholder(src: GetPlaiceholderSrc, {
+  autoOrient = false,
+  size = 4,
+  format = ['png'],
+  brightness = 1,
+  saturation = 1.2,
+  removeAlpha = false,
+  ...options
+}: GetPlaiceholderOptions = {}) {
   /* Optimize
     ---------------------------------- */
 
   const metadata = await sharp(src)
     .metadata()
     .then(({ width, height, ...metadata }) => {
-      if (!width || !height) {
-        throw Error("Could not get required image metadata");
-      }
+      if (!width || !height)
+        throw new Error('Could not get required image metadata')
 
-      return { width, height, ...metadata };
-    });
+      return { width, height, ...metadata }
+    })
 
-  const sizeMin = 4;
-  const sizeMax = 64;
+  const sizeMin = 4
+  const sizeMax = 64
 
-  const isSizeValid = sizeMin <= size && size <= sizeMax;
+  const isSizeValid = sizeMin <= size && size <= sizeMax
 
-  !isSizeValid &&
-    console.error(
-      ["Please enter a `size` value between", sizeMin, "and", sizeMax].join(
-        " ",
-      ),
-    );
+  !isSizeValid
+  && console.error(
+    ['Please enter a `size` value between', sizeMin, 'and', sizeMax].join(
+      ' ',
+    ),
+  )
 
   // initial optimization
   const pipelineStage1 = sharp(src)
     .resize(size, size, {
-      fit: "inside",
+      fit: 'inside',
     })
     .toFormat(...format)
     .modulate({
@@ -282,17 +281,17 @@ export const getPlaiceholder = async (
       saturation,
       ...(options?.hue ? { hue: options?.hue } : {}),
       ...(options?.lightness ? { lightness: options?.lightness } : {}),
-    });
+    })
 
   // alpha
-  const pipelineStage2 =
-    removeAlpha === false ? pipelineStage1 : pipelineStage1.removeAlpha();
+  const pipelineStage2
+    = removeAlpha === false ? pipelineStage1 : pipelineStage1.removeAlpha()
 
   // autoOrientation
-  const pipelineStage3 =
-    autoOrient === false ? pipelineStage2 : pipelineStage2.rotate();
+  const pipelineStage3
+    = autoOrient === false ? pipelineStage2 : pipelineStage2.rotate()
 
-  const pipeline = pipelineStage3;
+  const pipeline = pipelineStage3
 
   /* Return
     ---------------------------------- */
@@ -306,9 +305,9 @@ export const getPlaiceholder = async (
         g,
         b,
         hex:
-          "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join(""),
-      };
-    });
+          `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`,
+      }
+    })
 
   const base64 = await pipeline
     .clone()
@@ -316,32 +315,32 @@ export const getPlaiceholder = async (
     .toBuffer({ resolveWithObject: true })
     .then(
       ({ data, info }) =>
-        `data:image/${info.format};base64,${data.toString("base64")}`,
+        `data:image/${info.format};base64,${data.toString('base64')}`,
     )
     .catch((err) => {
-      console.error("base64 generation failed", err);
-      throw err;
-    });
+      console.error('base64 generation failed', err)
+      throw err
+    })
 
   const { pixels, css, svg } = await pipeline
     .clone()
     .raw()
     .toBuffer({ resolveWithObject: true })
     .then(({ data, info }) => {
-      const pixels = getPixels({ data, info });
-      const css = getCSS({ pixels, info });
-      const svg = getSVG({ pixels, info });
+      const pixels = getPixels({ data, info })
+      const css = getCSS({ pixels, info })
+      const svg = getSVG({ pixels, info })
 
       return {
         pixels,
         css,
         svg,
-      };
+      }
     })
     .catch((err) => {
-      console.error("pixel generation failed", err);
-      throw err;
-    });
+      console.error('pixel generation failed', err)
+      throw err
+    })
 
   return {
     color,
@@ -350,5 +349,5 @@ export const getPlaiceholder = async (
     metadata,
     pixels,
     svg,
-  };
-};
+  }
+}

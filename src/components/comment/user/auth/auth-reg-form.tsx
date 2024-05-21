@@ -1,21 +1,21 @@
-"use client";
+'use client'
 import {
   startAuthentication,
   startRegistration,
-} from "@simplewebauthn/browser";
-import { useState } from "react";
-import { useFormStatus } from "react-dom";
-import clsx from "clsx";
-import { ERROR_MESSAGE } from "~/server/message";
+} from '@simplewebauthn/browser'
+import { useState } from 'react'
+import { useFormStatus } from 'react-dom'
+import clsx from 'clsx'
+import { ERROR_MESSAGE } from '~/server/message'
 import {
   AuthOptAction,
   RegOptAction,
   vAuthResAction,
   vRegResAction,
-} from "~/server/action/webauthn";
+} from '~/server/action/webauthn'
 
 function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
   return (
     <button
       type="submit"
@@ -29,16 +29,16 @@ function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
     focus-visible:outline focus-visible:outline-2 
     focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
-          "bg-primary-extralight shadow-inner": pending,
+          'bg-primary-extralight shadow-inner': pending,
         },
       )}
     >
       验证
     </button>
-  );
+  )
 }
 function RegButton({ Reg }: { Reg: (formData: FormData) => Promise<void> }) {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
   return (
     <button
       type="submit"
@@ -52,54 +52,56 @@ function RegButton({ Reg }: { Reg: (formData: FormData) => Promise<void> }) {
     focus-visible:outline focus-visible:outline-2 
     focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
-          "bg-primary-extralight shadow-inner": pending,
+          'bg-primary-extralight shadow-inner': pending,
         },
       )}
     >
       注册
     </button>
-  );
+  )
 }
 
-const AuthRegForm = () => {
-  const [message, setMessage] = useState("");
+function AuthRegForm() {
+  const [message, setMessage] = useState('')
   async function Reg(formData: FormData) {
-    setMessage("请等待认证框弹出"); // 这个暂时不会工作！！
-    const optionRes = await RegOptAction(formData);
-    setMessage(optionRes.message);
-    if (!optionRes.data) {
-      return;
-    }
-    let localRes;
+    setMessage('请等待认证框弹出') // 这个暂时不会工作！！
+    const optionRes = await RegOptAction(formData)
+    setMessage(optionRes.message)
+    if (!optionRes.data)
+      return
+
+    let localRes
     try {
-      localRes = await startRegistration(optionRes.data);
-    } catch (e) {
-      console.error(e);
-      setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
-      return;
+      localRes = await startRegistration(optionRes.data)
     }
-    setMessage("已经发送过去啦，请耐心等待服务器认证...");
-    const verifyRes = await vRegResAction(localRes);
-    setMessage(verifyRes.message);
+    catch (e) {
+      console.error(e)
+      setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED)
+      return
+    }
+    setMessage('已经发送过去啦，请耐心等待服务器认证...')
+    const verifyRes = await vRegResAction(localRes)
+    setMessage(verifyRes.message)
   }
   async function Auth() {
-    setMessage("请等待认证框弹出");
-    const optionRes = await AuthOptAction();
-    setMessage(optionRes.message);
-    if (!optionRes.data) {
-      return;
-    }
-    let localRes;
+    setMessage('请等待认证框弹出')
+    const optionRes = await AuthOptAction()
+    setMessage(optionRes.message)
+    if (!optionRes.data)
+      return
+
+    let localRes
     try {
-      localRes = await startAuthentication(optionRes.data);
-    } catch (e) {
-      console.error(e);
-      setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
-      return;
+      localRes = await startAuthentication(optionRes.data)
     }
-    setMessage("已经发送过去啦，请耐心等待验证...");
-    const verifyRes = await vAuthResAction(localRes);
-    setMessage(verifyRes.message);
+    catch (e) {
+      console.error(e)
+      setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED)
+      return
+    }
+    setMessage('已经发送过去啦，请耐心等待验证...')
+    const verifyRes = await vAuthResAction(localRes)
+    setMessage(verifyRes.message)
   }
 
   return (
@@ -122,7 +124,7 @@ const AuthRegForm = () => {
             placeholder="名字，别太长，验证可以不用填哦"
             autoComplete="username webauthn"
             className="block w-full rounded-md border-0 bg-primary-bg px-3.5 py-2.5
-      shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light 
+      shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light
       focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small"
           />
         </div>
@@ -130,7 +132,7 @@ const AuthRegForm = () => {
         <p className="flex-1 py-2.5 font-medium text-primary">{message}</p>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default AuthRegForm;
+export default AuthRegForm

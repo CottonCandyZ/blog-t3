@@ -1,6 +1,6 @@
-import { cache } from "react";
-import type { AuthenticatorInfo } from "~/server/action/webauthn";
-import prisma from "~/server/db";
+import { cache } from 'react'
+import type { AuthenticatorInfo } from '~/server/action/webauthn'
+import prisma from '~/server/db'
 
 // READ
 export const dbReadLoggedInUserInfoBySession = cache(
@@ -11,18 +11,18 @@ export const dbReadLoggedInUserInfoBySession = cache(
           id: sessionId,
         },
       })
-      .user();
+      .user()
   },
-);
+)
 
-export const dbReadAuthenticatorById = async (credentialID: string) => {
+export async function dbReadAuthenticatorById(credentialID: string) {
   return await prisma.device.findUnique({
     where: {
-      credentialID: credentialID,
+      credentialID,
       removed: false,
     },
-  });
-};
+  })
+}
 
 export const dbReadAuthenticatorsByUserId = cache(async (userId: string) => {
   return await prisma.device.findMany({
@@ -32,40 +32,32 @@ export const dbReadAuthenticatorsByUserId = cache(async (userId: string) => {
       aaguid: true,
     },
     where: {
-      userId: userId,
+      userId,
       removed: false,
     },
-  });
-});
+  })
+})
 
-export const dbReadAuthSessionData = async (sessionId: string) => {
+export async function dbReadAuthSessionData(sessionId: string) {
   return await prisma.authSession.findUnique({
     where: {
       id: sessionId,
     },
-  });
-};
+  })
+}
 
 // CREATE
-export const dbCreateAuthSession = async (
-  currentChallenge: string,
-  userId?: string,
-  userName?: string,
-) => {
+export async function dbCreateAuthSession(currentChallenge: string, userId?: string, userName?: string) {
   return await prisma.authSession.create({
     data: {
-      userId: userId,
-      userName: userName,
-      currentChallenge: currentChallenge,
+      userId,
+      userName,
+      currentChallenge,
     },
-  });
-};
+  })
+}
 
-export const dbCreateUser = async (
-  userId: string,
-  userName: string,
-  newAuthenticator: AuthenticatorInfo,
-) => {
+export async function dbCreateUser(userId: string, userName: string, newAuthenticator: AuthenticatorInfo) {
   return await prisma.user.create({
     data: {
       id: userId,
@@ -76,56 +68,47 @@ export const dbCreateUser = async (
         },
       },
     },
-  });
-};
+  })
+}
 
-export const dbCreateSession = async (userId: string) => {
+export async function dbCreateSession(userId: string) {
   return await prisma.session.create({
     data: {
-      userId: userId,
+      userId,
     },
-  });
-};
+  })
+}
 
-export const dbCreateAuthenticatorForUser = async (
-  userId: string,
-  newAuthenticator: AuthenticatorInfo,
-) => {
+export async function dbCreateAuthenticatorForUser(userId: string, newAuthenticator: AuthenticatorInfo) {
   await prisma.device.create({
     data: {
       ...newAuthenticator,
-      userId: userId,
+      userId,
     },
-  });
-};
+  })
+}
 
 // UPDATE
-export const dbUpdateAuthenticatorCounter = async (
-  credentialID: string,
-  counter: number,
-) => {
+export async function dbUpdateAuthenticatorCounter(credentialID: string, counter: number) {
   return await prisma.device.update({
     where: {
-      credentialID: credentialID,
+      credentialID,
     },
     data: {
-      counter: counter,
+      counter,
     },
-  });
-};
+  })
+}
 
 // Remove
-export const dbRemoveAuthenticatorCounter = async (
-  userId: string,
-  credentialID: string,
-) => {
+export async function dbRemoveAuthenticatorCounter(userId: string, credentialID: string) {
   return await prisma.device.update({
     where: {
-      userId: userId,
-      credentialID: credentialID,
+      userId,
+      credentialID,
     },
     data: {
       removed: true,
     },
-  });
-};
+  })
+}
