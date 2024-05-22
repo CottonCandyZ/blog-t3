@@ -11,8 +11,7 @@
     "postinstall": "prisma generate",
     "new:post": "node ./scripts/new-post.mjs",
     "lint": "eslint . --fix",
-    "start": "next start",
-    "prepare": "husky install"
+    "start": "next start"
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",
@@ -45,22 +44,17 @@
   "devDependencies": {
     "@antfu/eslint-config": "^2.18.1",
     "@eslint-react/eslint-plugin": "^1.5.12",
-    "@eslint/eslintrc": "^3.1.0",
-    "@mdx-js/esbuild": "^3.0.1",
+    "@next/eslint-plugin-next": "^14.2.3",
     "@types/eslint": "^8.56.9",
-    "@types/eslint__eslintrc": "^2.1.1",
     "@types/node": "^18.19.31",
     "@types/react": "^18.2.77",
     "@types/react-dom": "^18.2.25",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.1.0",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3",
     "eslint-plugin-format": "^0.1.1",
     "eslint-plugin-react-refresh": "^0.4.7",
     "eslint-plugin-tailwindcss": "^3.15.2",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.2",
     "postcss": "^8.4.38",
     "prettier": "3.2.5",
     "prisma": "^5.12.1",
@@ -68,8 +62,5 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5",
     "unified": "^11.0.4"
-  },
-  "lint-staged": {
-    "*.{tsx,js}": "eslint --cache --fix"
   }
 }
