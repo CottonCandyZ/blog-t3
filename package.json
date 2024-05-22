@@ -2,7 +2,6 @@
   "name": "my-blog-t3",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@9.1.0",
   "scripts": {
     "build": "next build",
     "db:push": "prisma db push",
