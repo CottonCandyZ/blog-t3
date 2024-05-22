@@ -48,9 +48,9 @@ const MobileNav: React.FC = () => {
                 <li
                   key={item.name}
                   className={clsx(
-                    `duration- -translate-x-full 
+                    `duration-${(index + 4) * 100} -translate-x-full 
                     tracking-widest
-                    transition-transform${(index + 4) * 100}`,
+                    transition-transform`,
                     {
                       'translate-x-0': expend,
                       '-translate-x-full': !expend,
