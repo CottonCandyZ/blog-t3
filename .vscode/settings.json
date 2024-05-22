@@ -1,15 +1,12 @@
 {
-  "cSpell.words": [
-    "clsx",
-    "Frontmatter"
-  ],
+  "cSpell.words": ["clsx", "Frontmatter"],
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
 
   // (remove this if your ESLint extension above v3.0.5)
   "eslint.experimental.useFlatConfig": true,
 
   // Disable the default formatter, use eslint instead
-  "prettier.enable": false,
+  // "prettier.enable": false,
   "editor.formatOnSave": true,
 
   // Auto fix
@@ -49,5 +46,11 @@
     "gql",
     "graphql",
     "astro"
-  ]
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
