@@ -1,5 +1,4 @@
 'use server'
-import crypto from 'node:crypto'
 import process from 'node:process'
 import { Buffer } from 'node:buffer'
 import z from 'zod'
@@ -92,18 +91,16 @@ async function generateRegistrationOpt(
   userId?: string,
   userAuthenticators?: AuthenticatorInfoCreAndTrans[],
 ) {
-  if (!userId)
-    userId = crypto.randomUUID()
-
   let options
   try {
     options = await generateRegistrationOptions({
       rpName,
       rpID,
-      userID: userId,
+      userID: userId !== undefined ? isoBase64URL.toBuffer(userId) : userId,
+      userDisplayName: userName,
       userName,
       excludeCredentials: userAuthenticators?.map(authenticator => ({
-        id: isoBase64URL.toBuffer(authenticator.credentialID),
+        id: authenticator.credentialID,
         type: 'public-key',
         // Optional
         transports: authenticator.transports
@@ -125,7 +122,7 @@ async function generateRegistrationOpt(
   }
   let session
   try {
-    session = await dbCreateAuthSession(options.challenge, userId, userName)
+    session = await dbCreateAuthSession(options.challenge, options.user.id, options.user.name)
   }
   catch (e) {
     console.error(e)
@@ -182,7 +179,7 @@ async function verifyRegistrationRes(
   const { credentialPublicKey, credentialID, counter, aaguid }
     = registrationInfo
   const newAuthenticator = {
-    credentialID: isoBase64URL.fromBuffer(credentialID),
+    credentialID,
     credentialPublicKey: Buffer.from(credentialPublicKey),
     counter,
     transports: JSON.stringify(localResponse.response.transports),
@@ -277,7 +274,7 @@ export async function vAuthResAction(options: AuthenticationResponseJSON) {
       expectedRPID: rpID,
       authenticator: {
         ...authenticator,
-        credentialID: isoBase64URL.toBuffer(authenticator.credentialID),
+        credentialID: authenticator.credentialID,
         credentialPublicKey: new Uint8Array(authenticator.credentialPublicKey),
         transports: authenticator.transports
           ? (JSON.parse(
