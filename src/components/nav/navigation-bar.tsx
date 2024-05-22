@@ -52,6 +52,7 @@ function ListItem({
               current === false,
           },
         )}
+        prefetch
       >
         <Icon
           className={clsx('', {

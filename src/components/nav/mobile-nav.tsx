@@ -71,6 +71,7 @@ const MobileNav: React.FC = () => {
                       },
                     )}
                     onClick={() => setExpend(false)}
+                    prefetch
                   >
                     <item.icon className="mr-1 text-[1em]" />
                     {item.name}
