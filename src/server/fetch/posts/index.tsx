@@ -4,13 +4,13 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import remarkGfm from 'remark-gfm'
 import glob from 'fast-glob'
-import { bundleMDX } from 'mdx-bundler'
 import dayjs from 'dayjs'
 import remarkUnwrapImages from 'remark-unwrap-images'
 import rehypeMdxCodeProps from 'rehype-mdx-code-props'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
 import { cache } from 'react'
+import { serialize } from 'next-mdx-remote/serialize'
 import type { PostFrontmatter } from '~/components/posts'
 import remarkImageInfo from '~/server/fetch/posts/custom-remark-plugin/remark-image-info'
 
@@ -52,6 +52,7 @@ export const getLatestPostsListInfo = cache(async () => {
       return dayB - dayA
     })
 })
+
 /**
  * Get all tags appear in posts.
  * @returns All tags in posts.
@@ -73,32 +74,31 @@ export const getAllTags = cache(async () => {
 })
 
 /**
- * Parse the post content by slug.
- * @param slug Post path name without `.mdx` suffix.
+ * Parse the post content by path.
+ * @param mdxPath Post path.
  * @returns `code` and `frontmatter` parsed by `bundleMDX`.
  */
-export const getPostContent = cache(async (slug: string) => {
-  const { code, frontmatter } = await bundleMDX<PostFrontmatter>({
-    file: path.join(process.cwd(), `posts/${slug}.mdx`),
-    cwd: path.join(process.cwd(), './posts'),
-    mdxOptions(options) {
-      options.remarkPlugins = [
-        ...(options.remarkPlugins ?? []),
+export const getPostContent = cache(async (mdxPath: string) => {
+  const source = await fs.readFile(
+    path.join(process.cwd(), mdxPath),
+    'utf8',
+  )
+  const mdxSource = await serialize(source, {
+    mdxOptions: {
+      remarkPlugins: [
         remarkGfm,
         remarkUnwrapImages,
         remarkImageInfo,
-      ]
-      options.rehypePlugins = [
-        ...(options.rehypePlugins ?? []),
+      ],
+      rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: 'wrap' }],
         [rehypeMdxCodeProps, { tagName: 'code' }],
       ]
-
-      return options
     },
+    parseFrontmatter: true,
   })
-  return { code, frontmatter }
+  return mdxSource;
 })
 
 /**

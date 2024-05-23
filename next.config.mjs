@@ -8,6 +8,7 @@ const config = {
   experimental: {
     ppr: true,
   },
+  transpilePackages: ['next-mdx-remote'],
 }
 
 export default config

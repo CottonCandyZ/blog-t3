@@ -1,7 +1,6 @@
 'use client'
-import { useMemo } from 'react'
-import { getMDXComponent } from 'mdx-bundler/client'
-import type { MDXContentProps } from 'mdx-bundler/dist/types'
+import type { MDXRemoteProps } from 'next-mdx-remote'
+import { MDXRemote } from 'next-mdx-remote'
 import NextImage from '~/components/Image'
 import tagRenderer from '~/components/posts/tag-render'
 import UnorderedList from '~/components/posts/content/lists/unordered-list'
@@ -10,7 +9,7 @@ import ListItem from '~/components/posts/content/lists/list-item'
 import CodeBlock from '~/components/posts/content/Codeblock'
 import MDXLink from '~/components/posts/content/link'
 
-export default function MDXComponent({ code }: { code: string }) {
+export default function MDXComponent({ mdxSource }: { mdxSource: Omit<MDXRemoteProps, 'components'> }) {
   const components = {
     h1: tagRenderer('h1'),
     h2: tagRenderer('h2'),
@@ -36,7 +35,6 @@ export default function MDXComponent({ code }: { code: string }) {
     hr: tagRenderer('hr'),
     code: CodeBlock,
     a: MDXLink,
-  } as unknown as MDXContentProps['components']
-  const Component = useMemo(() => getMDXComponent(code), [code])
-  return <Component components={components} />
+  } as unknown as MDXRemoteProps['components']
+  return <MDXRemote {...mdxSource} components={components} />
 }

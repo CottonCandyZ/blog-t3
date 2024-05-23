@@ -3,9 +3,12 @@ import MDXComponent from '~/components/posts/mdx-component'
 import TableOfContents from '~/components/posts/table-of-contents'
 import PostInfo from '~/components/posts/post-info'
 import Comments from '~/components/comment'
+import type { PostFrontmatter } from '~/components/posts'
 
 export default async function PostContent({ slug }: { slug: string }) {
-  const { code, frontmatter } = await getPostContent(decodeURIComponent(slug))
+  const mdxSource = await getPostContent(decodeURIComponent(`posts/${slug}.mdx`))
+  const frontmatter = mdxSource.frontmatter as unknown as PostFrontmatter
+
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
       <div className="relative w-full max-w-[50rem] shrink-0 ">
@@ -25,7 +28,7 @@ export default async function PostContent({ slug }: { slug: string }) {
           <h2 className="anchor invisible absolute -top-4" id="Introduction">
             {frontmatter.title}
           </h2>
-          <MDXComponent code={code} />
+          <MDXComponent mdxSource={mdxSource} />
         </article>
         <div className="mt-4 rounded-2xl bg-primary-bg px-8 py-5 shadow-cxs">
           <Comments slug={slug} />
