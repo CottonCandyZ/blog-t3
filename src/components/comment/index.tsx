@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 import User from '~/components/comment/user'
 import CommentsList from '~/components/comment/comments-list'

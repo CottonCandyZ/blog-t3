@@ -1,9 +1,13 @@
+import { cookies } from 'next/headers'
 import { dbReadAuthenticatorsByUserId, dbReadLoggedInUserInfoBySession } from '~/server/db/user'
 import { resMessageError, resMessageSuccess } from '~/server/message'
 
-export type DeviceInfoPromise = ReturnType<typeof fetchUserDevice>;
+export type DeviceInfoPromise = ReturnType<typeof fetchUserDevice>
 
-export async function fetchLoggedUserInfo(sessionId: string) {
+export async function fetchLoggedUserInfo() {
+  const sessionId = cookies().get('session-id')?.value
+  if (!sessionId)
+    return resMessageError('SESSION_EXPIRE')
   let userInfo
   try {
     userInfo = await dbReadLoggedInUserInfoBySession(sessionId)
@@ -15,10 +19,13 @@ export async function fetchLoggedUserInfo(sessionId: string) {
   return resMessageSuccess('DB_READ_SUCCEED', userInfo)
 }
 
-export async function fetchUserDevice(userId: string) {
+export async function fetchUserDevice() {
+  const user = (await fetchLoggedUserInfo()).data
+  if (!user)
+    return resMessageError('SESSION_EXPIRE')
   let authenticators
   try {
-    authenticators = await dbReadAuthenticatorsByUserId(userId)
+    authenticators = await dbReadAuthenticatorsByUserId(user.id)
   }
   catch (e) {
     console.error(e)
@@ -27,7 +34,7 @@ export async function fetchUserDevice(userId: string) {
   return resMessageSuccess('DB_READ_SUCCEED', authenticators)
 }
 
-export type AaguidPromise = ReturnType<typeof fetchAaguid>;
+export type AaguidPromise = ReturnType<typeof fetchAaguid>
 
 export interface aaguid {
   name: string
