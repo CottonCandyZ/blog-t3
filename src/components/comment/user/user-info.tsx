@@ -1,9 +1,11 @@
 'use client'
 import clsx from 'clsx'
-import { type PropsWithChildren, useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import AddDevice from '~/components/comment/user/device/add-device'
+import DeviceList from '~/components/comment/user/device/device-list'
 import { LogoutAction } from '~/server/action/webauthn'
+import type { AaguidPromise, DeviceInfoPromise } from '~/server/fetch/user'
 
 function LogOutButton({
   Logout,
@@ -32,9 +34,12 @@ function LogOutButton({
     </button>
   )
 }
-const UserInfo: React.FC<
-  PropsWithChildren<{ user: { label: number, name: string, id: string } }>
-> = ({ user, children }) => {
+const UserInfo: React.FC<{
+  user: { label: number, name: string, id: string }
+  deviceInfoPromise: DeviceInfoPromise
+  aaguidPromise: AaguidPromise
+}>
+= ({ user, deviceInfoPromise, aaguidPromise }) => {
   const [toggleDevice, setToggleDevice] = useState(false)
   const [message, setMessage] = useState('')
   return (
@@ -81,10 +86,16 @@ const UserInfo: React.FC<
       </div>
       {message === ''
         ? null
-        : (
-          <p className="py-2.5 font-medium text-primary">{message}</p>
-          )}
-      {toggleDevice ? <div className="mt-4">{children}</div> : null}
+        : <p className="py-2.5 font-medium text-primary">{message}</p>}
+      {toggleDevice
+        ? (
+          <div className="mt-4">
+            <Suspense fallback={<p className="text-base font-medium text-primary">正在加载设备...</p>}>
+              <DeviceList aaguidPromise={aaguidPromise} deviceInfoPromise={deviceInfoPromise} />
+            </Suspense>
+          </div>
+          )
+        : null}
     </div>
   )
 }

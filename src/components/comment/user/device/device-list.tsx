@@ -1,24 +1,21 @@
-import { cookies } from 'next/headers'
+'use client'
+import { use } from 'react'
 import DeviceListClient from '~/components/comment/user/device/device-list-client'
-import { fetchAaguid, fetchLoggedUserInfo, fetchUserDevice } from '~/server/fetch/user'
+import type { AaguidPromise, DeviceInfoPromise } from '~/server/fetch/user'
 
-async function DeviceList() {
-  const sessionId = cookies().get('session-id')?.value
-  let authenticators = null
-  if (sessionId) {
-    const user = (await fetchLoggedUserInfo(sessionId)).data
-    if (!user)
-      return
-    authenticators = (await fetchUserDevice(user.id)).data
-  }
-  const aaguid = await fetchAaguid()
+function DeviceList({
+  deviceInfoPromise,
+  aaguidPromise,
+}: {
+  deviceInfoPromise: DeviceInfoPromise
+  aaguidPromise: AaguidPromise
+}) {
+  const authenticators = use(deviceInfoPromise).data
+  const aaguid = use(aaguidPromise).data
+
   return authenticators
-    ? (
-      <DeviceListClient devices={authenticators} aaguid={aaguid.data} />
-      )
-    : (
-      <p className="text-base font-medium text-primary">Session 消失了</p>
-      )
+    ? <DeviceListClient devices={authenticators} aaguid={aaguid} />
+    : <p className="text-base font-medium text-primary">Session 消失了</p>
 }
 
 export default DeviceList

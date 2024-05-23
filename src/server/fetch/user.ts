@@ -1,6 +1,8 @@
 import { dbReadAuthenticatorsByUserId, dbReadLoggedInUserInfoBySession } from '~/server/db/user'
 import { resMessageError, resMessageSuccess } from '~/server/message'
 
+export type DeviceInfoPromise = ReturnType<typeof fetchUserDevice>;
+
 export async function fetchLoggedUserInfo(sessionId: string) {
   let userInfo
   try {
@@ -24,6 +26,8 @@ export async function fetchUserDevice(userId: string) {
   }
   return resMessageSuccess('DB_READ_SUCCEED', authenticators)
 }
+
+export type AaguidPromise = ReturnType<typeof fetchAaguid>;
 
 export interface aaguid {
   name: string
