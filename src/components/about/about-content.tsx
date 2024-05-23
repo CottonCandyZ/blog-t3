@@ -4,7 +4,7 @@ import MDXComponent from '~/components/posts/mdx-component'
 import { getPostContent } from '~/server/fetch/posts'
 
 const AboutContent: React.FC = async () => {
-  const mdxSource = await getPostContent(decodeURIComponent('src/config/about.mdx'))
+  const mdxSource = await getPostContent(decodeURIComponent('config/about.mdx'))
   const frontmatter = mdxSource.frontmatter as unknown as PostFrontmatter
   return (
     <>

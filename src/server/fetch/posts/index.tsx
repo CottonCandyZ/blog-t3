@@ -28,15 +28,19 @@ export const getPostFrontmatter = cache(async (slug: string) => {
   return frontmatter
 })
 
+export const getAllPostsSlug = cache(async () => {
+  return (await getAllPostsPathName())
+    .map(path => getPostSlug(path))
+})
+
 /**
  * Get sorted and filtered posts info.
  * @returns Sorted by day and filtered `slug` and `frontmatter`.
  */
 export const getLatestPostsListInfo = cache(async () => {
-  const postsPathName = await getAllPostsPathName()
+  const postsSlug = await getAllPostsSlug()
   const allPostsListInfo = await Promise.all(
-    postsPathName.map(async (postPathName) => {
-      const slug = getPostSlug(postPathName)
+    postsSlug.map(async (slug) => {
       const frontmatter = await getPostFrontmatter(slug)
       return {
         slug,
@@ -94,11 +98,11 @@ export const getPostContent = cache(async (mdxPath: string) => {
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: 'wrap' }],
         [rehypeMdxCodeProps, { tagName: 'code' }],
-      ]
+      ],
     },
     parseFrontmatter: true,
   })
-  return mdxSource;
+  return mdxSource
 })
 
 /**
@@ -119,7 +123,3 @@ async function getAllPostsPathName() {
 function getPostSlug(postPathName: string) {
   return postPathName.replace(/^posts\/|\.mdx$/g, '')
 }
-
-export const getAllPostsSlug = cache(async () => {
-  return (await getAllPostsPathName()).map(path => getPostSlug(path))
-})
