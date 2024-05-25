@@ -10,9 +10,10 @@ import rehypeMdxCodeProps from 'rehype-mdx-code-props'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
 import { cache } from 'react'
-import { serialize } from 'next-mdx-remote/serialize'
+import { compileMDX } from 'next-mdx-remote/rsc'
 import type { PostFrontmatter } from '~/components/posts'
 import remarkImageInfo from '~/server/fetch/posts/custom-remark-plugin/remark-image-info'
+import { components } from '~/components/posts/mdx-component'
 
 /**
  * Extract frontmatter info.
@@ -21,7 +22,7 @@ import remarkImageInfo from '~/server/fetch/posts/custom-remark-plugin/remark-im
  */
 export const getPostFrontmatter = cache(async (slug: string) => {
   const rawMdx = await fs.readFile(
-    path.join(process.cwd(), `posts/${slug}.mdx`),
+    path.resolve(`posts/${slug}.mdx`),
     'utf8',
   )
   const frontmatter = matter(rawMdx).data as PostFrontmatter
@@ -84,10 +85,11 @@ export const getAllTags = cache(async () => {
  */
 export const getPostContent = cache(async (mdxPath: string) => {
   const source = await fs.readFile(
-    path.join(process.cwd(), mdxPath),
+    path.resolve(mdxPath),
     'utf8',
   )
-  const mdxSource = await serialize(source, {
+
+  const mdxSource = await compileMDX<PostFrontmatter>({ source, components, options: {
     mdxOptions: {
       remarkPlugins: [
         remarkGfm,
@@ -101,7 +103,7 @@ export const getPostContent = cache(async (mdxPath: string) => {
       ],
     },
     parseFrontmatter: true,
-  })
+  } })
   return mdxSource
 })
 

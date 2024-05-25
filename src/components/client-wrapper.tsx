@@ -37,13 +37,13 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
           </div>
           {home && (
             <search
-              className="relative row-start-1 h-min rounded-2xl bg-primary-bg p-4 shadow-cxs
-              md:sticky md:top-[104px] md:mt-4 "
+              className={`relative row-start-1 h-min rounded-2xl bg-primary-bg p-4 shadow-cxs
+              md:sticky md:top-[104px] md:mt-4`}
             >
               <h2
-                className="relative pl-3 text-xl font-semibold
+                className={`relative pl-3 text-xl font-semibold
                 before:absolute before:left-0 before:top-1.5 before:h-4 before:w-1 before:rounded-md
-                before:bg-primary-medium"
+                before:bg-primary-medium`}
               >
                 Tags
               </h2>

@@ -20,7 +20,7 @@ export default function Footer() {
         <span className="font-normal">
           &copy;
           {new Date().getFullYear()}
-&nbsp;
+          &nbsp;
           {CONFIG.footer_info.name}
         </span>
       </div>

@@ -31,8 +31,8 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = ({ codeContent, language
       {({ style, tokens, getLineProps, getTokenProps }) => (
         <div className="relative mb-5 mt-10">
           <div
-            className="absolute -top-7 right-10 size-fit rounded-t-lg bg-[#faf8f5]
-            px-3 pt-1 font-semibold text-primary-small"
+            className={`absolute -top-7 right-10 size-fit rounded-t-lg bg-[#faf8f5]
+            px-3 pt-1 font-semibold text-primary-small`}
           >
             {language.toUpperCase()}
           </div>

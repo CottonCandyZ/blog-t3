@@ -1,13 +1,10 @@
 import { getPostContent } from '~/server/fetch/posts'
-import MDXComponent from '~/components/posts/mdx-component'
 import TableOfContents from '~/components/posts/table-of-contents'
 import PostInfo from '~/components/posts/post-info'
 import Comments from '~/components/comment'
-import type { PostFrontmatter } from '~/components/posts'
 
 export default async function PostContent({ slug }: { slug: string }) {
-  const mdxSource = await getPostContent(decodeURIComponent(`posts/${slug}.mdx`))
-  const frontmatter = mdxSource.frontmatter as unknown as PostFrontmatter
+  const { content, frontmatter } = await getPostContent(decodeURIComponent(`posts/${slug}.mdx`))
 
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
@@ -15,8 +12,8 @@ export default async function PostContent({ slug }: { slug: string }) {
         <article className="markdown-body mt-4 rounded-2xl bg-primary-bg px-5 py-6 shadow-cxs md:px-8 md:py-10">
           <header className="mb-5">
             <h1
-              className="relative text-4xl font-bold
-          before:absolute before:-left-2 before:top-2 before:h-6 before:w-1 before:rounded-md before:bg-primary-medium md:before:-left-3"
+              className={`relative text-4xl font-bold
+          before:absolute before:-left-2 before:top-2 before:h-6 before:w-1 before:rounded-md before:bg-primary-medium md:before:-left-3`}
             >
               {frontmatter.title}
             </h1>
@@ -28,7 +25,7 @@ export default async function PostContent({ slug }: { slug: string }) {
           <h2 className="anchor invisible absolute -top-4" id="Introduction">
             {frontmatter.title}
           </h2>
-          <MDXComponent mdxSource={mdxSource} />
+          {content}
         </article>
         <div className="mt-4 rounded-2xl bg-primary-bg px-8 py-5 shadow-cxs">
           <Comments slug={slug} />

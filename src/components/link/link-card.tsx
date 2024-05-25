@@ -15,10 +15,10 @@ const LinkCard: React.FC<LinkCardProps> = async ({ avatar_src, name, description
   }
   return (
     <a
-      className="relative flex min-w-80 flex-row gap-4 rounded-2xl bg-primary-bg p-4
+      className={`relative flex min-w-80 flex-row gap-4 rounded-2xl bg-primary-bg p-4
         shadow-cxs before:absolute before:inset-2 before:rounded-3xl before:border-4
         before:border-primary-bg before:transition-all hover:before:absolute
-        hover:before:-inset-2"
+        hover:before:-inset-2`}
       href={href}
       target="_blank"
       rel="noreferrer noopener"

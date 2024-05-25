@@ -35,8 +35,8 @@ function Header() {
     <header className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center gap-7">
         <div
-          className="flex cursor-pointer flex-row items-center gap-1 rounded-xl p-2 hover:bg-primary-light/30
-          active:scale-95 active:bg-primary-light/20"
+          className={`flex cursor-pointer flex-row items-center gap-1 rounded-xl p-2 hover:bg-primary-light/30
+          active:scale-95 active:bg-primary-light/20`}
           ref={switchRef}
           onClick={() => {
             setToggle(toggle => !toggle)

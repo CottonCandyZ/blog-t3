@@ -123,9 +123,9 @@ function AuthRegForm() {
             name="username"
             placeholder="名字，别太长，验证可以不用填哦"
             autoComplete="username webauthn"
-            className="block w-full rounded-md border-0 bg-primary-bg px-3.5 py-2.5
+            className={`block w-full rounded-md border-0 bg-primary-bg px-3.5 py-2.5
       shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light
-      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small"
+      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small`}
           />
         </div>
         <RegButton Reg={Reg} />

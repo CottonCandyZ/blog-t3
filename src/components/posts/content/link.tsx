@@ -36,8 +36,8 @@ const MDXLink: React.FC<JSX.IntrinsicElements['a']> = (props) => {
       {children}
       {isPlainAnchor && (
         <ExternalLink
-          className="mx-0.5 inline-block
-        text-primary/50 transition-colors group-hover/a:text-primary"
+          className={`mx-0.5 inline-block
+        text-primary/50 transition-colors group-hover/a:text-primary`}
         />
       )}
     </a>

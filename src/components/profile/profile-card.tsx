@@ -23,8 +23,8 @@ function ProfileCard() {
       </Link>
 
       <span
-        className="relative text-lg font-bold
-      after:absolute after:inset-x-7 after:-bottom-1 after:h-1 after:rounded-xl after:bg-primary-small"
+        className={`relative text-lg font-bold
+      after:absolute after:inset-x-7 after:-bottom-1 after:h-1 after:rounded-xl after:bg-primary-small`}
       >
         {CONFIG.profile_card.name}
       </span>

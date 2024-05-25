@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 import PostContent from '~/components/posts/post-content'
 import { getAllPostsSlug, getPostFrontmatter } from '~/server/fetch/posts'
 
+export const dynamicParams = false
 export async function generateStaticParams() {
   const postsSlug = await getAllPostsSlug()
   return postsSlug.map(postSlug => ({
@@ -21,8 +21,5 @@ export async function generateMetadata({
   }
 }
 export default async function Page({ params }: { params: { slug: string } }) {
-  const postsSlug = await getAllPostsSlug()
-  if (!postsSlug.includes(params.slug))
-    notFound()
   return <PostContent slug={params.slug} />
 }

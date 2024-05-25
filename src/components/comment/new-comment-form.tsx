@@ -53,9 +53,9 @@ const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
           rows={4}
           placeholder="请保持友善"
           required
-          className="mt-2 block w-full rounded-md border-0 px-3.5 py-2
+          className={`mt-2 block w-full rounded-md border-0 px-3.5 py-2
       shadow-sm ring-1 ring-inset ring-primary-light placeholder:text-primary-light
-      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small"
+      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small`}
         />
       </div>
       <Submit />

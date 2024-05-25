@@ -7,6 +7,11 @@
 const config = {
   experimental: {
     ppr: true,
+    reactCompiler: true,
+    // just for vercel to work
+    outputFileTracingIncludes: {
+      '/about': ['./src/config/about.mdx'],
+    },
   },
   transpilePackages: ['next-mdx-remote'],
 }

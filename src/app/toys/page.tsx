@@ -12,8 +12,8 @@ export default function page() {
         return (
           <div key={info.title}>
             <h2
-              className="relative pl-4 text-xl font-semibold text-primary
-            before:absolute before:inset-y-0 before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-medium"
+              className={`relative pl-4 text-xl font-semibold text-primary
+            before:absolute before:inset-y-0 before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-medium`}
             >
               {info.title}
             </h2>
