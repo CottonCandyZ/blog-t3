@@ -18,15 +18,14 @@ const remarkImageInfo: Plugin<[], Root> = () => {
     const promises: (() => Promise<void>)[] = []
     visit(tree, 'image', (node: Image) => {
       promises.push(async () => {
-        const { src, width, height, ...BlurCss }
-          = await getImageMetaAndPlaceHolder(node.url)
+        const { src, width, height, ...BlurCss } = await getImageMetaAndPlaceHolder(node.url)
 
         node.data = {
           hProperties: { src, width, height, ...BlurCss },
         }
       })
     })
-    await Promise.allSettled(promises.map(t => t()))
+    await Promise.allSettled(promises.map((t) => t()))
   }
 }
 

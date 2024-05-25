@@ -7,11 +7,7 @@ import DeviceList from '~/components/comment/user/device/device-list'
 import { LogoutAction } from '~/server/action/webauthn'
 import type { AaguidPromise, DeviceInfoPromise } from '~/server/fetch/user'
 
-function LogOutButton({
-  Logout,
-}: {
-  Logout: (formData: FormData) => Promise<void>
-}) {
+function LogOutButton({ Logout }: { Logout: (formData: FormData) => Promise<void> }) {
   const { pending } = useFormStatus()
   return (
     <button
@@ -35,11 +31,10 @@ function LogOutButton({
   )
 }
 const UserInfo: React.FC<{
-  user: { label: number, name: string, id: string }
+  user: { label: number; name: string; id: string }
   deviceInfoPromise: DeviceInfoPromise
   aaguidPromise: AaguidPromise
-}>
-= ({ user, deviceInfoPromise, aaguidPromise }) => {
+}> = ({ user, deviceInfoPromise, aaguidPromise }) => {
   const [toggleDevice, setToggleDevice] = useState(false)
   const [message, setMessage] = useState('')
   return (
@@ -48,11 +43,7 @@ const UserInfo: React.FC<{
         <div>
           <span className="text-pretty text-2xl text-primary-dark">Hi! </span>
           <span className="text-2xl font-medium text-primary">{user.name}</span>
-          <span className="text-sm text-primary-light">
-            {' '}
-            #
-            {user.label}
-          </span>
+          <span className="text-sm text-primary-light"> #{user.label}</span>
         </div>
         <div className="flex gap-2">
           <div className="shrink-0">
@@ -77,25 +68,23 @@ const UserInfo: React.FC<{
             )}
             type="button"
             onClick={() => {
-              setToggleDevice(toggle => !toggle)
+              setToggleDevice((toggle) => !toggle)
             }}
           >
             设备管理
           </button>
         </div>
       </div>
-      {message === ''
-        ? null
-        : <p className="py-2.5 font-medium text-primary">{message}</p>}
-      {toggleDevice
-        ? (
-          <div className="mt-4">
-            <Suspense fallback={<p className="text-base font-medium text-primary">正在加载设备...</p>}>
-              <DeviceList aaguidPromise={aaguidPromise} deviceInfoPromise={deviceInfoPromise} />
-            </Suspense>
-          </div>
-          )
-        : null}
+      {message === '' ? null : <p className="py-2.5 font-medium text-primary">{message}</p>}
+      {toggleDevice ? (
+        <div className="mt-4">
+          <Suspense
+            fallback={<p className="text-base font-medium text-primary">正在加载设备...</p>}
+          >
+            <DeviceList aaguidPromise={aaguidPromise} deviceInfoPromise={deviceInfoPromise} />
+          </Suspense>
+        </div>
+      ) : null}
     </div>
   )
 }

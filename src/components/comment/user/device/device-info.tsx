@@ -43,21 +43,17 @@ const DeviceInfo: React.FC<{
   return (
     <div className="flex flex-row items-center justify-between border-b border-primary-extralight py-2">
       <div className="flex flex-row items-center gap-2">
-        {aaguidInfo
-          ? (
-            <Image
-              className="size-8"
-              src={aaguidInfo.icon_light}
-              alt="Authenticator Icon"
-              width={32}
-              height={32}
-            />
-            )
-          : null}
+        {aaguidInfo ? (
+          <Image
+            className="size-8"
+            src={aaguidInfo.icon_light}
+            alt="Authenticator Icon"
+            width={32}
+            height={32}
+          />
+        ) : null}
         <div className="font-medium text-primary">
-          <div>
-            {aaguidInfo ? <span>{aaguidInfo.name}</span> : <span>Unknown</span>}
-          </div>
+          <div>{aaguidInfo ? <span>{aaguidInfo.name}</span> : <span>Unknown</span>}</div>
           <div>
             <span>创建于 </span>
             <time suppressHydrationWarning>

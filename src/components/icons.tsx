@@ -2,76 +2,44 @@ import type { SVGProps } from 'react'
 
 export function HomeIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M21 20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.489a1 1 0 0 1 .386-.79l8-6.222a1 1 0 0 1 1.228 0l8 6.222a1 1 0 0 1 .386.79v10.51Zm-2-1V9.978l-7-5.445l-7 5.445V19h14Z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 export function ArticleIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M19 5v14H5V5zm0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2"
-      >
-      </path>
-      <path
-        fill="currentColor"
-        d="M14 17H7v-2h7zm3-4H7v-2h10zm0-4H7V7h10z"
-      >
-      </path>
+      ></path>
+      <path fill="currentColor" d="M14 17H7v-2h7zm3-4H7v-2h10zm0-4H7V7h10z"></path>
     </svg>
   )
 }
 
 export function LinkIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="m14.829 7.757l-5.657 5.657a1 1 0 1 0 1.414 1.415l5.657-5.657A3 3 0 0 0 12 4.929l-5.657 5.657a5 5 0 0 0 7.071 7.07L19.071 12l1.414 1.414l-5.656 5.657a7 7 0 1 1-9.9-9.9l5.657-5.656a5 5 0 0 1 7.071 7.07L12 16.244A3 3 0 1 1 7.758 12l5.656-5.657l1.415 1.414Z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 
 export function AboutIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M10 3h4a8 8 0 1 1 0 16v3.5c-5-2-12-5-12-11.5a8 8 0 0 1 8-8Zm2 14h2a6 6 0 0 0 0-12h-4a6 6 0 0 0-6 6c0 3.61 2.462 5.966 8 8.48V17Z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
@@ -88,8 +56,7 @@ export function GithubIcon(props: SVGProps<SVGSVGElement>) {
       <path
         fill="currentColor"
         d="M208.31 75.68A59.78 59.78 0 0 0 202.93 28a8 8 0 0 0-6.93-4a59.75 59.75 0 0 0-48 24h-24a59.75 59.75 0 0 0-48-24a8 8 0 0 0-6.93 4a59.78 59.78 0 0 0-5.38 47.68A58.14 58.14 0 0 0 56 104v8a56.06 56.06 0 0 0 48.44 55.47A39.8 39.8 0 0 0 96 192v8H72a24 24 0 0 1-24-24a40 40 0 0 0-40-40a8 8 0 0 0 0 16a24 24 0 0 1 24 24a40 40 0 0 0 40 40h24v16a8 8 0 0 0 16 0v-40a24 24 0 0 1 48 0v40a8 8 0 0 0 16 0v-40a39.8 39.8 0 0 0-8.44-24.53A56.06 56.06 0 0 0 216 112v-8a58.14 58.14 0 0 0-7.69-28.32M200 112a40 40 0 0 1-40 40h-48a40 40 0 0 1-40-40v-8a41.74 41.74 0 0 1 6.9-22.48a8 8 0 0 0 1.1-7.69a43.81 43.81 0 0 1 .79-33.58a43.88 43.88 0 0 1 32.32 20.06a8 8 0 0 0 6.71 3.69h32.35a8 8 0 0 0 6.74-3.69a43.87 43.87 0 0 1 32.32-20.06a43.81 43.81 0 0 1 .77 33.58a8.09 8.09 0 0 0 1 7.65a41.72 41.72 0 0 1 7 22.52Z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
@@ -111,12 +78,7 @@ export function TwitterIcon(props: SVGProps<SVGSVGElement>) {
       </g>
       <defs>
         <clipPath id="clip0_2_5">
-          <rect
-            width="1200"
-            height="1227"
-            fill="currentColor"
-            transform="translate(150 153)"
-          />
+          <rect width="1200" height="1227" fill="currentColor" transform="translate(150 153)" />
         </clipPath>
       </defs>
     </svg>
@@ -125,13 +87,7 @@ export function TwitterIcon(props: SVGProps<SVGSVGElement>) {
 
 export function BgmIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="none"
         stroke="currentColor"
@@ -139,8 +95,7 @@ export function BgmIcon(props: SVGProps<SVGSVGElement>) {
         strokeLinejoin="round"
         strokeWidth="1.5"
         d="m12 7l6.632-4m-7.106 4L5.368 3M3 9.154C3 7.964 3.895 7 5 7h14c1.105 0 2 .964 2 2.154v9.692c0 1.19-.895 2.154-2 2.154H5c-1.105 0-2-.964-2-2.154z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
@@ -167,13 +122,7 @@ export const ArrowRight: React.FC<SVGProps<SVGSVGElement>> = (props) => {
 }
 export const Dot: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path fill="currentColor" d="M12 16a4 4 0 1 1 0-8a4 4 0 0 1 0 8Z"></path>
     </svg>
   )
@@ -232,32 +181,12 @@ export const CottonCandy: React.FC<SVGProps<SVGSVGElement>> = (props) => {
       <circle className="fill-primary-light" cx="191" cy="180" r="96" />
       <circle className="fill-primary-light" cx="327" cy="352" r="77" />
       <circle className="fill-primary-light" cx="355" cy="267" r="94" />
-      <circle
-        className="fill-primary-extralight"
-        cx="369.5"
-        cy="253.5"
-        r="82.5"
-      />
+      <circle className="fill-primary-extralight" cx="369.5" cy="253.5" r="82.5" />
       <circle className="fill-primary-light" cx="367.5" cy="157.5" r="59.5" />
       <circle className="fill-primary-extralight" cx="262" cy="113" r="104" />
-      <circle
-        className="fill-primary-extralight"
-        cx="202.5"
-        cy="157.5"
-        r="90.5"
-      />
-      <circle
-        className="fill-primary-extralight"
-        cx="346.5"
-        cy="154.5"
-        r="53.5"
-      />
-      <circle
-        className="fill-primary-extralight"
-        cx="302.5"
-        cy="180.5"
-        r="52.5"
-      />
+      <circle className="fill-primary-extralight" cx="202.5" cy="157.5" r="90.5" />
+      <circle className="fill-primary-extralight" cx="346.5" cy="154.5" r="53.5" />
+      <circle className="fill-primary-extralight" cx="302.5" cy="180.5" r="52.5" />
       <rect x="237" y="407" width="50" height="119" rx="25" fill="#D7F3FF" />
       <rect x="237" y="419" width="24" height="103" rx="12" fill="#BDEBFF" />
       <rect x="255" y="410" width="25" height="14" rx="7" fill="#BDEBFF" />
@@ -298,65 +227,38 @@ export const CottonCandy: React.FC<SVGProps<SVGSVGElement>> = (props) => {
 
 export const ToysIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M18.75 10.08L17.4 6.05A2.978 2.978 0 0 0 14.56 4H9.44C8.15 4 7 4.82 6.6 6.05L5.81 8.4L4.41 7l.29-.29A.996.996 0 1 0 3.29 5.3l-2 2A.996.996 0 1 0 2.7 8.71l.3-.3l1.79 1.79C3.18 10.72 2 12.22 2 14c0 1.49.83 2.78 2.05 3.47A2.991 2.991 0 0 0 7 20c1.3 0 2.4-.84 2.82-2h4.37c.41 1.16 1.51 2 2.82 2c1.49 0 2.73-1.1 2.95-2.53C21.17 16.78 22 15.49 22 14c0-1.95-1.4-3.57-3.25-3.92M13 6h1.56a1 1 0 0 1 .95.68l1.1 3.32H13zm-4.51.68A1 1 0 0 1 9.44 6H11v4H7.41l-.02-.02zM7 18c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1m10 0c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1m2.49-2.68A3.028 3.028 0 0 0 17 14c-1.3 0-2.4.84-2.82 2H9.82C9.4 14.84 8.3 14 7 14c-1.03 0-1.95.53-2.49 1.32C4.2 14.97 4 14.51 4 14c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2c0 .51-.2.97-.51 1.32"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 export const NavIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 
 export const CloseIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 export const CopyIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      aria-hidden="true"
-      height="1em"
-      viewBox="0 0 16 16"
-      width="1em"
-      {...props}
-    >
+    <svg aria-hidden="true" height="1em" viewBox="0 0 16 16" width="1em" {...props}>
       <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path>
       <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
     </svg>
@@ -364,109 +266,62 @@ export const CopyIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
 }
 export const CopyFinishIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      aria-hidden="true"
-      height="1em"
-      viewBox="0 0 16 16"
-      width="1em"
-      {...props}
-    >
+    <svg aria-hidden="true" height="1em" viewBox="0 0 16 16" width="1em" {...props}>
       <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
     </svg>
   )
 }
 export const ExternalLink: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M6 7c0 .55.45 1 1 1h7.59l-8.88 8.88a.996.996 0 1 0 1.41 1.41L16 9.41V17c0 .55.45 1 1 1s1-.45 1-1V7c0-.55-.45-1-1-1H7c-.55 0-1 .45-1 1"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 
-export const IcOutlineCalendarTodayReact: React.FC<SVGProps<SVGSVGElement>> = (
-  props,
-) => {
+export const IcOutlineCalendarTodayReact: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 18H4V10h16zm0-13H4V5h16z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 
-export const MaterialSymbolsTagRounded: React.FC<SVGProps<SVGSVGElement>> = (
-  props,
-) => {
+export const MaterialSymbolsTagRounded: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="m9 16l-.825 3.275q-.075.325-.325.525t-.6.2q-.475 0-.775-.375T6.3 18.8L7 16H4.275q-.5 0-.8-.387T3.3 14.75q.075-.35.35-.55t.625-.2H7.5l1-4H5.775q-.5 0-.8-.387T4.8 8.75q.075-.35.35-.55t.625-.2H9l.825-3.275Q9.9 4.4 10.15 4.2t.6-.2q.475 0 .775.375t.175.825L11 8h4l.825-3.275q.075-.325.325-.525t.6-.2q.475 0 .775.375t.175.825L17 8h2.725q.5 0 .8.387t.175.863q-.075.35-.35.55t-.625.2H16.5l-1 4h2.725q.5 0 .8.388t.175.862q-.075.35-.35.55t-.625.2H15l-.825 3.275q-.075.325-.325.525t-.6.2q-.475 0-.775-.375T12.3 18.8L13 16zm.5-2h4l1-4h-4z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 
 export const IcOutlineDarkMode: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M9.37 5.51A7.35 7.35 0 0 0 9.1 7.5c0 4.08 3.32 7.4 7.4 7.4c.68 0 1.35-.09 1.99-.27A7.014 7.014 0 0 1 12 19c-3.86 0-7-3.14-7-7c0-2.93 1.81-5.45 4.37-6.49M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26a5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }
 
-export const IcOutlineLightMode: React.FC<SVGProps<SVGSVGElement>> = (
-  props,
-) => {
+export const IcOutlineLightMode: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M12 9c1.65 0 3 1.35 3 3s-1.35 3-3 3s-3-1.35-3-3s1.35-3 3-3m0-2c-2.76 0-5 2.24-5 5s2.24 5 5 5s5-2.24 5-5s-2.24-5-5-5M2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1m18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1M11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1m0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1M5.99 4.58a.996.996 0 0 0-1.41 0a.996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41zm12.37 12.37a.996.996 0 0 0-1.41 0a.996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41zm1.06-10.96a.996.996 0 0 0 0-1.41a.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0zM7.05 18.36a.996.996 0 0 0 0-1.41a.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0z"
-      >
-      </path>
+      ></path>
     </svg>
   )
 }

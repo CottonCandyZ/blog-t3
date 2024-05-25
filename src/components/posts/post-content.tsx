@@ -33,9 +33,7 @@ export default async function PostContent({ slug }: { slug: string }) {
       </div>
       <aside className="sticky top-28 hidden h-max max-h-[calc(-112px+100vh)] w-full overflow-auto p-2 lg:block lg:gap-4">
         <nav className="flex flex-col gap-2">
-          <h2 className="w-max text-2xl font-medium tracking-wider text-primary">
-            目录
-          </h2>
+          <h2 className="w-max text-2xl font-medium tracking-wider text-primary">目录</h2>
           <TableOfContents />
         </nav>
       </aside>

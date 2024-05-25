@@ -19,8 +19,8 @@ function useHeadings() {
         '.markdown-body > h2, .markdown-body > h3, .markdown-body > h4, .markdown-body > h5, .markdown-body > h6',
       ),
     )
-      .filter(element => element.id)
-      .map(element => ({
+      .filter((element) => element.id)
+      .map((element) => ({
         id: element.id,
         text: element.textContent ?? '',
         level: Number(element.tagName.substring(1)),
@@ -33,16 +33,12 @@ function useHeadings() {
 function useScrollSpy(ids: string[]) {
   const [activeId, setActiveId] = useState<string>()
   useEffect(() => {
-    const element = ids
-      .map(id => document.getElementById(id))
-      .filter(Boolean)
+    const element = ids.map((id) => document.getElementById(id)).filter(Boolean)
     const handleScroll = () => {
       element.forEach((item, index) => {
-        if (index === 0 && item!.getBoundingClientRect().top > 98)
-          setActiveId('')
+        if (index === 0 && item!.getBoundingClientRect().top > 98) setActiveId('')
 
-        if (item!.getBoundingClientRect().top < 98)
-          setActiveId(item!.id)
+        if (item!.getBoundingClientRect().top < 98) setActiveId(item!.id)
       })
     }
     window.addEventListener('scroll', handleScroll)

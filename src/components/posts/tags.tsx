@@ -12,8 +12,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
   const { toggledTags, setToggledTags } = useContext(TagsContext)
   useEffect(() => {
     const saveTags = sessionStorage.getItem('tags')
-    if (saveTags)
-      setToggledTags(new Set(JSON.parse(saveTags) as Array<string>))
+    if (saveTags) setToggledTags(new Set(JSON.parse(saveTags) as Array<string>))
   }, [setToggledTags])
 
   const otherTagsSet = new Set<string>()
@@ -21,11 +20,9 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
     // 是否存在这样的文章包含已经选中的 tags
     let include = true
     toggledTags.forEach((toggledTagName) => {
-      if (!tags.includes(toggledTagName))
-        include = false
+      if (!tags.includes(toggledTagName)) include = false
     })
-    if (include)
-      tags.forEach(tag => otherTagsSet.add(tag))
+    if (include) tags.forEach((tag) => otherTagsSet.add(tag))
   })
   const currentTags = new Set([...otherTagsSet].concat([...toggledTags]))
   // 这个地方写的有点恶心
@@ -42,49 +39,40 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
           const otherTagsArray: string[][] = []
           oTags.forEach((tags) => {
             let include = true
-            if (!tags.includes(toggledTag))
-              include = false
+            if (!tags.includes(toggledTag)) include = false
 
-            if (include)
-              otherTagsArray.push(tags)
+            if (include) otherTagsArray.push(tags)
           })
           // 找到交集
           const filtered = otherTagsArray[0]?.filter((item) => {
             for (let i = 1; i < otherTagsArray.length; i++) {
-              if (!otherTagsArray[i]?.includes(item))
-                return false
+              if (!otherTagsArray[i]?.includes(item)) return false
             }
 
             return true
           })
           // 如果里面不包含要去除的 tag，那就保留
-          if (!filtered?.includes(tagName))
-            filtered?.forEach(tag => remain.add(tag))
+          if (!filtered?.includes(tagName)) filtered?.forEach((tag) => remain.add(tag))
         })
         toggledTags.forEach((tag) => {
-          if (!remain.has(tag))
-            toggledTags.delete(tag)
+          if (!remain.has(tag)) toggledTags.delete(tag)
         })
-      }
-      else {
+      } else {
         const otherTagsArray: string[][] = []
         toggledTags.add(tagName)
         oTags.forEach((tags) => {
           // 是否存在这样的文章包含已经选中的 tags
           let include = true
           toggledTags.forEach((toggledTagName) => {
-            if (!tags.includes(toggledTagName))
-              include = false
+            if (!tags.includes(toggledTagName)) include = false
           })
-          if (include)
-            otherTagsArray.push(tags)
+          if (include) otherTagsArray.push(tags)
         })
         // 寻找交集
         otherTagsArray[0]
           ?.filter((item) => {
             for (let i = 1; i < otherTagsArray.length; i++) {
-              if (!otherTagsArray[i]?.includes(item))
-                return false
+              if (!otherTagsArray[i]?.includes(item)) return false
             }
 
             return true

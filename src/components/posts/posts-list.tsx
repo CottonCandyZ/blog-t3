@@ -7,19 +7,17 @@ import type { PostFrontmatter } from '~/components/posts'
 import PostInfo from '~/components/posts/post-info'
 
 export interface PostListProps {
-  posts: { slug: string, frontmatter: PostFrontmatter }[]
+  posts: { slug: string; frontmatter: PostFrontmatter }[]
 }
 
 const PostsList: React.FC<PostListProps> = ({ posts }) => {
   const { toggledTags } = useContext(TagsContext)
   if (toggledTags.size !== 0) {
     posts = posts.filter(({ frontmatter }) => {
-      if (!frontmatter.tags)
-        return false
+      if (!frontmatter.tags) return false
       let include = true
       toggledTags.forEach((tagName) => {
-        if (!frontmatter.tags?.includes(tagName))
-          include = false
+        if (!frontmatter.tags?.includes(tagName)) include = false
       })
       return include
     })
@@ -44,9 +42,7 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
             <div className="mt-4">
               <PostInfo date={frontmatter.date} tags={frontmatter.tags} />
             </div>
-            <p className="mt-5 text-sm leading-relaxed">
-              {frontmatter.abstract}
-            </p>
+            <p className="mt-5 text-sm leading-relaxed">{frontmatter.abstract}</p>
             <div className="mt-3 flex flex-row items-center gap-1">
               <h2 className="text-base font-medium">Read More</h2>
               <ArrowRight

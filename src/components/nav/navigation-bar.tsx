@@ -10,7 +10,7 @@ export default function NavigationBar() {
   return (
     <nav>
       <ul className="flex justify-center gap-4">
-        {router_content.map(item => (
+        {router_content.map((item) => (
           <ListItem
             key={item.name}
             content={item.name}
@@ -60,8 +60,7 @@ function ListItem({
             [`group-hover:animate-backshake mr-0 text-[0px] transition-all duration-300 group-hover:mr-1 group-hover:text-[1em]`]:
               current === false,
           })}
-        >
-        </Icon>
+        ></Icon>
         {content}
       </Link>
     </li>

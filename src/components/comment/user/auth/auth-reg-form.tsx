@@ -1,8 +1,5 @@
 'use client'
-import {
-  startAuthentication,
-  startRegistration,
-} from '@simplewebauthn/browser'
+import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
 import { useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import clsx from 'clsx'
@@ -67,14 +64,12 @@ function AuthRegForm() {
     setMessage('请等待认证框弹出') // 这个暂时不会工作！！
     const optionRes = await RegOptAction(formData)
     setMessage(optionRes.message)
-    if (!optionRes.data)
-      return
+    if (!optionRes.data) return
 
     let localRes
     try {
       localRes = await startRegistration(optionRes.data)
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e)
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED)
       return
@@ -87,14 +82,12 @@ function AuthRegForm() {
     setMessage('请等待认证框弹出')
     const optionRes = await AuthOptAction()
     setMessage(optionRes.message)
-    if (!optionRes.data)
-      return
+    if (!optionRes.data) return
 
     let localRes
     try {
       localRes = await startAuthentication(optionRes.data)
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e)
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED)
       return

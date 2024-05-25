@@ -11,14 +11,10 @@ interface ListContextType {
 
 export const ListContext = createContext({} as ListContextType)
 
-const ListProvider: React.FC<PropsWithChildren<ListProviderProps>> = (
-  props,
-) => {
+const ListProvider: React.FC<PropsWithChildren<ListProviderProps>> = (props) => {
   const { children, type } = props
   const value = useMemo(() => ({ type }), [type])
-  return (
-    <ListContext.Provider value={value}>{children}</ListContext.Provider>
-  )
+  return <ListContext.Provider value={value}>{children}</ListContext.Provider>
 }
 
 export default ListProvider

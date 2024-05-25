@@ -18,7 +18,7 @@
         @media (min-width: 768px) {
           &::before {
             @apply absolute -left-5 font-normal text-primary;
-            content: "#";
+            content: '#';
           }
         }
       }
@@ -105,9 +105,9 @@
       counter-increment: list-item;
       &::before {
         @apply mr-2 font-medium text-primary;
-        content: counter(list-item) ". ";
+        content: counter(list-item) '. ';
         min-width: 20px;
-        font-feature-settings: "tnum";
+        font-feature-settings: 'tnum';
       }
     }
 
@@ -118,11 +118,11 @@
 
     // CodeBlock
     .mdx-fenced-codeblock {
-      @apply p-6 text-sm font-medium leading-7 max-h-[36rem];
+      @apply max-h-[36rem] p-6 text-sm font-medium leading-7;
     }
 
     //link
-    .mdx-a:not([class~="anchor"]) {
+    .mdx-a:not([class~='anchor']) {
       @apply font-medium text-primary underline decoration-primary/20 underline-offset-4 transition hover:decoration-primary;
       .mdx-inline-code {
         @apply text-current;

@@ -18,16 +18,18 @@ import sharp, { type Metadata, type OutputInfo, type Sharp } from 'sharp'
  * @returns Splitted Array
  */
 function arrayChunk<T>(arr: T[], size: number): (T | T[])[] {
-  return arr.length > size
-    ? [arr.slice(0, size), ...arrayChunk(arr.slice(size), size)]
-    : [arr]
+  return arr.length > size ? [arr.slice(0, size), ...arrayChunk(arr.slice(size), size)] : [arr]
 }
 
-interface ToRGBAStringOptions { r: number, g: number, b: number, a?: number }
+interface ToRGBAStringOptions {
+  r: number
+  g: number
+  b: number
+  a?: number
+}
 
 function toRGBAString({ r, g, b, a }: ToRGBAStringOptions) {
-  if (typeof a === 'undefined')
-    return `rgb(${[r, g, b].join(',')})`
+  if (typeof a === 'undefined') return `rgb(${[r, g, b].join(',')})`
 
   return `rgba(${[r, g, b, a].join(',')})`
 }
@@ -49,7 +51,7 @@ function getPixels({ data, info }: GetPixelsOptions) {
   const allPixels = arrayChunk(rawBuffer, channels) as number[][]
   const rows = arrayChunk(allPixels, width) as number[][][]
 
-  const pixels = rows.map(row =>
+  const pixels = rows.map((row) =>
     row.map((pixel) => {
       const [r, g, b, a] = pixel
 
@@ -57,9 +59,7 @@ function getPixels({ data, info }: GetPixelsOptions) {
         r,
         g,
         b,
-        ...(typeof a === 'undefined'
-          ? {}
-          : { a: Math.round((a / 255) * 1000) / 1000 }),
+        ...(typeof a === 'undefined' ? {} : { a: Math.round((a / 255) * 1000) / 1000 }),
       }
     }),
   )
@@ -79,17 +79,12 @@ type GetCSSReturn = ReturnType<typeof getCSS>
 
 function getCSS({ pixels, info }: GetCSSOptions) {
   const linearGradients = pixels.map((row) => {
-    const rowPixels = row.map(pixel =>
-      toRGBAString(pixel as ToRGBAStringOptions),
-    )
+    const rowPixels = row.map((pixel) => toRGBAString(pixel as ToRGBAStringOptions))
 
     const gradient = rowPixels
       .map((pixel, i) => {
         const start = i === 0 ? '' : ` ${(i / rowPixels.length) * 100}%`
-        const end
-          = i === rowPixels.length
-            ? ''
-            : ` ${((i + 1) / rowPixels.length) * 100}%`
+        const end = i === rowPixels.length ? '' : ` ${((i + 1) / rowPixels.length) * 100}%`
 
         return `${pixel}${start}${end}`
       })
@@ -105,9 +100,7 @@ function getCSS({ pixels, info }: GetCSSOptions) {
   }
 
   const backgroundPosition = linearGradients
-    .map((_, i) =>
-      i === 0 ? '0 0 ' : `0 ${(i / (linearGradients.length - 1)) * 100}%`,
-    )
+    .map((_, i) => (i === 0 ? '0 0 ' : `0 ${(i / (linearGradients.length - 1)) * 100}%`))
     .join(',')
 
   const backgroundSize = `100% ${100 / linearGradients.length}%`
@@ -126,7 +119,7 @@ function getCSS({ pixels, info }: GetCSSOptions) {
 type TRects = [
   'rect',
   Record<'width' | 'height' | 'x' | 'y' | 'fillOpacity', object & number> &
-  Record<'fill', object & string>,
+    Record<'fill', object & string>,
 ]
 
 interface IGetSVGOptions {
@@ -153,14 +146,14 @@ type IGetSVG = (options: IGetSVGOptions) => GetSVGReturn
 const getSVG: IGetSVG = ({ pixels, info }) => {
   const chunkRects = pixels.map((row, y) =>
     row.map(({ a, ...rgb }, x) => {
-      const colorProps
-        = typeof a !== 'undefined'
+      const colorProps =
+        typeof a !== 'undefined'
           ? {
-              'fill': toRGBAString(rgb as ToRGBAStringOptions),
+              fill: toRGBAString(rgb as ToRGBAStringOptions),
               'fill-opacity': a,
             }
           : {
-              'fill': toRGBAString(rgb as ToRGBAStringOptions),
+              fill: toRGBAString(rgb as ToRGBAStringOptions),
               'fill-opacity': 1,
             }
 
@@ -223,8 +216,7 @@ export interface GetPlaiceholderOptions extends SharpModulateOptions {
 }
 
 export interface GetPlaiceholderReturn {
-  metadata: Omit<Metadata, 'width' | 'height'> &
-  Required<Pick<Metadata, 'width' | 'height'>>
+  metadata: Omit<Metadata, 'width' | 'height'> & Required<Pick<Metadata, 'width' | 'height'>>
   base64: string
   color: {
     hex: string
@@ -237,23 +229,25 @@ export interface GetPlaiceholderReturn {
   svg: GetSVGReturn
 }
 
-export async function getPlaiceholder(src: GetPlaiceholderSrc, {
-  autoOrient = false,
-  size = 4,
-  format = ['png'],
-  brightness = 1,
-  saturation = 1.2,
-  removeAlpha = false,
-  ...options
-}: GetPlaiceholderOptions = {}) {
+export async function getPlaiceholder(
+  src: GetPlaiceholderSrc,
+  {
+    autoOrient = false,
+    size = 4,
+    format = ['png'],
+    brightness = 1,
+    saturation = 1.2,
+    removeAlpha = false,
+    ...options
+  }: GetPlaiceholderOptions = {},
+) {
   /* Optimize
     ---------------------------------- */
 
   const metadata = await sharp(src)
     .metadata()
     .then(({ width, height, ...metadata }) => {
-      if (!width || !height)
-        throw new Error('Could not get required image metadata')
+      if (!width || !height) throw new Error('Could not get required image metadata')
 
       return { width, height, ...metadata }
     })
@@ -263,12 +257,8 @@ export async function getPlaiceholder(src: GetPlaiceholderSrc, {
 
   const isSizeValid = sizeMin <= size && size <= sizeMax
 
-  !isSizeValid
-  && console.error(
-    ['Please enter a `size` value between', sizeMin, 'and', sizeMax].join(
-      ' ',
-    ),
-  )
+  !isSizeValid &&
+    console.error(['Please enter a `size` value between', sizeMin, 'and', sizeMax].join(' '))
 
   // initial optimization
   const pipelineStage1 = sharp(src)
@@ -284,12 +274,10 @@ export async function getPlaiceholder(src: GetPlaiceholderSrc, {
     })
 
   // alpha
-  const pipelineStage2
-    = removeAlpha === false ? pipelineStage1 : pipelineStage1.removeAlpha()
+  const pipelineStage2 = removeAlpha === false ? pipelineStage1 : pipelineStage1.removeAlpha()
 
   // autoOrientation
-  const pipelineStage3
-    = autoOrient === false ? pipelineStage2 : pipelineStage2.rotate()
+  const pipelineStage3 = autoOrient === false ? pipelineStage2 : pipelineStage2.rotate()
 
   const pipeline = pipelineStage3
 
@@ -304,8 +292,7 @@ export async function getPlaiceholder(src: GetPlaiceholderSrc, {
         r,
         g,
         b,
-        hex:
-          `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`,
+        hex: `#${[r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('')}`,
       }
     })
 
@@ -313,10 +300,7 @@ export async function getPlaiceholder(src: GetPlaiceholderSrc, {
     .clone()
     .normalise()
     .toBuffer({ resolveWithObject: true })
-    .then(
-      ({ data, info }) =>
-        `data:image/${info.format};base64,${data.toString('base64')}`,
-    )
+    .then(({ data, info }) => `data:image/${info.format};base64,${data.toString('base64')}`)
     .catch((err) => {
       console.error('base64 generation failed', err)
       throw err

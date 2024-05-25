@@ -6,19 +6,11 @@ interface CommentBlockProps {
   createAt: Date
 }
 
-const CommentBlock: React.FC<CommentBlockProps> = ({
-  content,
-  authorName,
-  createAt,
-}) => {
+const CommentBlock: React.FC<CommentBlockProps> = ({ content, authorName, createAt }) => {
   return (
     <div className="border-b border-primary-extralight p-2">
       <div>
-        <span className="font-semibold">{authorName}</span>
-        {' '}
-        ·
-        {' '}
-        <TimeFromNow time={createAt} />
+        <span className="font-semibold">{authorName}</span> · <TimeFromNow time={createAt} />
       </div>
       <p className="mt-2">{content}</p>
     </div>

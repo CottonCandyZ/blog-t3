@@ -17,10 +17,7 @@ interface TagsContextType {
   setToggledTags: Dispatch<SetStateAction<Set<string>>>
 }
 export const TagsContext = createContext({} as TagsContextType)
-const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
-  tags,
-  children,
-}) => {
+const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, children }) => {
   const [toggledTags, setToggledTags] = useState(new Set<string>())
   const value = useMemo(() => ({ toggledTags, setToggledTags }), [toggledTags, setToggledTags])
   const home = usePathname() === '/'
@@ -54,13 +51,10 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({
           )}
         </section>
         <section
-          className={clsx(
-            `col-span-full md:col-start-1 md:col-end-1 md:row-start-1`,
-            {
-              'row-start-2': home,
-              'row-start-1': !home,
-            },
-          )}
+          className={clsx(`col-span-full md:col-start-1 md:col-end-1 md:row-start-1`, {
+            'row-start-2': home,
+            'row-start-1': !home,
+          })}
         >
           {children}
         </section>

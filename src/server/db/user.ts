@@ -3,17 +3,15 @@ import type { AuthenticatorInfo } from '~/server/action/webauthn'
 import prisma from '~/server/db'
 
 // READ
-export const dbReadLoggedInUserInfoBySession = cache(
-  async (sessionId: string) => {
-    return await prisma.session
-      .findUnique({
-        where: {
-          id: sessionId,
-        },
-      })
-      .user()
-  },
-)
+export const dbReadLoggedInUserInfoBySession = cache(async (sessionId: string) => {
+  return await prisma.session
+    .findUnique({
+      where: {
+        id: sessionId,
+      },
+    })
+    .user()
+})
 
 export async function dbReadAuthenticatorById(credentialID: string) {
   return await prisma.device.findUnique({
@@ -47,7 +45,11 @@ export async function dbReadAuthSessionData(sessionId: string) {
 }
 
 // CREATE
-export async function dbCreateAuthSession(currentChallenge: string, userId?: string, userName?: string) {
+export async function dbCreateAuthSession(
+  currentChallenge: string,
+  userId?: string,
+  userName?: string,
+) {
   return await prisma.authSession.create({
     data: {
       userId,
@@ -57,7 +59,11 @@ export async function dbCreateAuthSession(currentChallenge: string, userId?: str
   })
 }
 
-export async function dbCreateUser(userId: string, userName: string, newAuthenticator: AuthenticatorInfo) {
+export async function dbCreateUser(
+  userId: string,
+  userName: string,
+  newAuthenticator: AuthenticatorInfo,
+) {
   return await prisma.user.create({
     data: {
       id: userId,
@@ -79,7 +85,10 @@ export async function dbCreateSession(userId: string) {
   })
 }
 
-export async function dbCreateAuthenticatorForUser(userId: string, newAuthenticator: AuthenticatorInfo) {
+export async function dbCreateAuthenticatorForUser(
+  userId: string,
+  newAuthenticator: AuthenticatorInfo,
+) {
   await prisma.device.create({
     data: {
       ...newAuthenticator,

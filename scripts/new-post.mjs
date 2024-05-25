@@ -12,7 +12,7 @@ async function createPost() {
     `---
 title: '${title}'
 date: '${new Date().toISOString()}'
-tags:${tags.map(tag => `\n  - '${tag}'`).join('')}
+tags:${tags.map((tag) => `\n  - '${tag}'`).join('')}
 ---
 `,
   )

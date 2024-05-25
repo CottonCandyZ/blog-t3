@@ -17,8 +17,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
         after:top-3 after:border-y-4 after:border-l-[6px]
         after:border-y-transparent after:transition-opacity after:duration-400 after:ease-in`,
         {
-          [`before:invisible before:opacity-0 after:invisible after:opacity-0 `]:
-            !copied,
+          [`before:invisible before:opacity-0 after:invisible after:opacity-0 `]: !copied,
         },
       )}
     >
@@ -27,13 +26,11 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
         className="relative size-8 rounded-md hover:border-2 hover:border-primary-small"
         type="button"
       >
-        {copied
-          ? (
-            <CopyFinishIcon className="m-auto size-5" />
-            )
-          : (
-            <CopyIcon className="m-auto size-5" />
-            )}
+        {copied ? (
+          <CopyFinishIcon className="m-auto size-5" />
+        ) : (
+          <CopyIcon className="m-auto size-5" />
+        )}
       </button>
     </div>
   )

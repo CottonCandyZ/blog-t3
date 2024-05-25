@@ -6,8 +6,7 @@ interface CodeblockProps {
 }
 
 const CodeBlock: React.FC<CodeblockProps> = ({ children, className }) => {
-  if (!children)
-    return null
+  if (!children) return null
   const language = className?.replace(/language-/, '')
   if (!language && !children.endsWith('\n'))
     return <code className="mdx-inline-code">{children}</code>

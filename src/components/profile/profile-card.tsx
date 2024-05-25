@@ -12,11 +12,7 @@ function ProfileCard() {
         href="/about"
         className="group relative max-w-60 overflow-hidden rounded-xl active:scale-95"
       >
-        <Image
-          src={profileImage}
-          placeholder="blur"
-          alt="Picture of the author"
-        />
+        <Image src={profileImage} placeholder="blur" alt="Picture of the author" />
         <div className="absolute inset-0 flex items-center justify-center bg-primary-light/40 opacity-0 transition-all group-hover:opacity-100">
           <AboutIcon className="size-20 text-white" />
         </div>
@@ -28,9 +24,7 @@ function ProfileCard() {
       >
         {CONFIG.profile_card.name}
       </span>
-      <p className="font-medium text-primary-small">
-        {CONFIG.profile_card.description}
-      </p>
+      <p className="font-medium text-primary-small">{CONFIG.profile_card.description}</p>
       <div>
         <SocialLinks />
       </div>

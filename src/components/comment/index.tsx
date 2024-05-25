@@ -11,15 +11,18 @@ const Comments: React.FC<{ slug: string }> = ({ slug }) => {
         </h2>
       </div>
       <div className="mt-5">
-        <Suspense fallback={<div className="h-11 w-full animate-pulse rounded-2xl bg-primary-light"></div>}>
+        <Suspense
+          fallback={<div className="h-11 w-full animate-pulse rounded-2xl bg-primary-light"></div>}
+        >
           <User slug={slug} />
         </Suspense>
       </div>
       <div className="mt-10 flex items-center justify-center">
-        <Suspense fallback={<div className="h-11 w-full animate-pulse rounded-2xl bg-primary-light"></div>}>
+        <Suspense
+          fallback={<div className="h-11 w-full animate-pulse rounded-2xl bg-primary-light"></div>}
+        >
           <CommentsList slug={slug} />
         </Suspense>
-
       </div>
     </div>
   )

@@ -13,8 +13,7 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = ({ codeContent, language
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (copied)
-      setTimeout(() => setCopied(false), 1500)
+    if (copied) setTimeout(() => setCopied(false), 1500)
   }, [copied])
 
   async function onCopy() {
@@ -23,11 +22,7 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = ({ codeContent, language
   }
 
   return (
-    <Highlight
-      theme={themes.duotoneLight}
-      code={codeContent}
-      language={language}
-    >
+    <Highlight theme={themes.duotoneLight} code={codeContent} language={language}>
       {({ style, tokens, getLineProps, getTokenProps }) => (
         <div className="relative mb-5 mt-10">
           <div
@@ -41,11 +36,10 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = ({ codeContent, language
               style={style}
               className="mdx-fenced-codeblock relative z-0 w-full overflow-x-auto rounded-l-2xl"
             >
-
               {tokens.map((line, i) => (
                 <div key={i} {...getLineProps({ line })}>
                   <span>
-                    {line.map(token => (
+                    {line.map((token) => (
                       <span key={token.content} {...getTokenProps({ token })} />
                     ))}
                   </span>

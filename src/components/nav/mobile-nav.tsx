@@ -16,13 +16,7 @@ const MobileNav: React.FC = () => {
         onClick={() => setExpend(!expend)}
         type="button"
       >
-        {expend
-          ? (
-            <CloseIcon className="size-9" />
-            )
-          : (
-            <NavIcon className="size-9" />
-            )}
+        {expend ? <CloseIcon className="size-9" /> : <NavIcon className="size-9" />}
       </button>
       <div
         className={clsx('fixed inset-0 z-10', {
@@ -39,8 +33,7 @@ const MobileNav: React.FC = () => {
             },
           )}
           type="button"
-        >
-        </button>
+        ></button>
         <nav className="absolute bottom-20 left-0 z-20 flex h-2/4 w-max flex-col justify-between text-primary-small">
           <ul className="flex flex-col gap-5">
             {CONFIG.nav_router.map((item, index) => {

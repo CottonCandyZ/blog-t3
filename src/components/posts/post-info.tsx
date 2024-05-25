@@ -1,14 +1,8 @@
 import dayjs from 'dayjs'
 import { Fragment } from 'react'
-import {
-  IcOutlineCalendarTodayReact,
-  MaterialSymbolsTagRounded,
-} from '~/components/icons'
+import { IcOutlineCalendarTodayReact, MaterialSymbolsTagRounded } from '~/components/icons'
 
-const PostInfo: React.FC<{ date: string, tags: string[] | undefined }> = ({
-  date,
-  tags,
-}) => {
+const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({ date, tags }) => {
   return (
     <div className="mt-4 flex flex-row flex-wrap items-center gap-3">
       <div className="flex flex-row items-center gap-2">

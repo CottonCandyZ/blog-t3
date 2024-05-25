@@ -12,34 +12,23 @@ const DeviceListClient: React.FC<{
   aaguid: Record<string, aaguid> | undefined
 }> = ({ devices, aaguid }) => {
   const [message, setMessage] = useState('')
-  if (!aaguid)
-    setMessage('获取设备名列表失败，设备名可能不会正确显示')
+  if (!aaguid) setMessage('获取设备名列表失败，设备名可能不会正确显示')
 
   return (
     <div>
       <ul className="flex flex-col">
         {devices.map((item) => {
           let aaguidInfo
-          if (aaguid)
-            aaguidInfo = aaguid[item.aaguid] ?? undefined
+          if (aaguid) aaguidInfo = aaguid[item.aaguid] ?? undefined
 
           return (
             <li key={item.credentialID}>
-              <DeviceInfo
-                aaguidInfo={aaguidInfo}
-                {...item}
-                setMessage={setMessage}
-              >
-              </DeviceInfo>
+              <DeviceInfo aaguidInfo={aaguidInfo} {...item} setMessage={setMessage}></DeviceInfo>
             </li>
           )
         })}
       </ul>
-      {message === ''
-        ? null
-        : (
-          <p className="py-2.5 font-medium text-primary">{message}</p>
-          )}
+      {message === '' ? null : <p className="py-2.5 font-medium text-primary">{message}</p>}
     </div>
   )
 }

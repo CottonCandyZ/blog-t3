@@ -22,11 +22,7 @@ const noto_sans_mono = Noto_Sans_Mono({
   weight: ['500', '600'],
   variable: '--font-noto-sans-mono',
 })
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = cookies().get('theme')?.value
   return (
     <html

@@ -13,9 +13,11 @@ function DeviceList({
   const authenticators = use(deviceInfoPromise).data
   const aaguid = use(aaguidPromise).data
 
-  return authenticators
-    ? <DeviceListClient devices={authenticators} aaguid={aaguid} />
-    : <p className="text-base font-medium text-primary">Session 消失了</p>
+  return authenticators ? (
+    <DeviceListClient devices={authenticators} aaguid={aaguid} />
+  ) : (
+    <p className="text-base font-medium text-primary">Session 消失了</p>
+  )
 }
 
 export default DeviceList

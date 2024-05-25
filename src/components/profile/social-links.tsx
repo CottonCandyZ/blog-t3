@@ -4,13 +4,8 @@ export default function SocialLinks() {
   const social_link = CONFIG.social_link
   return (
     <ul className="flex w-max justify-center gap-1">
-      {social_link.map(item => (
-        <ListItem
-          key={item.name}
-          content={item.name}
-          Icon={item.icon}
-          href={item.href}
-        />
+      {social_link.map((item) => (
+        <ListItem key={item.name} content={item.name} Icon={item.icon} href={item.href} />
       ))}
     </ul>
   )
@@ -22,7 +17,7 @@ function ListItem({
   href,
 }: {
   content: string
-  Icon: React.FC<{ className?: string, color?: string }>
+  Icon: React.FC<{ className?: string; color?: string }>
   href: string
 }) {
   return (

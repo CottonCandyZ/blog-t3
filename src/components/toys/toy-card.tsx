@@ -19,12 +19,8 @@ const ToyCard: React.FC<ToyCardProps> = async ({ title, description, href, img_a
       <h3 className="text-lg font-semibold text-primary">{title}</h3>
       <p className="mt-2 text-primary-dark">{description}</p>
       <div className="overflow-hidden rounded-md border-2 border-primary-extralight">
-        <NextImage
-          {...img}
-          className="h-28 object-cover"
-        />
+        <NextImage {...img} className="h-28 object-cover" />
       </div>
-
     </a>
   )
 }

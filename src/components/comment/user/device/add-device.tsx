@@ -3,10 +3,7 @@ import { startRegistration } from '@simplewebauthn/browser'
 import clsx from 'clsx'
 import type { Dispatch, SetStateAction } from 'react'
 import { useFormStatus } from 'react-dom'
-import {
-  addDeviceOptAction,
-  addDeviceVResAction,
-} from '~/server/action/webauthn'
+import { addDeviceOptAction, addDeviceVResAction } from '~/server/action/webauthn'
 
 import { ERROR_MESSAGE } from '~/server/message'
 
@@ -33,21 +30,17 @@ function AddButton() {
   )
 }
 
-const AddDevice: React.FC<{ setMessage: Dispatch<SetStateAction<string>> }> = ({
-  setMessage,
-}) => {
+const AddDevice: React.FC<{ setMessage: Dispatch<SetStateAction<string>> }> = ({ setMessage }) => {
   async function add() {
     // setMessage("请等待认证框弹出"); // 这个暂时不会工作！！
     const optionRes = await addDeviceOptAction()
     setMessage(optionRes.message)
-    if (!optionRes.data)
-      return
+    if (!optionRes.data) return
 
     let localRes
     try {
       localRes = await startRegistration(optionRes.data)
-    }
-    catch (e) {
+    } catch (e) {
       setMessage(ERROR_MESSAGE.ADD_DEVICE_CANCELED)
       return
     }

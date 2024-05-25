@@ -21,17 +21,13 @@ import { components } from '~/components/posts/mdx-component'
  * @returns `PostFrontmatter`.
  */
 export const getPostFrontmatter = cache(async (slug: string) => {
-  const rawMdx = await fs.readFile(
-    path.resolve(`posts/${slug}.mdx`),
-    'utf8',
-  )
+  const rawMdx = await fs.readFile(path.resolve(`posts/${slug}.mdx`), 'utf8')
   const frontmatter = matter(rawMdx).data as PostFrontmatter
   return frontmatter
 })
 
 export const getAllPostsSlug = cache(async () => {
-  return (await getAllPostsPathName())
-    .map(path => getPostSlug(path))
+  return (await getAllPostsPathName()).map((path) => getPostSlug(path))
 })
 
 /**
@@ -68,8 +64,7 @@ export const getAllTags = cache(async () => {
   let uniqueTags = new Set<string>()
 
   posts.forEach((post) => {
-    if (post.frontmatter.tags)
-      oTags.push(post.frontmatter.tags)
+    if (post.frontmatter.tags) oTags.push(post.frontmatter.tags)
     post.frontmatter.tags?.forEach((tag) => {
       uniqueTags.add(tag)
     })
@@ -84,26 +79,23 @@ export const getAllTags = cache(async () => {
  * @returns `code` and `frontmatter` parsed by `bundleMDX`.
  */
 export const getPostContent = cache(async (mdxPath: string) => {
-  const source = await fs.readFile(
-    path.resolve(mdxPath),
-    'utf8',
-  )
+  const source = await fs.readFile(path.resolve(mdxPath), 'utf8')
 
-  const mdxSource = await compileMDX<PostFrontmatter>({ source, components, options: {
-    mdxOptions: {
-      remarkPlugins: [
-        remarkGfm,
-        remarkUnwrapImages,
-        remarkImageInfo,
-      ],
-      rehypePlugins: [
-        rehypeSlug,
-        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-        [rehypeMdxCodeProps, { tagName: 'code' }],
-      ],
+  const mdxSource = await compileMDX<PostFrontmatter>({
+    source,
+    components,
+    options: {
+      mdxOptions: {
+        remarkPlugins: [remarkGfm, remarkUnwrapImages, remarkImageInfo],
+        rehypePlugins: [
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+          [rehypeMdxCodeProps, { tagName: 'code' }],
+        ],
+      },
+      parseFrontmatter: true,
     },
-    parseFrontmatter: true,
-  } })
+  })
   return mdxSource
 })
 

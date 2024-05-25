@@ -10,16 +10,11 @@ export default function NextImage({
   height,
   className,
   ...BlurCss
-}: ImageProps & { alt: string, className?: string }) {
+}: ImageProps & { alt: string; className?: string }) {
   const [load, setLoad] = useState(false)
   return (
     <div className="mdx-img relative w-full overflow-hidden">
-      {!load && (
-        <div
-          className="absolute inset-0 size-full scale-150 blur-2xl"
-          style={BlurCss}
-        />
-      )}
+      {!load && <div className="absolute inset-0 size-full scale-150 blur-2xl" style={BlurCss} />}
       <Image
         className={className}
         onLoad={() => setLoad(true)}

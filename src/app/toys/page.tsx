@@ -18,7 +18,7 @@ export default function page() {
               {info.title}
             </h2>
             <div className="flex-wap mt-4 flex flex-row flex-wrap gap-5">
-              {info.project_list.map(project_info => (
+              {info.project_list.map((project_info) => (
                 <div
                   key={project_info.title}
                   className="h-min rounded-2xl bg-primary-bg p-4 shadow-cxs md:w-80"

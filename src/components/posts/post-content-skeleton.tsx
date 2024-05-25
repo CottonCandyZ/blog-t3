@@ -14,9 +14,7 @@ const PostContentSkeleton: React.FC = () => {
       </article>
       <aside className="sticky top-28 hidden max-h-[calc(-112px+100vh)] w-full overflow-auto p-2 lg:block lg:gap-4">
         <nav className="flex flex-col gap-2">
-          <h2 className="text-2xl font-medium tracking-wider text-primary">
-            目录
-          </h2>
+          <h2 className="text-2xl font-medium tracking-wider text-primary">目录</h2>
           <div className="flex max-w-sm animate-pulse flex-col gap-2">
             <div className="mb-2 h-2.5 w-28 rounded-full bg-gray-200"></div>
             <div className="h-2 max-w-[300px] rounded-full bg-gray-200"></div>

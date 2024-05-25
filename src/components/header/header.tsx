@@ -2,18 +2,15 @@
 import clsx from 'clsx'
 import { usePathname } from 'next/navigation'
 import { useContext, useEffect, useRef, useState } from 'react'
-import {
-  CottonCandy,
-} from '~/components/icons'
+import { CottonCandy } from '~/components/icons'
 import NavigationBar from '~/components/nav/navigation-bar'
 import { ThemeContext } from '~/components/theme-wrapper'
 
 function Header() {
   const [toggle, setToggle] = useState(false)
-  const { themeNumber, setThemeNumber }
-    = useContext(ThemeContext)
+  const { themeNumber, setThemeNumber } = useContext(ThemeContext)
   const switchRef = useRef<HTMLDivElement>(null)
-  const availableThemeNumber = [1, 2, 3, 4].filter(i => i !== themeNumber)
+  const availableThemeNumber = [1, 2, 3, 4].filter((i) => i !== themeNumber)
   const pathname = usePathname()
   const saveTheme = (number: number) => {
     setThemeNumber(availableThemeNumber[number]!)
@@ -39,12 +36,10 @@ function Header() {
           active:scale-95 active:bg-primary-light/20`}
           ref={switchRef}
           onClick={() => {
-            setToggle(toggle => !toggle)
+            setToggle((toggle) => !toggle)
           }}
         >
-          <span className="text-xl font-semibold text-primary-dark">
-            Cotton
-          </span>
+          <span className="text-xl font-semibold text-primary-dark">Cotton</span>
           <span className="relative flex items-center justify-center">
             <CottonCandy
               className={clsx(

@@ -17,16 +17,15 @@ $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
   --color-primary-extralight: #{getColorValue(mix($primary-color, white, 10%))};
 }
 
-
-  @mixin theme-primary-dark-map($primary-color) {
-    --color-primary-bg: #{getColorValue(#161616)};
-    --color-primary-dark: #{getColorValue(mix($primary-color, white, 40%))};
-    --color-primary: #{getColorValue($primary-color)};
-    --color-primary-small: #{getColorValue(mix($primary-color, black, 65%))};
-    --color-primary-medium: #{getColorValue(mix($primary-color, white, 40%))};
-    --color-primary-light: #{getColorValue(mix($primary-color, white, 15%))};
-    --color-primary-extralight: #{getColorValue(mix($primary-color, white, 5%))};
-  }
+@mixin theme-primary-dark-map($primary-color) {
+  --color-primary-bg: #{getColorValue(#161616)};
+  --color-primary-dark: #{getColorValue(mix($primary-color, white, 40%))};
+  --color-primary: #{getColorValue($primary-color)};
+  --color-primary-small: #{getColorValue(mix($primary-color, black, 65%))};
+  --color-primary-medium: #{getColorValue(mix($primary-color, white, 40%))};
+  --color-primary-light: #{getColorValue(mix($primary-color, white, 15%))};
+  --color-primary-extralight: #{getColorValue(mix($primary-color, white, 5%))};
+}
 
 @for $i from 1 through length($themeColorList) {
   $color: nth($themeColorList, $i);
@@ -42,5 +41,5 @@ $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
 
 @tailwind utilities;
 
-@import "animation.scss";
-@import "markdown.scss";
+@import 'animation.scss';
+@import 'markdown.scss';

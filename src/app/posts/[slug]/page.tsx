@@ -5,7 +5,7 @@ import { getAllPostsSlug, getPostFrontmatter } from '~/server/fetch/posts'
 export const dynamicParams = false
 export async function generateStaticParams() {
   const postsSlug = await getAllPostsSlug()
-  return postsSlug.map(postSlug => ({
+  return postsSlug.map((postSlug) => ({
     slug: postSlug,
   }))
 }

@@ -11,13 +11,17 @@ const User: React.FC<{ slug: string }> = async ({ slug }) => {
   return (
     <>
       <div>
-        {user
-          ? <UserInfo user={user} deviceInfoPromise={deviceInfoPromise} aaguidPromise={aaguidPromise} />
-          : <AuthRegForm />}
+        {user ? (
+          <UserInfo
+            user={user}
+            deviceInfoPromise={deviceInfoPromise}
+            aaguidPromise={aaguidPromise}
+          />
+        ) : (
+          <AuthRegForm />
+        )}
       </div>
-      <div className="mt-5">
-        {user ? <NewCommentForm slug={slug} /> : null}
-      </div>
+      <div className="mt-5">{user ? <NewCommentForm slug={slug} /> : null}</div>
     </>
   )
 }

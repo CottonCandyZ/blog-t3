@@ -23,13 +23,12 @@ export default {
       },
       colors: {
         'primary-bg': 'rgb(var(--color-primary-bg) / <alpha-value>)',
-        'primary': 'rgb(var(--color-primary) / <alpha-value>)',
+        primary: 'rgb(var(--color-primary) / <alpha-value>)',
         'primary-dark': 'rgb(var(--color-primary-dark) / <alpha-value>)',
         'primary-small': 'rgb(var(--color-primary-small) / <alpha-value>)',
         'primary-medium': 'rgb(var(--color-primary-medium) / <alpha-value>)',
         'primary-light': 'rgb(var(--color-primary-light) / <alpha-value>)',
-        'primary-extralight':
-          'rgb(var(--color-primary-extralight) / <alpha-value>)',
+        'primary-extralight': 'rgb(var(--color-primary-extralight) / <alpha-value>)',
       },
     },
   },
