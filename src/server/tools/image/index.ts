@@ -7,7 +7,7 @@ import { getPlaiceholder } from '~/server/tools/image/plaiceholder'
 export type ImageProps = Awaited<ReturnType<typeof getImageMetaAndPlaceHolder>>
 
 export const getImageMetaAndPlaceHolder = cache(async (src: string) => {
-  const buffer = await fs.readFile(path.join(process.cwd(), 'public', src))
+  const buffer = await fs.readFile(path.join(process.cwd(), 'public', decodeURIComponent(src)))
 
   const {
     metadata: { height, width },
