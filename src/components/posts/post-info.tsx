@@ -1,13 +1,12 @@
 import dayjs from 'dayjs'
 import { Fragment } from 'react'
-import { IcOutlineCalendarTodayReact, MaterialSymbolsTagRounded } from '~/components/icons'
 
 const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({ date, tags }) => {
   return (
     <div className="mt-4 flex flex-row flex-wrap items-center gap-3">
       <div className="flex flex-row items-center gap-2">
-        <div className="rounded-lg bg-primary-light/60 p-1.5 text-primary-small">
-          <IcOutlineCalendarTodayReact className="size-5" />
+        <div className="rounded-lg bg-primary-light/60 p-1.5 text-primary-small flex">
+          <span className="i-mingcute-calendar-line size-6" />
         </div>
         <h2 className="min-w-max font-semibold text-primary-dark">
           <time dateTime={date} suppressHydrationWarning>
@@ -17,8 +16,8 @@ const PostInfo: React.FC<{ date: string; tags: string[] | undefined }> = ({ date
       </div>
       {tags && (
         <div className="flex flex-row items-center gap-2">
-          <div className="rounded-lg bg-primary-light/60 p-1.5 text-primary-small">
-            <MaterialSymbolsTagRounded className="size-5" />
+          <div className="rounded-lg bg-primary-light/60 p-1.5 text-primary-small flex">
+            <span className="i-mingcute-hashtag-line size-6" />
           </div>
           <div className="flex min-w-max flex-row gap-1 font-semibold text-primary-dark">
             {tags.map((item, index) => (

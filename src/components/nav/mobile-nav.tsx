@@ -3,7 +3,6 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { CloseIcon, NavIcon } from '~/components/icons'
 import { CONFIG } from '~/config'
 
 const MobileNav: React.FC = () => {
@@ -16,7 +15,7 @@ const MobileNav: React.FC = () => {
         onClick={() => setExpend(!expend)}
         type="button"
       >
-        {expend ? <CloseIcon className="size-9" /> : <NavIcon className="size-9" />}
+        {expend ? <span className="i-mingcute-close-line size-9" /> : <span className="i-mingcute-menu-line size-9" />}
       </button>
       <div
         className={clsx('fixed inset-0 z-10', {
@@ -66,7 +65,7 @@ const MobileNav: React.FC = () => {
                     onClick={() => setExpend(false)}
                     prefetch
                   >
-                    <item.icon className="mr-1 text-[1em]" />
+                    <span className={`${item.icon} mr-1 text-[1em]`} />
                     {item.name}
                   </Link>
                 </li>

@@ -1,13 +1,3 @@
-import {
-  AboutIcon,
-  BgmIcon,
-  GithubIcon,
-  HomeIcon,
-  LinkIcon,
-  ToysIcon,
-  TwitterIcon,
-} from '~/components/icons'
-
 const BASE = {
   profile_card: {
     name: 'CottonCZ',
@@ -15,26 +5,27 @@ const BASE = {
     image: '/profile/AvatarSample.webp',
   },
   nav_router: [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Toys', href: '/toys', icon: ToysIcon },
-    { name: 'Links', href: '/link', icon: LinkIcon },
-    { name: 'About', href: '/about', icon: AboutIcon },
+    // https://icon-sets.iconify.design/mingcute/
+    { name: 'Home', href: '/', icon: 'i-mingcute-home-2-line' },
+    { name: 'Toys', href: '/toys', icon: 'i-mingcute-toy-horse-line' },
+    { name: 'Links', href: '/link', icon: 'i-mingcute-link-line' },
+    { name: 'About', href: '/about', icon: 'i-mingcute-message-4-line' },
   ],
   social_link: [
     {
       name: 'GitHub',
       href: 'https://github.com/CottonCandyZ',
-      icon: GithubIcon,
+      icon: 'i-mingcute-github-line',
     },
     {
       name: 'Twitter',
       href: 'https://twitter.com/cotton_candyZG',
-      icon: TwitterIcon,
+      icon: 'i-mingcute-social-x-line',
     },
     {
       name: 'Bangumi',
       href: 'https://bgm.tv/user/cotton_candyz',
-      icon: BgmIcon,
+      icon: 'i-mingcute-tv-2-line',
     },
   ],
   toy_cards: [

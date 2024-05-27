@@ -1,5 +1,7 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
+import  { iconsPlugin, getIconCollections } from "@egoist/tailwindcss-icons"
+
 
 export default {
   darkMode: 'selector',
@@ -37,4 +39,9 @@ export default {
       pattern: /duration-(400|500|600|700)/,
     },
   ],
+  plugins: [
+    iconsPlugin({
+      collections: getIconCollections(['mingcute'])
+    })
+  ]
 } satisfies Config

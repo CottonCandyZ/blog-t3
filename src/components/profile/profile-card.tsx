@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { AboutIcon } from '~/components/icons'
+
 import SocialLinks from '~/components/profile/social-links'
 import { CONFIG } from '~/config'
 import profileImage from '~/config/profile-image.webp'
@@ -14,7 +14,7 @@ function ProfileCard() {
       >
         <Image src={profileImage} placeholder="blur" alt="Picture of the author" />
         <div className="absolute inset-0 flex items-center justify-center bg-primary-light/40 opacity-0 transition-all group-hover:opacity-100">
-          <AboutIcon className="size-20 text-white" />
+          <span className="i-mingcute-message-4-line size-20 text-white" />
         </div>
       </Link>
 

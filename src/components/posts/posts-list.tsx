@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { useContext } from 'react'
 import { TagsContext } from '~/components/client-wrapper'
-import { ArrowRight } from '~/components/icons'
 import type { PostFrontmatter } from '~/components/posts'
 import PostInfo from '~/components/posts/post-info'
 
@@ -45,8 +44,8 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
             <p className="mt-5 text-sm leading-relaxed">{frontmatter.abstract}</p>
             <div className="mt-3 flex flex-row items-center gap-1">
               <h2 className="text-base font-medium">Read More</h2>
-              <ArrowRight
-                className={`mt-[2px] text-2xl transition-transform
+              <span
+                className={`i-mingcute-arrow-right-line mt-[2px] text-2xl transition-transform
       duration-200 ease-in-out group-hover:translate-x-1 group-hover:text-primary`}
               />
             </div>

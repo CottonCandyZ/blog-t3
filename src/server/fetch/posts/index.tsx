@@ -21,7 +21,7 @@ import { components } from '~/components/posts/mdx-component'
  * @returns `PostFrontmatter`.
  */
 export const getPostFrontmatter = cache(async (slug: string) => {
-  const rawMdx = await fs.readFile(path.resolve(`posts/${slug}.mdx`), 'utf8')
+  const rawMdx = await fs.readFile(path.join(process.cwd(), `posts/${slug}.mdx`), 'utf8')
   const frontmatter = matter(rawMdx).data as PostFrontmatter
   return frontmatter
 })
@@ -79,7 +79,7 @@ export const getAllTags = cache(async () => {
  * @returns `code` and `frontmatter` parsed by `bundleMDX`.
  */
 export const getPostContent = cache(async (mdxPath: string) => {
-  const source = await fs.readFile(path.resolve(mdxPath), 'utf8')
+  const source = await fs.readFile(path.join(process.cwd(), mdxPath), 'utf8')
 
   const mdxSource = await compileMDX<PostFrontmatter>({
     source,

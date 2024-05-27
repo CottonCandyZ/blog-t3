@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import Link from 'next/link'
-import { ExternalLink } from '~/components/icons'
 
 const MDXLink: React.FC<JSX.IntrinsicElements['a']> = (props) => {
   const { className, href = '', children, ...rest } = props
@@ -35,9 +34,8 @@ const MDXLink: React.FC<JSX.IntrinsicElements['a']> = (props) => {
     >
       {children}
       {isPlainAnchor && (
-        <ExternalLink
-          className={`mx-0.5 inline-block
-        text-primary/50 transition-colors group-hover/a:text-primary`}
+        <span
+          className="i-mingcute-arrow-right-up-line mx-0.5 align-middle text-primary/50 transition-colors group-hover/a:text-primary"
         />
       )}
     </a>

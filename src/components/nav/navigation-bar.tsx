@@ -15,7 +15,7 @@ export default function NavigationBar() {
             key={item.name}
             content={item.name}
             href={item.href}
-            Icon={item.icon}
+            icon={item.icon}
             current={pathname === item.href}
           />
         ))}
@@ -26,12 +26,12 @@ export default function NavigationBar() {
 
 function ListItem({
   content,
-  Icon,
+  icon,
   href,
   current = false,
 }: {
   content: string
-  Icon: React.FC<{ className?: string }>
+  icon: string
   href: string
   current?: boolean
 }) {
@@ -54,13 +54,13 @@ function ListItem({
         )}
         prefetch
       >
-        <Icon
-          className={clsx('', {
+        <span
+          className={clsx(icon, {
             [`mr-1 text-[1em]`]: current === true,
             [`group-hover:animate-backshake mr-0 text-[0px] transition-all duration-300 group-hover:mr-1 group-hover:text-[1em]`]:
               current === false,
           })}
-        ></Icon>
+        ></span>
         {content}
       </Link>
     </li>
