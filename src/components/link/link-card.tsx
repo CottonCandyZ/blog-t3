@@ -1,4 +1,4 @@
-import NextImage from '~/components/Image'
+import NextImage from '~/components/next-image'
 import { getImageMetaAndPlaceHolder } from '~/server/tools/image'
 
 interface LinkCardProps {

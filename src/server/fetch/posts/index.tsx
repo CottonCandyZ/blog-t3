@@ -12,7 +12,6 @@ import rehypeSlug from 'rehype-slug'
 import { cache } from 'react'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import type { PostFrontmatter } from '~/components/posts'
-import remarkImageInfo from '~/server/fetch/posts/custom-remark-plugin/remark-image-info'
 import { components } from '~/components/posts/mdx-component'
 
 
@@ -87,7 +86,7 @@ export const getPostContent = cache(async (mdxPath: string) => {
     components,
     options: {
       mdxOptions: {
-        remarkPlugins: [remarkGfm, remarkUnwrapImages, remarkImageInfo],
+        remarkPlugins: [remarkGfm, remarkUnwrapImages],
         rehypePlugins: [
           rehypeSlug,
           [rehypeAutolinkHeadings, { behavior: 'wrap' }],

@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-
 import SocialLinks from '~/components/profile/social-links'
 import { CONFIG } from '~/config'
 import profileImage from '~/config/profile-image.webp'

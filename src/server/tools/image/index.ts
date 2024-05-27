@@ -4,6 +4,8 @@ import process from 'node:process'
 import { cache } from 'react'
 import { getPlaiceholder } from '~/server/tools/image/plaiceholder'
 
+export type ImageProps = Awaited<ReturnType<typeof getImageMetaAndPlaceHolder>>
+
 export const getImageMetaAndPlaceHolder = cache(async (src: string) => {
   const buffer = await fs.readFile(path.join(process.cwd(), 'public', src))
 
@@ -16,6 +18,6 @@ export const getImageMetaAndPlaceHolder = cache(async (src: string) => {
     src,
     width,
     height,
-    ...css,
+    blurCss: css,
   }
 })
