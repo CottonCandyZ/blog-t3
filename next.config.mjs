@@ -13,7 +13,8 @@ const config = {
       '/about': ['./src/config/about.mdx'],
     },
   },
-  transpilePackages: ['next-mdx-remote'],
+  // serverExternalPackages: [],
+  transpilePackages: ['next-mdx-remote', 'shiki'],
 }
 
 export default config

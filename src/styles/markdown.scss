@@ -118,7 +118,10 @@
 
     // CodeBlock
     .mdx-fenced-codeblock {
-      @apply max-h-[36rem] p-6 text-sm font-medium leading-7;
+      @apply py-6;
+      code {
+        @apply block max-h-[36rem] pl-6 text-sm leading-6;
+      }
     }
 
     //link

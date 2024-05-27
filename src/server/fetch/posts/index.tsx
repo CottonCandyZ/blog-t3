@@ -15,6 +15,7 @@ import type { PostFrontmatter } from '~/components/posts'
 import remarkImageInfo from '~/server/fetch/posts/custom-remark-plugin/remark-image-info'
 import { components } from '~/components/posts/mdx-component'
 
+
 /**
  * Extract frontmatter info.
  * @param slug Post path name without `.mdx` suffix.

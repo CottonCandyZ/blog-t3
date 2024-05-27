@@ -30,6 +30,7 @@ export const components = {
   ol: OrderedList,
   li: ListItem,
   hr: tagRenderer('hr'),
+  pre: tagRenderer('pre'),
   code: CodeBlock,
   a: MDXLink,
 } as unknown as MDXRemoteProps['components']
