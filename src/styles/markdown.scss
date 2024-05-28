@@ -123,7 +123,7 @@
     // CodeBlock
     .mdx-fenced-codeblock {
       .shiki {
-        @apply max-h-[36rem] overflow-x-auto p-6;
+        @apply max-h-[36rem] overflow-auto p-6;
       }
       code {
         @apply block text-sm leading-6;

@@ -30,7 +30,7 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = ({ codeContent, language
       </div>
       <div className="flex flex-row">
         <div
-          className="mdx-fenced-codeblock w-full"
+          className="mdx-fenced-codeblock w-full overflow-hidden"
           dangerouslySetInnerHTML={{ __html: codeContent }}
         />
         <div>
