@@ -1,0 +1,178 @@
+---
+title: 'Code Block'
+date: '2024-05-28T04:14:54.269Z'
+tags:
+  - Code
+  - Code Block
+abstract: Add some @shikijs/transformers in code block highlight.
+---
+
+[@shikijs/transformers](https://shiki.matsu.io/packages/transformers)
+
+## Transformers
+
+### `transformerNotationDiff`
+
+Use `[!code ++]` and `[!code --]` to mark added and removed lines.
+
+````md
+```ts
+console.log('hewwo') // [\!code --]
+console.log('hello') // [\!code ++]
+console.log('goodbye')
+```
+````
+
+Renders (with custom CSS rules):
+
+```ts
+console.log('hewwo') // [!code --]
+console.log('hello') // [!code ++]
+console.log('goodbye')
+```
+
+---
+
+### `transformerNotationHighlight`
+
+Use `[!code highlight]` to highlight a line.
+
+````md
+```ts
+console.log('Not highlighted')
+console.log('Highlighted') // [\!code highlight]
+console.log('Not highlighted')
+```
+````
+
+Renders (with custom CSS rules):
+
+```ts
+console.log('Not highlighted')
+console.log('Highlighted') // [!code highlight]
+console.log('Not highlighted')
+```
+
+You can also highlight multiple lines with a single comment:
+
+````md
+```ts
+// [\!code highlight:3]
+console.log('Highlighted')
+console.log('Highlighted')
+console.log('Not highlighted')
+```
+````
+
+Renders:
+
+```ts
+// [!code highlight:3]
+console.log('Highlighted')
+console.log('Highlighted')
+console.log('Not highlighted')
+```
+
+---
+
+### `transformerNotationWordHighlight`
+
+Use `[!code word:Hello]` to highlight the word `Hello` in any subsequent code.
+
+````md
+```ts
+// [\!code word:Hello]
+const message = 'Hello World'
+console.log(message) // prints Hello World
+```
+````
+
+Renders (with custom CSS rules):
+
+```ts
+// [!code word:Hello]
+const message = 'Hello World'
+console.log(message) // prints Hello World
+```
+
+You can also specify the number of lines to highlight words on, e.g. `[!code word:Hello:1]` will only highlight occurrences of `Hello` on the next line.
+
+````md
+```ts
+// [\!code word:Hello:1]
+const message = 'Hello World'
+console.log(message) // prints Hello World
+```
+````
+
+Renders:
+
+```ts
+// [!code word:Hello:1]
+const message = 'Hello World'
+console.log(message) // prints Hello World
+```
+
+---
+
+### `transformerNotationFocus`
+
+Use `[!code focus]` to focus a line.
+
+````md
+```ts
+console.log('Not focused');
+console.log('Focused') // [\!code focus]
+console.log('Not focused');
+```
+````
+
+Renders (with custom CSS rules):
+
+```ts
+console.log('Not focused')
+console.log('Focused') // [!code focus]
+console.log('Not focused')
+```
+
+You can also focus multiple lines with a single comment:
+
+````md
+```ts
+// [\!code focus:3]
+console.log('Focused')
+console.log('Focused')
+console.log('Not focused')
+```
+````
+
+Renders:
+
+```ts
+// [!code focus:3]
+console.log('Focused')
+console.log('Focused')
+console.log('Not focused')
+```
+
+---
+
+### `transformerNotationErrorLevel`
+
+Use `[!code error]` and `[!code warning]` to mark a line with an error and warning levels.
+
+````md
+```ts
+console.log('No errors or warnings')
+console.error('Error') // [\!code error]
+console.warn('Warning') // [\!code warning]
+```
+````
+
+With some additional CSS rules, you can make it look like this:
+
+```ts
+console.log('No errors or warnings')
+console.error('Error') // [!code error]
+console.warn('Warning') // [!code warning]
+```

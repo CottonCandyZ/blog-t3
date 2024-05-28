@@ -6,14 +6,19 @@ import remarkGfm from 'remark-gfm'
 import glob from 'fast-glob'
 import dayjs from 'dayjs'
 import remarkUnwrapImages from 'remark-unwrap-images'
-import rehypeMdxCodeProps from 'rehype-mdx-code-props'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import {
+  default as rehypeMdxCodeProps,
+  type RehypeMdxCodePropsOptions,
+} from 'rehype-mdx-code-props'
+import {
+  default as rehypeAutolinkHeadings,
+  type Options as rehypeAutolinkHeadingsOptions,
+} from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
 import { cache } from 'react'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import type { PostFrontmatter } from '~/components/posts'
 import { components } from '~/components/posts/mdx-component'
-
 
 /**
  * Extract frontmatter info.
@@ -89,8 +94,8 @@ export const getPostContent = cache(async (mdxPath: string) => {
         remarkPlugins: [remarkGfm, remarkUnwrapImages],
         rehypePlugins: [
           rehypeSlug,
-          [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-          [rehypeMdxCodeProps, { tagName: 'code' }],
+          [rehypeAutolinkHeadings, { behavior: 'wrap' } as rehypeAutolinkHeadingsOptions],
+          [rehypeMdxCodeProps, { tagName: 'code' } as RehypeMdxCodePropsOptions],
         ],
       },
       parseFrontmatter: true,

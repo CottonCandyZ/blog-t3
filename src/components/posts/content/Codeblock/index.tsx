@@ -1,6 +1,12 @@
 import FencedCodeBlock from '~/components/posts/content/Codeblock/fenced-code-block'
 import { codeToHtml } from 'shiki'
-import { transformerNotationDiff, transformerNotationHighlight } from '@shikijs/transformers'
+import {
+  transformerNotationDiff,
+  transformerNotationHighlight,
+  transformerNotationWordHighlight,
+  transformerNotationFocus,
+  transformerNotationErrorLevel
+} from '@shikijs/transformers'
 import {} from 'shiki/themes/vitesse-light.mjs'
 
 interface CodeblockProps {
@@ -23,6 +29,9 @@ const CodeBlock: React.FC<CodeblockProps> = async ({ children, className }) => {
     transformers: [
       transformerNotationDiff(),
       transformerNotationHighlight(),
+      transformerNotationWordHighlight(),
+      transformerNotationFocus(),
+      transformerNotationErrorLevel(),
       {
         pre(node) {
           delete node.properties.style

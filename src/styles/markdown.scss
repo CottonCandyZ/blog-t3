@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer utilities {
   .markdown-body {
     @apply break-words text-base;
@@ -113,14 +117,64 @@
 
     // Inline Code
     .mdx-inline-code {
-      @apply inline-block rounded bg-zinc-400/10 px-1 text-sm font-semibold text-primary-dark;
+      @apply rounded bg-zinc-400/10 px-1 text-primary-dark;
     }
 
     // CodeBlock
     .mdx-fenced-codeblock {
-      @apply py-6;
+      .shiki {
+        @apply max-h-[36rem] overflow-x-auto p-6;
+      }
       code {
-        @apply block max-h-[36rem] pl-6 text-sm leading-6;
+        @apply block text-sm leading-6;
+        .remove,
+        .add,
+        .highlighted {
+          width: calc(100% + 48px);
+          @apply relative -mx-6 inline-block px-6;
+        }
+        .remove {
+          @apply bg-red-500/10 opacity-70;
+          &::before {
+            content: '-';
+            @apply absolute left-2 text-red-500;
+          }
+        }
+        .add {
+          @apply bg-green-500/10;
+          &::before {
+            content: '+';
+            @apply absolute left-2 text-green-500;
+          }
+        }
+        .highlighted {
+          @apply bg-gray-200/50;
+          &.error {
+            @apply bg-red-500/10;
+          }
+          &.warning {
+            @apply bg-yellow-500/10;
+          }
+        }
+        .highlighted-word {
+          padding: 1px 3px;
+          margin: -1px -3px;
+          border: 1px solid;
+          border-radius: 4px;
+        }
+      }
+      .has-focused {
+        &:hover .line:not(.focused) {
+          filter: none;
+          opacity: 1;
+        }
+        .line:not(.focused) {
+          filter: blur(0.095rem);
+          opacity: 0.4;
+          transition:
+            filter 0.35s,
+            opacity 0.35s;
+        }
       }
     }
 
