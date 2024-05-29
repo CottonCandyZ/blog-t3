@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { getPostContent } from '~/server/fetch/posts'
+import '~/styles/markdown.scss'
 
 const AboutContent: React.FC = async () => {
   const { content, frontmatter } = await getPostContent('src/config/about.mdx')
