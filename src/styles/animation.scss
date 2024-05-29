@@ -22,6 +22,15 @@
   }
 }
 
+@keyframes hide {
+  0% {
+    opacity: 100;
+  }
+  100% {
+    transform: 0;
+  }
+}
+
 @layer utilities {
   .animate-move-show {
     animation: move-show ease-in-out 1.2s 1s;
@@ -29,5 +38,9 @@
 
   .animate-backshake {
     animation: backshake 0.5s linear;
+  }
+
+  .animate-hide {
+    animation: hide linear 1.2s 1s;
   }
 }

@@ -47,11 +47,11 @@ function Header() {
           <span className="text-xl font-semibold text-primary-dark">Candy</span>
         </button>
         <div className="absolute flex flex-row items-center gap-1 p-2">
-          <span className="text-xl font-semibold text-primary-dark opacity-0">Cotton</span>
+          <span className="text-xl font-semibold text-primary-dark invisible">Cotton</span>
           <span className="relative size-10">
             <CottonCandy
               className={clsx(
-                `theme-${availableThemeNumber[0]} absolute
+                `theme-${availableThemeNumber[0]} absolute animate-hide
           size-10 cursor-pointer opacity-0 transition-all duration-200 active:scale-95`,
                 {
                   '-translate-x-[100%] translate-y-[130%] opacity-100': toggle,
@@ -63,7 +63,7 @@ function Header() {
             />
             <CottonCandy
               className={clsx(
-                `theme-${availableThemeNumber[1]} absolute 
+                `theme-${availableThemeNumber[1]} absolute animate-hide
           size-10 cursor-pointer opacity-0 transition-all duration-400 active:scale-95`,
                 {
                   'translate-y-[130%] opacity-100': toggle,
@@ -75,7 +75,7 @@ function Header() {
             />
             <CottonCandy
               className={clsx(
-                `theme-${availableThemeNumber[2]} absolute  
+                `theme-${availableThemeNumber[2]} absolute animate-hide
           size-10 cursor-pointer opacity-0 transition-all duration-600 active:scale-95`,
                 {
                   'translate-x-[100%] translate-y-[130%] opacity-100': toggle,
