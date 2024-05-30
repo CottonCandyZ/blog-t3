@@ -31,7 +31,7 @@ export const getPostFrontmatter = cache(async (slug: string) => {
   return frontmatter
 })
 
-export const getAllPostsSlug = cache(async () => {
+const getAllPostsSlug = cache(async () => {
   return (await getAllPostsPathName()).map((path) => getPostSlug(path))
 })
 
