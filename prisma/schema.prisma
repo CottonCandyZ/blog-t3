@@ -54,6 +54,6 @@ model Device {
   credentialPublicKey Bytes
   counter             Int
   transports          String?
-  removed             Boolean @default(false)
+  removed             Boolean  @default(false)
   aaguid              String
 }
