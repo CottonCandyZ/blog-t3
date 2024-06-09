@@ -6,6 +6,8 @@ import MobileNav from '~/components/nav/mobile-nav'
 import ThemeWrapper from '~/components/theme-wrapper'
 import HeaderWithWrapper from '~/components/header/header-with-wrapper'
 import MainWrapper from '~/components/main-wrapper'
+import NextTopLoader from 'nextjs-toploader';
+
 
 const noto_sans = Noto_Sans({
   subsets: ['latin'],
@@ -30,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`antialiased ${noto_sans.variable} ${noto_sans_sc.variable} ${noto_sans_mono.variable}`}
     >
       <ThemeWrapper theme={theme}>
+        <NextTopLoader color='rgb(var(--color-primary-small) / 1)' showSpinner={false} />
         <HeaderWithWrapper />
         <MobileNav />
         <MainWrapper>{children}</MainWrapper>

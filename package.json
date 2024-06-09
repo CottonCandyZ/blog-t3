@@ -25,6 +25,7 @@
     "gray-matter": "^4.0.3",
     "next": "rc",
     "next-mdx-remote": "^5.0.0",
+    "nextjs-toploader": "^1.6.12",
     "react": "canary",
     "react-dom": "canary",
     "rehype-autolink-headings": "^7.1.0",
