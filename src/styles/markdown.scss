@@ -126,7 +126,7 @@
         @apply max-h-[36rem] overflow-auto p-6;
       }
       code {
-        @apply block text-sm w-fit leading-6;
+        @apply block text-sm w-fit leading-6 min-w-full;
         .remove,
         .add,
         .highlighted {
