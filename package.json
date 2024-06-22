@@ -13,14 +13,14 @@
     "start": "next start"
   },
   "dependencies": {
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.15.1",
     "@simplewebauthn/browser": "^10.0.0",
     "@simplewebauthn/server": "^10.0.0",
     "@simplewebauthn/types": "^10.0.0",
     "@types/mdast": "^4.0.4",
     "babel-plugin-react-compiler": "0.0.0-experimental-592953e-20240517",
     "dayjs": "^1.11.11",
-    "esbuild": "^0.21.3",
+    "esbuild": "^0.21.5",
     "fast-glob": "^3.3.2",
     "gray-matter": "^4.0.3",
     "next": "rc",
@@ -29,7 +29,7 @@
     "react": "canary",
     "react-dom": "canary",
     "rehype-autolink-headings": "^7.1.0",
-    "rehype-mdx-code-props": "^3.0.0",
+    "rehype-mdx-code-props": "^3.0.1",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0",
     "remark-unwrap-images": "^4.0.0",
@@ -38,12 +38,12 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@egoist/tailwindcss-icons": "^1.8.0",
-    "@iconify-json/mingcute": "^1.1.17",
-    "@shikijs/transformers": "^1.6.0",
+    "@egoist/tailwindcss-icons": "^1.8.1",
+    "@iconify-json/mingcute": "^1.1.18",
+    "@shikijs/transformers": "^1.9.0",
     "@types/eslint": "^8.56.10",
-    "@types/node": "^20.12.12",
-    "@types/react": "^18.3.2",
+    "@types/node": "^20.14.8",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.1.1",
@@ -53,11 +53,11 @@
     "postcss": "^8.4.38",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
-    "prisma": "^5.14.0",
-    "sass": "^1.77.2",
-    "shiki": "^1.6.0",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5",
-    "unified": "^11.0.4"
+    "prisma": "^5.15.1",
+    "sass": "^1.77.6",
+    "shiki": "^1.9.0",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.2",
+    "unified": "^11.0.5"
   }
 }
