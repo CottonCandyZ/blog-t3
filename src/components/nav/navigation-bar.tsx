@@ -52,7 +52,6 @@ function ListItem({
               current === false,
           },
         )}
-        prefetch
       >
         <span
           className={clsx(icon, {

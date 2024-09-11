@@ -63,7 +63,6 @@ const MobileNav: React.FC = () => {
                       },
                     )}
                     onClick={() => setExpend(false)}
-                    prefetch
                   >
                     <span className={`${item.icon} mr-1 text-[1em]`} />
                     {item.name}
