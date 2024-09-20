@@ -8,6 +8,7 @@ const config = {
   experimental: {
     ppr: true,
     reactCompiler: true,
+    scrollRestoration: true,
   },
   // just for vercel to work
   outputFileTracingIncludes: {
