@@ -23,8 +23,8 @@ const LinkCard: React.FC<LinkCardProps> = async ({ avatar_src, name, description
       target="_blank"
       rel="noreferrer noopener"
     >
-      <div className="size-14 overflow-hidden rounded-xl">
-        <NextImage {...avatar_img} />
+      <div className='size-14 overflow-hidden rounded-xl'>
+        <NextImage {...avatar_img} className="size-14 overflow-hidden rounded-xl object-cover"/>
       </div>
       <div>
         <h1 className="text-lg font-bold text-primary">{name}</h1>
