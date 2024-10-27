@@ -156,7 +156,7 @@ async function verifyRegistrationRes(
     currentChallenge: string
   },
 ) {
-  const { rpID } = await getRP()
+  const { rpID, origin } = await getRP()
   let verification
   try {
     verification = await verifyRegistrationResponse({
@@ -235,7 +235,7 @@ export async function AuthOptAction() {
 }
 
 export async function vAuthResAction(options: AuthenticationResponseJSON) {
-  const { rpID } = await getRP()
+  const { rpID, origin } = await getRP()
   const currentSession = await getCurrentAuthSession()
   if ('message' in currentSession) return currentSession
 
