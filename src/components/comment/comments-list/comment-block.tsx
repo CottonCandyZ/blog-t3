@@ -12,7 +12,7 @@ const CommentBlock: React.FC<CommentBlockProps> = ({ content, authorName, create
       <div>
         <span className="font-semibold">{authorName}</span> · <TimeFromNow time={createAt} />
       </div>
-      <p className="mt-2">{content}</p>
+      <p className="mt-2 break-words">{content}</p>
     </div>
   )
 }
