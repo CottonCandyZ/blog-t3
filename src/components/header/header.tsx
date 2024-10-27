@@ -1,20 +1,18 @@
 'use client'
 import clsx from 'clsx'
+import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CottonCandy } from '~/components/icons'
 import NavigationBar from '~/components/nav/navigation-bar'
-import { ThemeContext } from '~/components/theme-wrapper'
 
 function Header() {
   const [toggle, setToggle] = useState(false)
-  const { themeNumber, setThemeNumber } = useContext(ThemeContext)
+  const { theme, setTheme } = useTheme()
+  const themeNumber = Number(theme?.replace('theme-', '') ?? 1)
   const availableThemeNumber = [1, 2, 3, 4].filter((i) => i !== themeNumber)
   const pathname = usePathname()
-  const saveTheme = (number: number) => {
-    setThemeNumber(availableThemeNumber[number]!)
-    document.cookie = `theme=${availableThemeNumber[number]!}; max-age=34560000`
-  }
+  const saveTheme = (number: number) => setTheme(`theme-${availableThemeNumber[number]!}`)
   useEffect(() => {
     const tog = () => {
       setToggle(false)
@@ -47,11 +45,12 @@ function Header() {
           <span className="text-xl font-semibold text-primary-dark">Candy</span>
         </button>
         <div className="absolute flex flex-row items-center gap-1 p-2">
-          <span className="text-xl font-semibold text-primary-dark invisible">Cotton</span>
+          <span className="invisible text-xl font-semibold text-primary-dark">Cotton</span>
           <span className="relative size-10">
             <CottonCandy
+              suppressHydrationWarning
               className={clsx(
-                `theme-${availableThemeNumber[0]} absolute animate-hide
+                `theme-${availableThemeNumber[0]} animate-hide absolute
           size-10 cursor-pointer opacity-0 transition-all duration-200 active:scale-95`,
                 {
                   '-translate-x-[100%] translate-y-[130%] opacity-100': toggle,
@@ -62,8 +61,9 @@ function Header() {
               }}
             />
             <CottonCandy
+              suppressHydrationWarning
               className={clsx(
-                `theme-${availableThemeNumber[1]} absolute animate-hide
+                `theme-${availableThemeNumber[1]} animate-hide absolute
           size-10 cursor-pointer opacity-0 transition-all duration-400 active:scale-95`,
                 {
                   'translate-y-[130%] opacity-100': toggle,
@@ -74,8 +74,9 @@ function Header() {
               }}
             />
             <CottonCandy
+              suppressHydrationWarning
               className={clsx(
-                `theme-${availableThemeNumber[2]} absolute animate-hide
+                `theme-${availableThemeNumber[2]} animate-hide absolute
           size-10 cursor-pointer opacity-0 transition-all duration-600 active:scale-95`,
                 {
                   'translate-x-[100%] translate-y-[130%] opacity-100': toggle,
