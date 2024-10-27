@@ -35,18 +35,21 @@ import {
   dbUpdateAuthenticatorCounter,
 } from '~/server/db/user'
 
-const host = headers().get('host')!
-const [domain] = host.split(':')
+async function getRP() {
+  const host = (await headers()).get('host')!
+  const [domain] = host.split(':')
 
-// Human-readable title for your website
-const rpName = 'Cotton Blog'
-// A unique identifier for your website
-const rpID = domain!
-// The URL at which registrations and authentications should occur
-const origin = process.env.NODE_ENV !== 'production' ? `http://${host}` : `https://${host}`
+  // Human-readable title for your website
+  const rpName = 'Cotton Blog'
+  // A unique identifier for your website
+  const rpID = domain!
+  // The URL at which registrations and authentications should occur
+  const origin = process.env.NODE_ENV !== 'production' ? `http://${host}` : `https://${host}`
+  return { rpName, rpID, origin }
+}
 
-function setCookie(key: string, value: string) {
-  cookies().set(key, value, {
+async function setCookie(key: string, value: string) {
+  ;(await cookies()).set(key, value, {
     httpOnly: true,
     secure: true,
     maxAge: 2592000,
@@ -55,7 +58,7 @@ function setCookie(key: string, value: string) {
 
 // LOGOUT
 export async function LogoutAction() {
-  await Promise.resolve(cookies().delete('session-id'))
+  await Promise.resolve((await cookies()).delete('session-id'))
 }
 
 // REG
@@ -72,7 +75,7 @@ export interface AuthenticatorInfo extends AuthenticatorInfoCreAndTrans {
 }
 
 async function getCurrentAuthSession() {
-  const sessionId = cookies().get('auth-session-id')?.value
+  const sessionId = (await cookies()).get('auth-session-id')?.value
   if (!sessionId) return resMessageError('AUTH_SESSION_NOT_FOND')
 
   let currentSession
@@ -92,6 +95,7 @@ async function generateRegistrationOpt(
   userId?: string,
   userAuthenticators?: AuthenticatorInfoCreAndTrans[],
 ) {
+  const { rpName, rpID } = await getRP()
   let options
   try {
     options = await generateRegistrationOptions({
@@ -125,7 +129,7 @@ async function generateRegistrationOpt(
     console.error(e)
     return resMessageError('DB_ERROR')
   }
-  setCookie('auth-session-id', session.id)
+  await setCookie('auth-session-id', session.id)
   return resMessageSuccess('OPTION_GENERATE', options)
 }
 
@@ -152,6 +156,7 @@ async function verifyRegistrationRes(
     currentChallenge: string
   },
 ) {
+  const { rpID } = await getRP()
   let verification
   try {
     verification = await verifyRegistrationResponse({
@@ -195,9 +200,9 @@ export async function vRegResAction(localResponse: RegistrationResponseJSON) {
     return resMessageError('DB_ERROR')
   }
   try {
-    cookies().delete('auth-session-id')
+    ;(await cookies()).delete('auth-session-id')
     const session = await dbCreateSession(user.id)
-    setCookie('session-id', session.id)
+    await setCookie('session-id', session.id)
   } catch (e) {
     console.error(e)
     return resMessageError('DB_ERROR')
@@ -207,6 +212,7 @@ export async function vRegResAction(localResponse: RegistrationResponseJSON) {
 
 // Auth
 export async function AuthOptAction() {
+  const { rpID } = await getRP()
   let options
   try {
     options = await generateAuthenticationOptions({
@@ -224,11 +230,12 @@ export async function AuthOptAction() {
     console.error(e)
     return resMessageError('GENERATE_NEW_AUTH_SESSION_FAILED')
   }
-  setCookie('auth-session-id', session.id)
+  await setCookie('auth-session-id', session.id)
   return resMessageSuccess('OPTION_GENERATE', options)
 }
 
 export async function vAuthResAction(options: AuthenticationResponseJSON) {
+  const { rpID } = await getRP()
   const currentSession = await getCurrentAuthSession()
   if ('message' in currentSession) return currentSession
 
@@ -274,9 +281,9 @@ export async function vAuthResAction(options: AuthenticationResponseJSON) {
   }
 
   try {
-    cookies().delete('auth-session-id')
+    ;(await cookies()).delete('auth-session-id')
     const session = await dbCreateSession(authenticator.userId)
-    setCookie('session-id', session.id)
+    await setCookie('session-id', session.id)
   } catch (e) {
     console.error(e)
     return resMessageError('DB_ERROR')
@@ -289,7 +296,7 @@ export async function vAuthResAction(options: AuthenticationResponseJSON) {
 
 export async function addDeviceOptAction() {
   // SESSION CHECK
-  const sessionId = cookies().get('session-id')?.value
+  const sessionId = (await cookies()).get('session-id')?.value
   if (!sessionId) return resMessageError('SESSION_NOT_FOUND')
 
   // USER CHECK
@@ -335,7 +342,7 @@ export async function addDeviceVResAction(localResponse: RegistrationResponseJSO
 
 export async function removeUserDeviceAction(credentialID: string) {
   // SESSION CHECK
-  const sessionId = cookies().get('session-id')?.value
+  const sessionId = (await cookies()).get('session-id')?.value
   if (!sessionId) return resMessageError('SESSION_NOT_FOUND')
 
   // USER CHECK

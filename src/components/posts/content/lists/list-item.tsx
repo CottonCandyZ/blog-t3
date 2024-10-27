@@ -1,6 +1,6 @@
 'use client'
 import clsx from 'clsx'
-import { Children, type ReactElement, useContext } from 'react'
+import { Children, JSX, type ReactElement, useContext } from 'react'
 import { Checked, Dot, Unchecked } from '~/components/icons'
 import { ListContext } from '~/components/posts/content/lists/list-provider'
 

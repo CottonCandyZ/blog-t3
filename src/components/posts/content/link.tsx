@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import Link from 'next/link'
+import { JSX } from 'react'
 
 const MDXLink: React.FC<JSX.IntrinsicElements['a']> = (props) => {
   const { className, href = '', children, ...rest } = props

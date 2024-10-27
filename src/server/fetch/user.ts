@@ -5,7 +5,7 @@ import { resMessageError, resMessageSuccess } from '~/server/message'
 export type DeviceInfoPromise = ReturnType<typeof fetchUserDevice>
 
 export async function fetchLoggedUserInfo() {
-  const sessionId = cookies().get('session-id')?.value
+  const sessionId = (await cookies()).get('session-id')?.value
   if (!sessionId) return resMessageError('SESSION_EXPIRE')
   let userInfo
   try {

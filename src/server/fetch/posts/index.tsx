@@ -15,7 +15,6 @@ import {
   type Options as rehypeAutolinkHeadingsOptions,
 } from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
-import { cache } from 'react'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import type { PostFrontmatter } from '~/components/posts'
 import { components } from '~/components/posts/mdx-component'
@@ -25,21 +24,21 @@ import { components } from '~/components/posts/mdx-component'
  * @param slug Post path name without `.mdx` suffix.
  * @returns `PostFrontmatter`.
  */
-export const getPostFrontmatter = cache(async (slug: string) => {
+export const getPostFrontmatter = async (slug: string) => {
   const rawMdx = await fs.readFile(path.join(process.cwd(), `posts/${slug}.mdx`), 'utf8')
   const frontmatter = matter(rawMdx).data as PostFrontmatter
   return frontmatter
-})
+}
 
-const getAllPostsSlug = cache(async () => {
+const getAllPostsSlug = async () => {
   return (await getAllPostsPathName()).map((path) => getPostSlug(path))
-})
+}
 
 /**
  * Get sorted and filtered posts info.
  * @returns Sorted by day and filtered `slug` and `frontmatter`.
  */
-export const getLatestPostsListInfo = cache(async () => {
+export const getLatestPostsListInfo = async () => {
   const postsSlug = await getAllPostsSlug()
   const allPostsListInfo = await Promise.all(
     postsSlug.map(async (slug) => {
@@ -57,13 +56,13 @@ export const getLatestPostsListInfo = cache(async () => {
       const dayB = dayjs(b.frontmatter.date).valueOf()
       return dayB - dayA
     })
-})
+}
 
 /**
  * Get all tags appear in posts.
  * @returns All tags in posts.
  */
-export const getAllTags = cache(async () => {
+export const getAllTags = async () => {
   const posts = await getLatestPostsListInfo()
   const oTags: string[][] = []
   let uniqueTags = new Set<string>()
@@ -76,14 +75,14 @@ export const getAllTags = cache(async () => {
   })
   uniqueTags = new Set([...uniqueTags].sort((a, b) => a.localeCompare(b)))
   return { uniqueTags, oTags }
-})
+}
 
 /**
  * Parse the post content by path.
  * @param mdxPath Post path.
  * @returns `code` and `frontmatter` parsed by `bundleMDX`.
  */
-export const getPostContent = cache(async (mdxPath: string) => {
+export const getPostContent = async (mdxPath: string) => {
   const source = await fs.readFile(path.join(process.cwd(), mdxPath), 'utf8')
 
   const mdxSource = await compileMDX<PostFrontmatter>({
@@ -102,7 +101,7 @@ export const getPostContent = cache(async (mdxPath: string) => {
     },
   })
   return mdxSource
-})
+}
 
 /**
  * Get all posts path name under posts folder and subfolder.

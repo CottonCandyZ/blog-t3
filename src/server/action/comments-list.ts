@@ -27,7 +27,7 @@ export async function createCommentAction(
   if (data.content === '') return resMessageError('NEW_COMMENT_COMMENT_EMPTY')
 
   // SESSION CHECK
-  const sessionId = cookies().get('session-id')?.value
+  const sessionId = (await cookies()).get('session-id')?.value
   if (!sessionId) return resMessageError('SESSION_NOT_FOUND')
 
   // USER CHECK

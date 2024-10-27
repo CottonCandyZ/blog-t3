@@ -6,7 +6,7 @@
     "build": "next build",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbopack",
     "postinstall": "prisma generate",
     "new:post": "node ./scripts/new-post.mjs",
     "lint": "next lint",
@@ -23,11 +23,12 @@
     "esbuild": "^0.21.5",
     "fast-glob": "^3.3.2",
     "gray-matter": "^4.0.3",
-    "next": "canary",
+    "next": "15.0.2-canary.8",
     "next-mdx-remote": "^5.0.0",
+    "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",
-    "react": "canary",
-    "react-dom": "canary",
+    "react": "19.0.0-rc-1631855f-20241023",
+    "react-dom": "19.0.0-rc-1631855f-20241023",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-mdx-code-props": "^3.0.1",
     "rehype-slug": "^6.0.0",
@@ -43,12 +44,12 @@
     "@shikijs/transformers": "^1.16.3",
     "@types/eslint": "^8.56.12",
     "@types/node": "^20.16.5",
-    "@types/react": "^18.3.5",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "autoprefixer": "^10.4.20",
     "clsx": "^2.1.1",
     "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.3",
+    "eslint-config-next": "15.0.2-canary.8",
     "eslint-config-prettier": "^9.1.0",
     "postcss": "^8.4.45",
     "prettier": "3.2.5",
@@ -59,5 +60,11 @@
     "tailwindcss": "^3.4.10",
     "typescript": "^5.6.2",
     "unified": "^11.0.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "npm:types-react@19.0.0-rc.1",
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    }
   }
 }
