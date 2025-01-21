@@ -39,11 +39,11 @@ export interface aaguid {
 }
 export async function fetchAaguid() {
   try {
-    const aaguid = (await (
+    const aaguid = (
       await fetch(
         'https://raw.githubusercontent.com/passkeydeveloper/passkey-authenticator-aaguids/main/aaguid.json',
       )
-    ).json()) as Record<string, aaguid>
+    ).json() as unknown as Record<string, aaguid>
     return resMessageSuccess('FETCH_SUCCESS', aaguid)
   } catch (e) {
     console.error(e)
