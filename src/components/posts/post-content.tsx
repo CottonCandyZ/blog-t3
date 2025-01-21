@@ -8,7 +8,7 @@ export default async function PostContent({ slug }: { slug: string }) {
 
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
-      <div className="relative w-full grow">
+      <div className="relative grow overflow-hidden">
         <article className="markdown-body mt-4 rounded-2xl bg-primary-bg px-5 py-6 shadow-cxs md:px-8 md:py-10">
           <header className="mb-5">
             <h1
@@ -31,7 +31,7 @@ export default async function PostContent({ slug }: { slug: string }) {
           <Comments slug={slug} />
         </div>
       </div>
-      <aside className="sticky top-28 hidden h-max max-h-[calc(-112px+100vh)] w-56 overflow-auto p-2 lg:block lg:gap-4 grow-0">
+      <aside className="sticky top-28 hidden h-max max-h-[calc(-112px+100vh)] w-56 overflow-auto p-2 lg:block lg:gap-4 shrink-0">
         <nav className="flex flex-col gap-2">
           <h2 className="w-max text-2xl font-medium tracking-wider text-primary">目录</h2>
           <TableOfContents />
