@@ -1,5 +1,6 @@
 import type { MDXRemoteProps } from 'next-mdx-remote/rsc'
 import Image from '~/components/posts/content/Image'
+import Video from '~/components/posts/content/Video'
 import tagRenderer from '~/components/posts/tag-render'
 import UnorderedList from '~/components/posts/content/lists/unordered-list'
 import OrderedList from '~/components/posts/content/lists/ordered-list'
@@ -26,6 +27,7 @@ export const components = {
   strong: tagRenderer('strong'),
   del: tagRenderer('del'),
   img: Image,
+  Video: Video,
   ul: UnorderedList,
   ol: OrderedList,
   li: ListItem,

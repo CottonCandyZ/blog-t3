@@ -3,6 +3,8 @@ import PostContent from '~/components/posts/post-content'
 import { getLatestPostsListInfo, getPostFrontmatter } from '~/server/fetch/posts'
 import '~/styles/markdown.scss'
 
+export const dynamicParams = false
+
 export async function generateStaticParams() {
   const postsInfo = await getLatestPostsListInfo()
   return postsInfo.map((postInfo) => ({
