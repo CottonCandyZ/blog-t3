@@ -1,0 +1,53 @@
+---
+title: '记录一下 Blog 自去年 11 月至今的一些变化'
+date: '2024-04-18T06:24:51.597Z'
+tags:
+  - 'Blog'
+abstract: '这个 Blog 是去年开始搭建的，先是模仿了 DouLog，后来觉得应该更加简约，于是换成了像 JoshWComeau 那种风格。再后来看到了一个不错的模板，遂又做了一些改变...'
+---
+
+在看到 [DouLog](https://im.daidr.me/) 后，发现 web 设计真是太有趣了，于是想要做一个自己的 Blog。先从模仿开始吧，然后就做了个类似的卡片：
+
+![卡片首页](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-18-blog-change/%E5%8D%A1%E7%89%87%E9%A6%96%E9%A1%B5.webp)
+
+当然没有他的好看的说（记录于 24-04-18）：
+
+![DouLog 24-04-18 截图](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-18-blog-change/DouLog.webp)
+
+做的时候我发现让这个卡片居中其实挺麻烦的，因为我有个 footer 嘛，然后如果直接用绝对定位的话，view 高度小于卡片时，页面会无法滚动，footer 也会被挡住。所以图上实际上并没有完全居中（指在 view 的正中间），如果既需要能够滚动又希望在屏幕正中得话，可以考虑算一下 footer 的高度，然后给个 margin 偏移。而且这里还有个小坑就是对移动设备的适配，应当使用 100dvh（而不是 100vh），因为会有个[导航栏](https://web.dev/blog/viewport-units#the-need-for-new-viewport-units)。
+
+我还做了一些动画，是用 Nextjs Layout 实现的，就不展示了，现自己看看感觉呆呆地。
+
+随后闲置了很长一段时间（跑去改文章了）。
+
+## 第二版
+
+后来发现，首页呈现的有效内容太少了，Blog 嘛，先整点内容。于是在网上冲浪时看到了 [JoshWComeau](https://www.joshwcomeau.com/) 的 Blog，遂花了点时间在今年三月改成了下面这样：
+
+![第二版展现内容为主](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-18-blog-change/%E7%AC%AC%E4%BA%8C%E7%89%88%E5%B1%95%E7%8E%B0%E5%86%85%E5%AE%B9%E4%B8%BA%E4%B8%BB.webp)
+
+文章部分：
+
+![第二版展文章部分](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-18-blog-change/%E7%AC%AC%E4%BA%8C%E7%89%88%E6%96%87%E7%AB%A0%E9%83%A8%E5%88%86.webp)
+
+这有个非常有趣的部分就是它的 Header sticky 实现：
+
+<Video src="/images/2024-04-18-blog-change/Header演示.webm" />
+
+其实在文章的上面有一个同样大小的白色 sticky 块，同时 header 自身是透明的，在有颜色的区域是后面是一个绝对定位的 div，在它下面也有一个有颜色的 sticky 块，这里处理的时候要注意 z-index 的处理。
+
+后来优先实现了评论区，并用 [WebAuthn](/posts/2024-04-12-webauthn) 实现了评论区的登录。
+
+## 第三版
+
+再后来就是现在 Blog 的样子，我在 [About](/about) 里有写，参考了 [fuwari](https://github.com/saicaca/fuwari) 的设计，虽然在写这篇文章时有些动画还没有实现。它之后应该就是现在这样了，之后应该会再优化一些 UI 的表现和添加暗黑模式。记录一下 (2024-04-18)：
+
+主页：
+
+![第三版主页](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-18-blog-change/%E7%AC%AC%E4%B8%89%E7%89%88%E4%B8%BB%E9%A1%B5.webp)
+
+内容页：
+
+![第三版](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-18-blog-change/%E7%AC%AC%E4%B8%89%E7%89%88%E5%86%85%E5%AE%B9%E9%A1%B5.webp)
+
+当然此 Blog 的 MDX 渲染部分大量参考了 [xiaojun Blog](https://github.com/xiaojundebug/xiaojun.im) 的设计，再次表示感谢。

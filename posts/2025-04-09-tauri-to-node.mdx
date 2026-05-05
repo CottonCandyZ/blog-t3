@@ -1,0 +1,119 @@
+---
+title: 'Tauri To Node'
+date: '2025-04-09T13:16:18.220Z'
+tags:
+ - wasm
+ - devtool
+abstract: 用 Node 重写！
+---
+
+之前用 Tauri 写了个图片压缩工具，虽然最后的效果还不错（指性能上，易用性我觉得也就那样），但是我对打开桌面应用还是有点抵触，它是个应用而不是一个工具，给我的感觉就不像是程序员用的。
+
+> 好的你又发什么神经，想干什么事情？
+
+那么我决定就将其作为一个普通的压缩应用做下去，这样有大批量图片需要压缩的话，还可以用用。但是我们的一开始的需求就不是这种东西。
+
+> 那来聊聊你的诉求吧
+
+我想要快速的管理那些 Assets 里的图片，总结来说就是如下流程：
+
+1. 添加进去。
+2. 标记。
+3. 压缩。
+4. 上传。
+5. 生成 ts 文件。
+
+另外还有：
+
+1. 读取 ts 文件。
+2. 替换图片。（同时压缩并上传）
+
+很好。一开始我想这东西的形态是一个桌面应用，主要出于两点：
+
+1. 图片这个东西并不轻巧，存在本地方便归档。应用去操作可以通通存在固定的地方，如果作为用户不是程序员，那确实挺方便的。
+2. node 侧没有什么好用的压缩图片工具，但 Rust 的侧有，我心痒锈化很久了，趁机（啊不是）偷偷看一波文档，学习锈化过程。
+
+> 那痛点在哪，看上去在没事找事？
+
+是这样的，但是提效（偷懒）总是给人带来一些动力。同时我看到一个有意思的项目 [node-modules-inspector](https://github.com/antfu/node-modules-inspector)，好极了，我们得做个类似的东西对吧（我 clone 了项目并仔细观摩了一番，然后发现了一个已经影响到使用的 bug，不过已经有人提 issue 了，我给了问题出现的原因，以及可能解决的方案，由于不太熟悉这些路径上的设计问题，所以暂时先给个评论吧 [Failed to Connect to the Backend](https://github.com/antfu/node-modules-inspector/issues/93#issuecomment-2788689465)。然后这件事导致我觉得 Antfu 对 PR 的审核太松了，可能维护多个项目就是这样的，但应该是那个 PR 把它搞坏了，由于我不知道为啥合并的原因，就不多说了）。并且我发现 Vite 近期说是要请他搞 devtools 来可视化 modules bundle 这些东西，形态类似 Nuxt devtools 吧，毕竟也是他做的。
+
+说了这么多废话，原因就是作为一个前端，我们对于这类应用最好做成一行启动的形式，像这样：
+
+```bash
+pnpx node-modules-inspector
+```
+
+同时集成一些 cli 和 plugin 插入在构建流里，直接让这个东西全程无感才是关键的。
+
+好，说了这么多废话，重新回来讨论怎么做。
+
+## 怎么做
+
+还记得我上面说的么，我简单看了一下那个仓库，他是这么干的。
+
+一个入口 bin，里面用 `cac` 封了一个 cli，其执行并用 `h3` 启动一个 `nuxt` api 服务，然后托管一个 `ws` 来通信，随后代理 web 端的静态 html，典型的 csr + api 结构。
+
+然后这里我比较在意的是 `npm pack` 之后的产物问题，这是搞清楚在干嘛的关键，Antfu 是把 nuxt build 的 dist 产物一同上传实现的，直接把 `.nuxt` 传上去了。
+
+ok，这看上去没什么问题，并且我用 next.js 直接做了尝试，vibe coding 了一波（确实是不熟悉 npm 发包，不过看过之后学习了一波），然后这里就直接采用 RSC + SSR 的老朋友来实现了，发现效果也非常不错，实现了一行启动，同时监听项目目录下的 Assets 文件夹。
+
+好，前置工作基本结束了，然后我就开始思考另外一个问题。
+
+## 拆分
+
+压缩，本身也应该是一个通用的东西，所以应该做成单独的包来分发，以后可以用在任何地方。因此我决定将其打包成 wasm，实际上之前就做了类似的尝试，但是这次希望彻底一点，把它发布到 npm 并提供直接可以在 node 和浏览器同时使用。
+
+于是我开始尝试打包它…这里我们考虑用 wasm-pack，好极了。
+
+嗯。首先我们来看一个 issue：
+
+[ESM target that is compatible with node](https://github.com/rustwasm/wasm-pack/issues/1253)
+
+wtf，浏览器打的是 ESM，node 怎么打得 cjs，而且我想要共用一个。其最关键的在于浏览器用了 fetch，而 node 应该直接 load file，很好。所以我直接在 rollup 里暴力给他匹配并替换了，后续看看能不能提 PR 修。
+
+其次，我这里使用 rollup 打包，然后你会发现 wasm 文件会被漏掉。确实，不在树里的东西就应该被 shake 掉，但是这里我们也确实用到了它，所以直接 copy 进 dist 就行。
+
+这样差不多就搞定了。
+
+差不多是因为到 vite 上 dev 会出错：
+
+[`new URL(foo, import.meta.url)` doesn't work when dependency was optimized](https://github.com/vitejs/vite/issues/8427)
+
+这里直接加到 `optimizeDeps.exclude` 里就行了。
+
+看上去很简短的过程，实际上打包了好几次才发现问题所在…
+
+总之就是这样，以后也可以愉快的使用 wasm 了，我发现在浏览器里多开 worker 跑压缩其实速度也还可以接受，但是还是不及桌面原生的速度的，除非我们考虑分发 bin 包，也就是原生 rust 包，然后用 exec 去跑，我感觉会有点搞笑，但是 pngquant 的作者就是这么干的，注意这个项目：[imagemin-pngquant](https://github.com/imagemin/imagemin-pngquant)，然后我们观察它的实现：
+
+```jsx
+const {stdout} = await execa(pngquant, arguments_, {
+  encoding: 'buffer',
+  maxBuffer: Number.POSITIVE_INFINITY,
+  input,
+});
+```
+
+好极了，这样浏览器就无缘了，并且 linux 本地还要装 lib 库，所以实际上我搜了一下 npm，发现 wasm 比较罕见才考虑自己做的。
+
+> 然后这一章的标题叫拆分？
+
+是这样的，把图片压缩拆分出来是一部份。
+
+同时我其实还想将解析项目中使用的图片也单独抽出来做一个包，或者是插件，总之可能有不错的方案去实现它，但后续再研究吧。
+
+## 总结
+
+Tauri 2.0 之后实际上没有什么坑，整个项目没有用 vibe，直接写的体验还是不错的。用 vibe 写一些小的项目还行，需要整合的时候会有难度，这也是我考虑拆分的原因，同时图片这里后续还可以出 cli 工具，直接 pnpx 压缩，想想还能接入 mcp，就发现 wasm 其实也挺好的，只要有 node 就能跑。rust 分发需要跨平台编译，这个坑非常多，建议看这里 [Packaging Rust Applications for the NPM Registry](https://blog.orhun.dev/packaging-rust-for-npm/)。
+
+写这些的目的是为了下次想要打包的时候再来看一眼，同时在构建应用的初期，咱也要重新考虑一下它的形态问题。当然学了 rust 和 Tarui 是个意外，但是还是收获满满的开心。
+
+另外前端的构建工具非常难用，由于一些历史兼容性问题，非常多的坑都是为了兼容以前的老代码，我希望能够在 5 年内，尽可能的迁移到 ESM，以解决一些奇怪的问题。
+
+最后，我发现我用 `pnpm create next-app` 搞出来的项目里 vscode eslint 直接宕机，原因在于 pnpm 10 对于幻影依赖的强制处理，这里非常推荐去看 [how pnpm links](https://zhuanlan.zhihu.com/p/609430861)，对一些历史问题解释的很清楚。所以只要在 `.npmrc` 里加上如下内容就可以解决：
+
+```txt
+public-hoist-pattern[]=*@nextui-org/*
+public-hoist-pattern[]=*eslint*
+```
+
+ok。到这里需要反思一下自己对于 package 处理仍然不熟的问题，由于入行的时间太短，还有太多的历史包袱需要熟悉和了解，有些打包问题很难定位，坑也很多，还是要多多熟悉。

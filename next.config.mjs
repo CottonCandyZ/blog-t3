@@ -5,10 +5,7 @@
 
 /** @type {import("next").NextConfig} */
 const config = {
-  experimental: {
-    ppr: true,
-    reactCompiler: true,
-  },
+  reactCompiler: true,
   // just for vercel to work
   outputFileTracingIncludes: {
     '/about': ['./src/config/about.mdx'],

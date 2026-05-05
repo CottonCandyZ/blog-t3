@@ -1,0 +1,506 @@
+---
+title: '全局的 hover card'
+date: '2024-08-12T08:45:45.796Z'
+tags:
+  - UI
+  - 动画
+abstract: 是一种 Hover Card 实现！
+---
+
+感觉好久没发 Blog，实际上有一篇一直在准备中，关于实现 Hover pop card，先放个预览图地说，正篇还在写：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/hover-pop-card.webm " />
+
+这个视频可能稍微有点大。
+
+然后看看本篇要实现的一个小组件：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/remake.webm" />
+
+这里我将窗口限制在了一个较小的范围，这样可以演示一些极端情况。
+
+它的特点：
+
+- 全局的，不会被其他元素遮挡，类似在 top layer。
+- 拥有平移的 transition 动画。
+- 拥有 height 动画。
+- 能够根据边界调整高度。
+
+## Hover Card
+
+我想在聊 hover pop card 之前先发一篇聊聊 [hover-card](https://ui.shadcn.com/docs/components/hover-card)，由于 [bangumi-electron](https://github.com/CottonCandyZ/bangumi-electron) 一直用 shadcn 作为 “组件” 库，这里组件打引号的原因是因为 shadcn 不像是个完整的组件库，而是一个整合方案。其大部分“组件”都取自于 [radix-ui](https://www.radix-ui.com/)，然后配合 tailwind 形成一个较为一体的设计方案。所以自然当我想要点格字时就会考虑用上 hover-card:
+
+![hover-card 示例，鼠标放在一个 trigger 上，其会从下部 pop 出来一个 card](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/hover-card-example.webp)
+
+然后我们只需要去[这里](https://ui.shadcn.com/docs/components/hover-card) 把它粘贴过来就行了对吧，像是...这样：
+
+```tsx
+<HoverCard>
+  <HoverCardTrigger>Hover</HoverCardTrigger>
+  <HoverCardContent>The React Framework – created and maintained by @vercel.</HoverCardContent>
+</HoverCard>
+```
+
+嗯，不错，好用。
+
+然后我们把里面的东西替换成自己的，就结束了对吧：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/radix-ui.webm" />
+
+好像，像那么回事，没错，又是像那么回事，动画好像不太连贯。于是我愉快的套用了这个方案好久...
+
+## 冲突
+
+直到，上周末，我想把左侧的 list 换成虚拟的，谈到虚拟列表，我们有 [react-window](https://github.com/bvaughn/react-window) 这种年纪较大的库，也有像 [react-virtuoso](https://github.com/petyosi/react-virtuoso), [TanStack Virtual](https://github.com/TanStack/virtual) 这种相对较年轻的库，当然还有 egjs 的 [infinitegrid](https://github.com/naver/egjs-infinitegrid) 可以选。很好，我们的选择很多，但是这和我们的 hover card 有什么关系？
+
+时间回到几周前...
+
+我当时执迷于实现 overlay scroll，也就是可以把 scroll bar 浮动在 overflow 框里的方案，实际上有个 `overflow: overlay` 直接秒解决问题，但是这个值早就被 deprecated，而且之前还能再 chrome 用 flag 启用，但是某个版本之后就被彻底移除了。然后我就尝试用 [OverlayScrollbars](https://github.com/KingSora/OverlayScrollbars) 来解决，然而实际上它有一堆坑，所以你可以看到上面除了主栏，侧栏用的就是普通的 scroll bar。其中一个坑就是默认带有 `z-index: 0`，这会导致建立新的 [Stacking context](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context)，然后当你尝试再左边的 panel 弹出 hover card 时，就会被右侧的 panel 遮挡，然后整个全局的：
+
+```css
+[data-overlayscrollbars-viewport] {
+  z-index: auto !important;
+}
+```
+
+就把问题解决了，但是我这周还是把左边 panel 的 wrapper 去掉了，原因在于：
+
+- 性能问题，使用这种模拟的 Scrollbar，需要多次计算高度，如果是长列表会有比较严重的性能问题，特别是再 re-render 的时候。
+
+- 还是性能问题，每次组件 re-mount restore scroll 会慢半拍，因为监听器是等滚动条加载完再上的，导致你想恢复滚动位置时会发生闪烁。
+
+后面等 Chrome 支持 [Overlay Fluent ScrollBar](https://source.chromium.org/chromium/chromium/src/+/main:ui/native_theme/native_theme_features.cc;l=5?q=native_theme_features&ss=chromium%2Fchromium%2Fsrc) 再说。
+
+OK，所以这和虚拟列表有什么关系。
+
+遮挡。
+
+是的还是遮挡，如果不是什么特别严重的 bug，我一般不会放弃已有的组件库，因为他们提供的方案比较完备，键盘支持也不错，自己写一套往往要踩一些坑（但其实还好，只是懒吧，当然 hover-pop-card 是踩了不少坑，后面再说...
+
+那么哪里会产生遮挡，emmmm，就是这样：
+
+![遮挡的 hover card，列表中，由于绝对定位 + transform 导致 hover card 被下一个 item 遮挡](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/hover-card-occlusion.webp)
+
+原因在于一般的虚拟滚动是通过 absolute + transform 实现的，这将会形成新的 Stacking context，是的它又形成新的 Stacking context 了。
+
+好烦啊！
+
+于是有了 [top layer](https://developer.mozilla.org/en-US/docs/Glossary/Top_layer)，[overlay](https://developer.mozilla.org/en-US/docs/Web/CSS/overlay)，emmm，看上去不错，但听我说，他们不是用来实现 dialog 的么，啊对对对。
+
+所以我不想在这里用他们，虽然咱 electron 不需要考虑兼容性（上面两个还处在 Limited availability，离所谓的 Baseline 还早着呢）。然后我第一个想到的就是我之前实现了一个全局的 Sheet（嗯，这个之前是出现在之后的文章里的，咱就在这先提一下，大概就是只在离 body 比较近的地方挂上一个 sheet 或者 dialog，然后用一组全局 state 去管理），所以我们也可以把这个 hover card 放到全局，然后用一组 state 去管理就好了。其实 [X](X.com) 也就是 twitter 就是这么干的，检查元素就可以看到了。
+
+## 直接用
+
+由于 sheet 我就直接用了 radix-ui 的，然后把它的 context 套在比较外面的位置，直接就可以用它的组件了，但是到了 hover-card 这里就行不通了，如果一个 hover card context 下有多个 trigger 的话，只会以 dom 里出现的最后一个为准，然后就会出现下面这种整蛊情况：
+
+![hover 第一个，结果页面上最后一个 trigger 被触发，显示的还是第一个对应的内容](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/radix-global-error.webp)
+
+没错我试过了，就是这样，至于怎么实现的，大概就是下面这样：
+
+```tsx
+return (
+  <HoverCardTrigger
+    asChild
+    onMouseEnter={() => {
+      setHoverCardContent({
+        index,
+        episodes,
+        collectionType,
+        setEnabledForm,
+        modifyEpisodeCollectionOpt,
+      })
+    }}
+  >
+    <Button
+      key={episode.id}
+      className={cn(
+        `h-10 min-w-10 rounded-md p-2`,
+        size === 'small' && 'h-6 min-w-6 rounded-sm p-1 text-xs',
+      )}
+      variant={status}
+    >
+      {episode.sort}
+    </Button>
+  </HoverCardTrigger>
+)
+```
+
+很好，这样没用，那看来是不能指望你了 radix-ui，而且我忍你很久了，因为你不告诉我[你在上面还是下面](https://github.com/radix-ui/primitives/issues/791)，这导致你在上面的时候我没法把点格字的按钮放下面：
+
+![由于不知道 popper 的方向，而无法正确摆放按钮的位置](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/dont-know-side.webp)
+
+## 实现
+
+我们来自己写一个吧，这里就实现一个可以上下翻转的版本，然后它不会像 radix-ui 的会在滚动时跟随（其实我不太喜欢这个功能）。
+
+首先准备一个 Wrapper，它就是存放它的地方，管理一组 State 用于控制开关和内容，当然你可以把两个变一个用 null 判断开关也行：
+
+```tsx
+export default function HoverCard() {
+  const type = useAtomValue(hoverCardContentTypeAtom)
+  const open = useAtomValue(hoverCardOpenAtom)
+  return open && type === 'episode' && <HoverEpisodeDetail />
+}
+```
+
+接着准备好一个开关，由于我还需要在 hover 时显示哪个按钮被 hover，所以在 trigger 上整些回调函数：
+
+```tsx
+export default function HoverCardTrigger({
+  children,
+  onOpen,
+}: PropsWithChildren<{ onOpen: () => void }>) {
+  const ref = useRef<HTMLDivElement>(null)
+  const rectSet = useSetAtom(triggerClientRectAtom)
+  const setOpen = useSetAtom(hoverCardOpenAtomAction)
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => {
+        rectSet(ref.current!.getBoundingClientRect())
+        setOpen(true)
+        onOpen()
+      }}
+      onMouseLeave={() => {
+        setOpen(false)
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+```
+
+当然你可以用 data attribute 实现啦。
+
+最后准备好一个 content:
+
+```tsx
+export default function HoverCardContent({
+  children,
+  className,
+  margin = 5,
+  align = 'start',
+  collisionPadding = {
+    right: 8,
+    left: UI_CONFIG.NAV_WIDTH + 8,
+    bottom: 8,
+    top: UI_CONFIG.HEADER_HEIGHT + 8,
+  },
+  isBottom,
+}: PropsWithChildren<
+  HTMLProps<'div'> & {
+    margin?: number
+    collisionPadding?: Partial<Record<Side, number>>
+    align?: Align
+    isBottom?: (isBottom: boolean) => void
+  }
+>) {
+  const triggerClientRect = useAtomValue(triggerClientRectAtom)
+  const ref = useRef<HTMLDivElement>(null)
+  const [translate, setTranslate] = useState({ X: 0 })
+  const [position, setPosition] = useState<Record<'X' | 'top' | 'bottom', number | undefined>>({
+    X: undefined,
+    top: undefined,
+    bottom: undefined,
+  })
+  const [isCollision, setIsCollision] = useState(false)
+  const [height, setHeight] = useState<number | 'auto'>('auto')
+
+  const calc = useCallback(() => {
+    if (!triggerClientRect || !ref.current) return
+    const c = calcPos({
+      margin,
+      collisionPadding,
+      align,
+      trigger: triggerClientRect,
+      content: ref.current.getBoundingClientRect(),
+    })
+    if (c.height != undefined) {
+      setHeight(c.height)
+      setIsCollision(true)
+    } else {
+      setHeight(ref.current.getBoundingClientRect().height)
+      setIsCollision(false)
+    }
+    if (position.X === undefined) setPosition({ ...c })
+    else {
+      setTranslate({ X: c.X - (position.X ?? 0) })
+      setPosition({ ...position, top: c.top, bottom: c.bottom })
+    }
+    isBottom && isBottom(c.bottom === undefined)
+  }, [
+    margin,
+    collisionPadding,
+    align,
+    triggerClientRect,
+    ref.current,
+    setPosition,
+    setTranslate,
+    isBottom,
+  ])
+
+  useLayoutEffect(() => {
+    if (!ref.current) return
+    calc()
+    const ob = new ResizeObserver(() => {
+      calc()
+    })
+    ob.observe(ref.current)
+    return () => {
+      ref.current && ob.unobserve(ref.current)
+    }
+  }, [triggerClientRect, ref])
+  const setOpen = useSetAtom(hoverCardOpenAtomAction)
+
+  return (
+    <div
+      className={cn(
+        'scroll bg-popover text-popover-foreground animate-in fade-in-0 fixed z-50 rounded-md border shadow-md transition-[transform_height] duration-150',
+        isCollision ? 'overflow-x-hidden' : 'overflow-hidden',
+      )}
+      style={{
+        top: position.top,
+        left: position.X,
+        bottom: position.bottom,
+        transform: `translateX(${translate.X}px)`,
+        height,
+      }}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    </div>
+  )
+}
+```
+
+你可以能注意到我包裹了两层，那是为了计算高度，来实现一个高度动画，我参考了[这里](https://github.com/framer/motion/discussions/1884#discussioncomment-5861808)。如果你仔细观察 [radix-ui](https://www.radix-ui.com/primitives/docs/components/navigation-menu) 的动画和实现代码，会发现有一个 [Viewport](https://www.radix-ui.com/primitives/docs/components/navigation-menu#viewport) 专门干这个，用一个 CSS variable `--radix-navigation-menu-viewport-height`。所以我在这里也是这么干的。
+
+其中还包含一个计算位置的函数，这个写的稍微有点简陋，只能够实现上下的版本：
+
+```ts
+export function calcPos({
+  margin,
+  collisionPadding,
+  align,
+  trigger,
+  content,
+}: {
+  margin: number
+  collisionPadding?: Partial<Record<Side, number>>
+  align: Align
+  trigger: DOMRect
+  content: DOMRect
+}) {
+  const toTop = trigger.top - margin - undefinedToZero(collisionPadding?.top)
+  const toBottom =
+    window.innerHeight - trigger.bottom - margin - undefinedToZero(collisionPadding?.bottom)
+  let X: number | undefined,
+    top: number | undefined,
+    bottom: number | undefined,
+    height: number | undefined
+  if (align == 'start') {
+    X = trigger.left
+    if (X + content.width > window.innerWidth - undefinedToZero(collisionPadding?.right)) {
+      X = window.innerWidth - content.width - undefinedToZero(collisionPadding?.right)
+    }
+  } else if (align === 'end') {
+    X = trigger.left + trigger.width
+  } else {
+    X = trigger.left - (content.width - trigger.width) / 2
+  }
+  if (toBottom >= content.height) {
+    // bottom
+    top = trigger.bottom + margin
+  } else if (toTop >= content.height) {
+    // top
+    bottom = window.innerHeight - trigger.top + margin
+  } else {
+    if (toTop > toBottom) {
+      bottom = window.innerHeight - trigger.top + margin
+      height = toTop
+    } else {
+      top = trigger.bottom + margin
+      height = toBottom
+    }
+  }
+  if (X < 0) {
+    X = undefinedToZero(collisionPadding?.left)
+  }
+  if (X + content.width > window.innerWidth - undefinedToZero(collisionPadding?.right)) {
+    X = window.innerWidth - content.width - undefinedToZero(collisionPadding?.right)
+  }
+  return { X, top, bottom, height }
+}
+```
+
+这里有个细节需要注意，**为了更好的实现 height 动画**，在反转上去的时候，应该使用 **bottom** 定位而非 top，不然动画会不太好看，其中我还计算了碰撞时的建议高度，这样就可以实现在碰撞时，将其在空间较宽裕的一端展开。
+
+这里回过头来说一些 context 的细节：
+
+```ts
+const c = calcPos({
+  margin,
+  collisionPadding,
+  align,
+  trigger: triggerClientRect,
+  content: ref.current.getBoundingClientRect(),
+})
+if (position === null)
+  setPosition({ ...c }) // [!code focus]
+else {
+  // [!code focus]
+  setTranslate({ X: c.X - position.X, Y: 0 }) // [!code focus]
+  setPosition({ ...position, Y: c.Y }) // [!code focus]
+} // [!code focus]
+```
+
+这里实际上我们首先会先计算一个 top, left 用于 fixed 定位，当然你可以直接用 translate。后续的**横向** re-render 我们需要使用 transform-translate，这样的好处是可以使用 transform 做一些动画。注意是横向，如果在纵向上使用 translate，在卡片位于上方时会导致奇怪的行为，纵向的定位更新我们仍然使用 position。
+
+可能会有疑问为什么不止用一种定位方式，比如直接用 top left，然后后续用 transition: left 不就行了。但是实际上**第一次**也会被计算在内，这就导致第一次会从初始的位置乘坐动画出现，这里使用两个值是为了规避第一次的动画（就算使用 layoutEffect 也无法很好的控制这种动画的生命周期）。
+
+至于使用 framer motion 还是原生的，这个随便啦，这里有个 framer motion 的版本：
+
+```tsx
+<motion.div
+  ref={ref}
+  className={cn(
+    'scroll bg-popover text-popover-foreground fixed z-50 rounded-md border shadow-md',
+    isCollision ? 'overflow-x-hidden' : 'overflow-hidden',
+  )}
+  animate={{
+    opacity: [0, 1],
+    translateX: translate.X,
+    height,
+  }}
+  transition={{
+    duration: 0.1,
+  }}
+  style={{
+    top: position.Y,
+    left: position.X,
+    height,
+  }}
+  onMouseEnter={() => setOpen(true)}
+  onMouseLeave={() => setOpen(false)}
+>
+  <div ref={ref} className="p-4">
+    {children}
+  </div>
+</motion.div>
+```
+
+然后是一个 resize 的 ob：
+
+```ts
+useLayoutEffect(() => {
+  if (!ref.current) return
+  calc()
+  const ob = new ResizeObserver(() => {
+    // [!code focus]
+    calc() // [!code focus]
+  }) // [!code focus]
+  ob.observe(ref.current)
+  return () => {
+    ref.current && ob.unobserve(ref.current)
+  }
+}, [triggerClientRect, ref])
+```
+
+这个是用来防止里面的东西发生变化而 ob 的，如果发生了变化，我们需要重新计算一下位置，确保它能够挨着我们的 trigger，同时避免碰撞到边缘。
+
+### state
+
+我想把 state 单独拿出来说说：
+
+```ts
+export const hoverCardOpenAtom = atom(false)
+
+let timeId: ReturnType<typeof setTimeout> | undefined
+
+export const hoverCardOpenAtomAction = atom(
+  null,
+  (_get, set, value: boolean, closeDelay: number = 50, openDelay: number = 200) => {
+    clearTimeout(timeId)
+    if (!value) {
+      timeId = setTimeout(() => set(hoverCardOpenAtom, value), closeDelay)
+    } else timeId = setTimeout(() => set(hoverCardOpenAtom, value), openDelay)
+  },
+)
+
+// 记录 trigger 的位置
+export const triggerClientRectAtom = atom<DOMRect | null>(null)
+
+export const hoverCardContentTypeAtom = atom('episode')
+
+export const hoverCardEpisodeContentAtom = atom<
+  | ({
+      index: number
+      episodes: Episode[] | CollectionEpisode[]
+      collectionType: CollectionType | undefined
+      setEnabledForm: (enabled: boolean) => void
+    } & ModifyEpisodeCollectionOptType)
+  | null
+>(null)
+```
+
+注意中间的 `hoverCardOpenAtomAction`，它可以帮我们做一些防抖，同时又能保证能从 Trigger 移到 Content 时继续保持展开。
+
+我本来是想用背景建一个 back 区域，在 enter 时关闭的，但后来发现这样的策略更简单也更好。
+
+全局的 state 实际上为我们判断当前打开的是哪一个带来了难度，也就是要多写一点，然后就是不知道性能上会不会有压力：
+
+```tsx
+const [selfOpen, setSelfOpen] = useState(false) // [!code focus]
+const open = useAtomValue(hoverCardOpenAtom) // [!code focus]
+useEffect(() => {
+  // [!code focus]
+  if (hoverCardContent?.episodes[hoverCardContent.index] !== episodes[index]) setSelfOpen(false) // [!code focus]
+}, [hoverCardContent]) // [!code focus]
+
+return (
+  <HoverCardTrigger
+    onOpen={() => {
+      setHoverCardContent({
+        index,
+        episodes,
+        collectionType,
+        setEnabledForm,
+        modifyEpisodeCollectionOpt,
+      })
+      setSelfOpen(true)
+    }}
+  >
+    <Button
+      key={episode.id}
+      className={cn(
+        `h-10 min-w-10 rounded-md p-2`,
+        size === 'small' && 'h-6 min-w-6 rounded-sm p-1 text-xs',
+      )}
+      variant={selfOpen && open ? `${status}Hover` : status} // [!code focus]
+    >
+      {episode.sort}
+    </Button>
+  </HoverCardTrigger>
+)
+```
+
+这样做的目的是为了能在展开时 hover 在 content 上时添加一些样式。
+
+![hover 在 content 上时点亮 trigger](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-08-12-global-hover-card/hover-highlight.webp)
+
+最终的效果在本文的开头哦！
+
+## 结语
+
+这个 card 封装的确实有点简陋，但是想要的效果已经实现啦，然后我们解决了上面的问题，包括：
+
+- 遮挡
+- 不知道上下
+- 动画不够舒服
+
+感谢你能看到这里！

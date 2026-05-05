@@ -2,6 +2,8 @@ import { resMessageError, resMessageSuccess } from '~/server/message'
 import { dbReadAllCommentsDecBySlug } from '~/server/db/comments-list'
 
 export async function fetchComments(slug: string) {
+  if (!process.env.POSTGRES_PRISMA_URL) return resMessageSuccess('DB_READ_SUCCEED', [])
+
   try {
     const comments = await dbReadAllCommentsDecBySlug(slug)
     return resMessageSuccess('DB_READ_SUCCEED', comments)

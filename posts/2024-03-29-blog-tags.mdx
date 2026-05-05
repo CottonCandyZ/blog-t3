@@ -1,0 +1,175 @@
+---
+title: 'Blog 右侧的 Tags'
+date: '2024-03-29T09:20:43.488Z'
+tags:
+  - 'Blog'
+  - 'React.js'
+abstract: '如果你尝试点击右边的 Tags 的话，会发现它的行为有点奇怪。但是实际上是符合我的预期的，我想让每一次点击都能有所「反馈」，所以在设计上采取了一些奇怪的策略。'
+---
+
+我观察了一些 Blog 的分类方式，有的会使用文件夹归类，或直接按年份分类。使用 Tag 分类的通常不能多选，所以我想做一个可以多选的 Tag，~~虽然没多少文章~~。
+
+## 需要考虑哪些问题？目标究竟是什么？
+
+由于这个 Blog 的内容都是使用文件静态存储的，并且是使用 Next.js SSG 的，所以打算直接在前端用 State 管理一组 Set 即可。后续应该会连接数据库，因为文章比较少，应该还是会采取这种方式，如果文章比较多的话，应该会考虑用查询来过滤。
+
+明确了使用 Set 过滤的方式来实现后，如果要在主页做成动态的，那么实际上只需要管理一个 State 就可以了，就是「被选中的」 Tags，只要提供这组被选中的 Tags，让左侧的文章作出「响应」即可。
+
+那么问题来了，既然要支持多选的 Tag，什么样的行为是合理的。简单来说就是，我希望用户的每次点击都能够有所「反馈」，并且这种反馈最好不是无效的。
+
+我首先想到的是交集为空的情况，这种情况下，让左侧显示一个空页面并提示用户内容为空真的合理么？我直觉感觉这不是一个合理的交互，而且遇到这种情况用户需要不停的点击才知道哪些交集为空。所以…首先我希望实现在每次点击后尽可能的缩小可以点击的范围。这个简单，只需要拿到每篇 Blog 对应的 Tags 数组就行，这是个二维数组，然后找到包含选中 Tags 的文章，并取他们拥有的 Tags 的并集作为新的「可选」 Tags 集合就行。
+
+计算当前可以选择的 Tags 应该直接放在父组件的函数体中，这样每次更新被选中的 Tag State 时，备选项就会自动更新。
+
+```ts
+const [toggledTags, setToggledTags] = useState(new Set<string>());
+const otherTagsSet = new Set<string>();
+oTags.forEach((tags) => {
+  // 是否存在这样的文章包含已经选中的 tags
+  let include = true;
+  toggledTags.forEach((toggledTagName) => {
+    if (!tags.includes(toggledTagName)) {
+      include = false;
+    }
+  });
+  if (include) {
+    tags.forEach((tag) => otherTagsSet.add(tag));
+  }
+});
+const currentTags = new Set([...otherTagsSet].concat([...toggledTags]));
+```
+
+那如果是这样的话，这篇文章可能到这里就结束了… emmm 如果，有一篇文章有两个 Tags，并且这两个 Tags 独一无二，别的文章都没有，这时候点击其中的一个，这个简易的 Tags filter 会做什么？
+
+它会筛出这篇文章，然后留一个 Tag 给我们选。好像很符合我们的逻辑，缩小了可选的范围，并且都不为空了。但是，留下的 Tag，我们点击它之后，会有新的「反馈」么（出现新的文章）？显然什么都不会发生，这种情况在这种 Tags 增加到三四个的时候更加致命，如果同时有多个这样拥有这些 Tags 的文章，那么选择新的 Tag 时，左侧文章页不会有任何变化。我认为这是极其糟糕的交互，它不会给用户任何的「反应」，产生了很多无效的点击。
+
+所以我们的目标是让每一次点击都能够「有效的」缩小或增加查询范围。
+
+## 我们拥有什么？
+
+整理一下我们知道的条件：
+
+- 一个 uniqueTags 集合，包含了所有 Tags
+- 一个 selectedTags 集合，包含了被选中的部分
+- 一个 原始的 Tags 二维数组，按照文章分组
+- 有两种操作
+  1. 选取新的**单个** Tag
+  2. 移除选中的**单个** Tag
+
+## 希望出现的效果
+
+- 每选择一个，无效的点击的 Tag 都会被自动选上
+- 去除一个，可有效点击的 Tag 会被重新释放
+
+看上去这个效果就是 Do 和 Undo，好像我们压压栈就能解决，但是实际情况要复杂一些。
+
+我们假设有两篇文章他们的 tag 如下：
+
+- 美食、生活
+- 生活
+
+考虑下面的步骤：
+
+1. 点击生活，筛出的应该是两篇。
+2. 点击美食，筛出一篇。
+3. 取消美食，出现两篇。（类似 undo）
+4. 回到第二步，取消生活，应该连带美食一起被取消（否则会只剩下美食被选中，这个时候与我们之前想法冲突，因为只要选择了美食，生活就应该被勾上，若留下生活，则会留下一个无效的点击）。
+
+另外，若我们一开始就勾选美食（同时会自动勾上生活），这时候取消美食，生活应该会被保留，所以这是非对称的，并且看上去和动作（选择、取消）有关。
+
+那就不能用栈实现了，好烦啊，还要考虑两种状态。确实，想到这的时候我都有点不想实现了。但是本着「如果实现了，好像还蛮酷的」的态度，做了一些尝试。
+
+我们需要理清一个问题：为什么会有无效的点击，什么样的标签会导致这个问题？
+
+Oh，是交集。
+
+## 实现它！
+
+如果我们找到包含所选标签的文章，并尝试找一个交集，就应该找到了我们需要一同勾选的 Tags。在去除的时也是一样的，只要确定去除之后剩下的每一个 Tag 包含的文章的交集是否包含去除的那个 Tag，如果包含的话就一起去除。
+
+```ts
+const toggle = (tagName: string) => {
+  return () => {
+    // 确定是移除还是新增
+    const remove = toggledTags.has(tagName);
+    if (remove) {
+      toggledTags.delete(tagName);
+      // 要保留的 tags
+      const remain = new Set<string>();
+      toggledTags.forEach((toggledTag) => {
+        const otherTagsArray: string[][] = [];
+        oTags.forEach((tags) => {
+          let include = true;
+          if (!tags.includes(toggledTag)) {
+            include = false;
+          }
+          if (include) {
+            otherTagsArray.push(tags);
+          }
+        });
+        // 找到交集
+        const filtered = otherTagsArray[0]?.filter((item) => {
+          for (let i = 1; i < otherTagsArray.length; i++) {
+            if (!otherTagsArray[i]?.includes(item)) return false;
+          }
+          return true;
+        });
+        // 如果里面不包含要去除的 tag，那就保留
+        if (!filtered?.includes(tagName)) {
+          filtered?.forEach((tag) => remain.add(tag));
+        }
+      });
+      toggledTags.forEach((tag) => {
+        if (!remain.has(tag)) toggledTags.delete(tag);
+      });
+    } else {
+      const otherTagsArray: string[][] = [];
+      toggledTags.add(tagName);
+      oTags.forEach((tags) => {
+        // 是否存在这样的文章包含已经选中的 tags
+        let include = true;
+        toggledTags.forEach((toggledTagName) => {
+          if (!tags.includes(toggledTagName)) {
+            include = false;
+          }
+        });
+        if (include) {
+          otherTagsArray.push(tags);
+        }
+      });
+      // 寻找交集
+      otherTagsArray[0]
+        ?.filter((item) => {
+          for (let i = 1; i < otherTagsArray.length; i++) {
+            if (!otherTagsArray[i]?.includes(item)) return false;
+          }
+          return true;
+        })
+        ?.forEach((otherTagName) => {
+          toggledTags.add(otherTagName);
+        });
+    }
+    setToggledTags(new Set(toggledTags));
+    sessionStorage.setItem("tags", JSON.stringify([...toggledTags]));
+  };
+};
+const clearTag = () => {
+  setToggledTags(new Set());
+  sessionStorage.setItem("tags", JSON.stringify([]));
+};
+```
+
+可能会注意到上面两句关于 `sessionStorage` 语句，实际上还有一句在 `useEffect()` 中。
+
+```ts
+useEffect(() => {
+  const saveTags = sessionStorage.getItem("tags");
+  if (saveTags) {
+    setToggledTags(new Set(JSON.parse(saveTags) as Array<string>));
+  };
+},[])
+```
+
+这些是为了在刷新和切换页面的时候能够保存状态，但是由于 Next.js 的某些机制（我的下一篇应该会着重吐槽一下），会导致画面闪烁，暂时无解。我之前是把 State 保存在一个全局 React Context 里，但是我感觉这不是一个好实现，而且刷新时会掉状态。当然也可以用 cookie 全局 SSR，但是那样速度会慢很多。
+
+[完整的代码](https://github.com/CottonCandyZ/blog-t3/blob/main/src/components/posts/tags.tsx) 中还包含了 UI 的实现，欢迎来玩！

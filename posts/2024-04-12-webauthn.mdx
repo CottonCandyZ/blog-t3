@@ -1,0 +1,278 @@
+---
+title: 'WebAuthn 两三事'
+date: '2024-04-12T08:52:49.127Z'
+tags:
+  - 'Auth'
+  - 'Session'
+abstract: '为了搭建评论区，需要实现用户的登录注册和账户管理，可能使用诸如邮箱（magic link），手机号等验证方式，但都会一定程度的泄漏隐私，而且并不方便。WebAuthn 就是为了解决这些问题而生，同时更加安全，且易于管理。我将会简单介绍一下 WebAuthn 的验证方式，同时讲讲我在评论区中如何实现它的'
+---
+
+WebAuthn（Web Authentication API）是用非对称加密实现用户验证的，其具体应当是使用了数字签名，也就是用私钥签名和公钥解密。因此注册过程实际上就是在分发公钥，验证过程就是在验证签名。在注册与验证的过程中，其实际需要维护一个 Session，也就是 [challenge](https://w3c.github.io/webauthn/#dom-publickeycredentialcreationoptions-challenge)，这主要是为了避免重放攻击。但是奇怪的是，明明有 TLS，为何仍需要避免？
+
+## 为何要避免重放？
+
+我查了一些资料，其中首先是对 TLS 如何避免重放的[解释](https://zhuanlan.zhihu.com/p/360782536) 以及关于是否可能导致重放的[可能性](https://security.stackexchange.com/questions/20105/are-ssl-encrypted-requests-vulnerable-to-replay-attacks/20106#20106)。TLS 其是使用 MAC 来避免重放的，也就是通过 SHA 256 来 HMAC 带序号的报文，来验证完整性，从而避免重放。从上面的两个解释不难看出，在使用 TLS 后，除非用户设备被攻击，否则是无法在已经建立连接后实现重放的。我们再来看一下 W3C 对于其的解释：
+
+> This member specifies a challenge that the authenticator signs, along with other data, when producing an attestation object for the newly created credential.
+
+Challenge 会被 authenticator 签名，从而方便服务器验证所收到 public key 就是用户注册时同其 private key 一同生成的，由于 Challenge 被设置成不可伪造，显然此举就是为了防止重放的。那就是在 TLS 保护之外，避免重放。那这种情况究竟是怎样的？W3C 又说：
+
+> A Relying Party implementation typically consists of both some client-side script that invokes the Web Authentication API in the client, and a server-side component that executes the Relying Party operations and other application logic. Communication between the two components MUST use HTTPS or equivalent transport security, but is otherwise beyond the scope of this specification.
+
+上面的 MUST use HTTPS 说明其客户端与验证服务器应该使用 TLS 的，所以我实在没搞懂为什么会有这种情况，除非用户的设备被攻击，但这明显不满足上面所提的安全要求。如果你知道原因的话，欢迎到[评论区](#Comments)留言。
+
+## 如何使用？
+
+其实 [webauthn.guide](https://webauthn.guide/) 讲的还蛮清楚的，配合 [simplewebauthn](https://simplewebauthn.dev/docs/packages/server) 的文档应该很好实现。但是问题的关键在于，我们需要用户提供什么，以及如果有数据库的话，该如何管理 Session 呢。既然不需要用户提供手机号，那我们应该只让用户提供用户名。那用户名作为 id 的话，如何避免重名认证呢？我的选择是在注册时生成一个 uuid 作为用户 [id](https://w3c.github.io/webauthn/#dom-publickeycredentialuserentity-id)，用户名则充当 [userName](https://w3c.github.io/webauthn/#dom-publickeycredentialentity-name)，其会在密钥设备上显示。除此之外，为了方便识别重名用户，再在数据库建一个自增字段 `label`。因此使用 Prisma 构建如下的用户 Schema：
+
+```prisma
+model User {
+  id       String    @id
+  createAt DateTime  @default(now())
+  label    Int       @unique @default(autoincrement())
+  name     String
+  comment  Comment[]
+  device   Device[]
+  session  Session[]
+}
+```
+
+可以发现这里的 id 没有似乎用 auto generate uuid，这有关注册整个过程。那既然用户名可以重名，我们在后续的验证时如何识别这个用户呢？用户除了提供用户名外，还会提供什么信息？
+
+### 注册过程
+
+用 FigJam [画了一张图](https://www.figma.com/file/TmeqVudZIfzukKVtrXVFg7/WebAuthn)，大致流程如下：
+
+![WebAuthn 注册过程](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-12-webauthn/WebAuthn%E6%B3%A8%E5%86%8C%E8%BF%87%E7%A8%8B.webp)
+
+先看看浏览器在干些什么
+
+- 发送两次请求，这个我们使用 React Server Action 完成
+- 调用浏览器 API Prompt 验证器
+
+再来看看服务器做些什么
+
+- 第一次返回 Options 供浏览器弹出相应的验证器
+- 第二次验证公钥是否有效并存储
+
+有别于传统的验证方式，WebAuthn 需要服务器先生成 Options，所以创建用户的阶段被延后到了第二次 Response，这也是为什么上面没有在数据库里直接生成 uuid 的原因，我们需要在生成 Options 前就生成一个 uuid。
+
+我们首先写好浏览器里的逻辑：
+
+```tsx
+async function Reg(formData: FormData) {
+  const optionRes = await RegOptAction(formData); // 需要实现
+  setMessage(optionRes.message);
+  if (!optionRes.data) {
+    return;
+  }
+  let localRes;
+  try {
+    localRes = await startRegistration(optionRes.data);
+  } catch (e) {
+    console.error(e);
+    setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED);
+    return;
+  }
+  const verifyRes = await vRegResAction(localRes); // 需要实现
+  setMessage(verifyRes.message);
+}
+```
+
+然后我们需要实现两个 Action，分别用于生成 Options 和验证 Public key 并创建用户。也就是上面的 `AuthOptAction` 和 `vRegResAction`。
+
+然后来写这两个 Action，首先是生成 Option 的 Action：
+
+```ts
+export async function RegOptAction(formData: FormData) {
+  const schema = z.object({
+    userName: z.string(),
+  });
+  let data;
+  try {
+    data = schema.parse({
+      userName: formData.get("username"),
+    });
+  } catch {
+    return resMessageError("ZOD_FORM_DATA_TYPE_ERROR");
+  }
+  if (data.userName == "") {
+    return resMessageError("USER_ID_CAN_NOT_BE_EMPTY");
+  }
+  return await generateRegistrationOpt(data.userName);
+}
+
+async function generateRegistrationOpt(
+  userName: string,
+  userId?: string,
+  userAuthenticators?: AuthenticatorInfoCreAndTrans[],
+) {
+  if (!userId) {
+    userId = crypto.randomUUID();
+  }
+  let options;
+  try {
+    options = await generateRegistrationOptions({
+      rpName,
+      rpID,
+      userID: userId,
+      userName: userName,
+      excludeCredentials: userAuthenticators?.map((authenticator) => ({
+        id: isoBase64URL.toBuffer(authenticator.credentialID),
+        type: "public-key",
+        // Optional
+        transports: authenticator.transports
+          ? (JSON.parse(
+              authenticator.transports,
+            ) as AuthenticatorTransportFuture[])
+          : undefined,
+      })),
+      authenticatorSelection: {
+        // Defaults
+        residentKey: "preferred",
+        userVerification: "preferred",
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    return resMessageError("GENERATE_REG_OPTIONS_FAILED");
+  }
+  let session;
+  try {
+    session = await dbCreateAuthSession(options.challenge, userId, userName);
+  } catch (e) {
+    console.error(e);
+    return resMessageError("DB_ERROR");
+  }
+  cookies().set("auth-session-id", session.id);
+  return resMessageSuccess("OPTION_GENERATE", options);
+}
+```
+
+我抽出 `generateRegistrationOpt` 是为了后续添加设备，后面两个参数在注册时是用不到的，在添加设备时用于验证是否添加重复的设备。为了让服务器能够在两次 response 之间能够记住第一次生成的 uuid（方便后续创建用户）和 challenge，我使用了 session 来管理。这里直接用了 pg 来存，其实最好的方案是再另起一个 Redis，应该性能上会好不少。
+
+注意生成 options 所使用的 rpName 和 rpID，这里的 rp 实际上就是 [Replying Party](https://w3c.github.io/webauthn/#relying-party)，也就是我在上文图中标出的 Server，验证器会使用 userId 以及 rpId（一般为域名）来生成唯一的 challengeId，如果使用重复的 userId 来注册，会直接替换到之前生成的密钥，所以区分用户的方式，就是通过 userId。**那么既然 challengeId 和用户 id 以及网站绑定，那我们就可以直接使用其用于后续验证和查找用户。**
+
+然后我们来实现 verify：
+
+```ts
+export async function vRegResAction(localResponse: RegistrationResponseJSON) {
+  const currentSession = await getCurrentAuthSession();
+  if ("message" in currentSession) {
+    return currentSession;
+  }
+  const newAuthenticator = await verifyRegistrationRes(
+    localResponse,
+    currentSession,
+  );
+  if ("message" in newAuthenticator) {
+    return newAuthenticator;
+  }
+  let user;
+  try {
+    user = await dbCreateUser(
+      currentSession.userId!,
+      currentSession.userName!,
+      newAuthenticator,
+    );
+  } catch (e) {
+    console.error(e);
+    return resMessageError("DB_ERROR");
+  }
+  try {
+    cookies().delete("auth-session-id");
+    const session = await dbCreateSession(user.id);
+    cookies().set("session-id", session.id);
+  } catch (e) {
+    console.error(e);
+    return resMessageError("DB_ERROR");
+  }
+  return resMessageSuccess("REGISTER_FINISH");
+}
+
+async function verifyRegistrationRes(
+  localResponse: RegistrationResponseJSON,
+  currentSession: {
+    currentChallenge: string;
+  },
+) {
+  let verification;
+  try {
+    verification = await verifyRegistrationResponse({
+      response: localResponse,
+      expectedChallenge: currentSession.currentChallenge,
+      expectedOrigin: origin,
+      expectedRPID: rpID,
+      requireUserVerification: false,
+    });
+  } catch (e) {
+    console.error(e);
+    return resMessageError("VERIFY_REG_RESPONSE_PROCESS_FAILED");
+  }
+  const { verified, registrationInfo } = verification;
+
+  if (!verified || !registrationInfo) {
+    return resMessageError("VERIFY_REG_RESPONSE_FAILED");
+  }
+  const { credentialPublicKey, credentialID, counter, aaguid } =
+    registrationInfo;
+  const newAuthenticator = {
+    credentialID: isoBase64URL.fromBuffer(credentialID),
+    credentialPublicKey: Buffer.from(credentialPublicKey),
+    counter,
+    transports: JSON.stringify(localResponse.response.transports),
+    aaguid,
+  };
+  return newAuthenticator;
+}
+```
+
+同样分离了 `verifyRegistrationRes` 方便后面重用，注意到我们会验证 challenge、origin 和 rpID 从而防止上述的重放或是中间人攻击。
+
+`newAuthenticator` 随创建用户时存储到其 device 中，device 表的 schema 如下，供参考：
+
+```prisma
+model Device {
+  credentialID        String   @id
+  createAt            DateTime @default(now())
+  user                User     @relation(fields: [userId], references: [id])
+  userId              String
+  credentialPublicKey Bytes
+  counter             Int
+  transports          String?
+  removed             Boolean @default(false)
+  aaguid              String
+}
+```
+
+注意到表里有个奇怪的东西 `aaguid`，这个是用来方便在设备列表里[展现设备名称](https://web.dev/articles/webauthn-aaguid)的。
+
+至此注册过程其实就结束了，我上面再结束时使用了 `cookie().set()` 在 response 时设置了用户登录的 session。
+
+那验证过程呢？
+
+### 验证过程
+
+同样用 FigJam [画个图](https://www.figma.com/file/TmeqVudZIfzukKVtrXVFg7/WebAuthn)
+
+![webAuthn 验证过程](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-04-12-webauthn/WebAuthn%E9%AA%8C%E8%AF%81%E8%BF%87%E7%A8%8B.webp)
+
+什么嘛，一模一样嘛。~~你就使用第一张图改的吧？~~
+
+这里有几个细节要注意：
+
+- 第一次返回的 Option 其实压根不知道用户是谁，也就是不验证用户 Id，当然这是可选的，其实是可以验证用户名，但是我希望用户啥都不要输，体验 WebAuthn 顺滑的登录流程。
+
+- 验证时直接使用 ChallengeId 反向获得用户 Id，上面的 device schema 里有个 userId 的外键，可以用来做这个。
+
+那么就不贴代码了，感兴趣直接可以去 Github 看：
+
+- [Actions](https://github.com/CottonCandyZ/blog-t3/blob/9f236f53e697e01986bc56da381ef49275728585/src/server/action/webauthn.ts#L215)
+
+- [UI](https://github.com/CottonCandyZ/blog-t3/blob/9f236f53e697e01986bc56da381ef49275728585/src/components/comment/user/auth/auth-reg-form.tsx#L85)
+
+## 结语
+
+到这里就差不多结束了，实际上还可以按照[这里](https://simplewebauthn.dev/docs/packages/browser#browser-autofill-aka-conditional-ui)实现 [conditional ui](https://github.com/w3c/webauthn/wiki/Explainer%3A-WebAuthn-Conditional-UI)，但是我发现在 [webauthn.io](https://webauthn.io/) 上都有弹出 bug，所以暂时搁置吧。
+
+如果有什么有趣的想法，欢迎赶紧体验一下，然后在评论区留言吧。~~虽然回复系统还没建好。~~

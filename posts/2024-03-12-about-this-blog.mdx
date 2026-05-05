@@ -1,0 +1,24 @@
+---
+title: '关于这个新的 Blog'
+date: '2024-03-12T13:38:20.072Z'
+tags:
+  - 'Blog'
+  - 'Next.js'
+abstract: '最近将主页从 Notion 迁移到了这里，关于它的构建和以后，从这篇文章开始'
+---
+
+最近在学习前端，说想写点东西练练手，于是就想着先建一个 Blog 吧，顺便记录一下前端的学习过程。
+
+HTML 和 CSS 其实早在 2018 年左右就有看过一些，当时还是买了一本 [《Head First HTML 与 CSS》](https://book.douban.com/subject/25752357/) 看，其实相对来说比较老了，JS 则是直接啃了 [《JavaScript高级程序设计》](https://book.douban.com/subject/10546125/)，这个好像也有年代了，当时还是第三版，然后也有看过一些什么 [《图解HTTP》](https://book.douban.com/subject/25863515/) 之类的。总之看了一堆书，好像实践的环节很少，特别是那个 JS 高级程序设计，给我的印象像是读 [《C Primper Plus》](https://book.douban.com/subject/26792521/)，或者是 [《C++ Primer》](https://book.douban.com/subject/25708312/) 的感觉，但是好像更像字典一样，起码《C++ Primer》还有题目可以做，我还把它放在了[这里](https://github.com/CottonCandyZ/Learning-Cpp-with-Cpp-Primer)。
+
+后来学校里教 Java，就没怎么接触前端了，但每次看到 UI 和动画时觉得很有趣，还是想继续再看一看，更何况 JS 这个语言比 Java 要 “有趣” 一些，Koltin 则要灵活一些，起码可以把函数当作参数传递了，这样就可以搞函数式编程了。于是在经历了[用 Kotlin 写了个安卓毕设](https://github.com/CottonCandyZ/Android-based-emergency-app) → 考研 → [用 Python 搞深度学习后](https://github.com/CottonCandyZ/LFSA)，还是想回到前端上来。
+
+之前虽然看过[阮一峰的 ES6](https://es6.ruanyifeng.com/)，但是应该忘的差不多了，所以就看了这个被称为更加现代的教程 [javascrip.info](https://javascript.info/)，网页上有不少可以互动的东西，整个过程还是蛮有趣的，我顺便写了个[笔记放在了 Notion 上](https://www.notion.so/cottoncandyz/JavaScript-info-cd75f905ddf242acab52664d1f33f7d4)。随后直接找 [MDN](https://developer.mozilla.org/) 补一下 HTML 和 CSS 的基本知识，就准备找个顺手的框架开写了。由于之前就有看过 React，发现其在近期更新了文档，我对老的文档印象还挺深，当时有个做 Tic-Tac-Toe 的 Tutorial，现在也还是。新的文档更新了不少可能被踩的坑，包括 State 和 Effect 究竟在何时被使用，同样，也顺便写了个[笔记](https://www.notion.so/cottoncandyz/6a1a103e5f6840f0a3b7b84b96185331)。看完之后，想起多年前 React 推荐的还是 CRA 来创建新项目，现在直接给的全是全栈框架，考虑到 Next.js 有着不错的生态，App Router 推出也没多久，遂准备直接用它来写这个 Blog。
+
+说到 Blog，其实早在 2018 年左右就有建过，最初的时候是用 Markdown 直接生成静态文件，用 Typora 配合模版生成 HTML 然后直接托管在国内的阿里云上，还为此拍照备案。后来用过 [Hexo](https://hexo.io/) 和一些类它的生成工具，也非常的不错，但是往往搭好了就结束了。搭的时候非常快乐，配置 Nginx 加上 SSL，后来则是换上了 Docker，工具倒是换了不少，Blog 本身写的反而很少，后来有了 Notion，于是把大部分的笔记都迁移到了上面，并把[这个页面](https://cottoncandyz.notion.site)作为展示自己最近状态的入口，以后笔记应该还会写在上面，继续以文件夹的形式呈现，新的 Blog 则用时间线展现一些“真正”的 Posts 吧。
+
+这个 Blog 是仅利用 Tailwind + TS + Next.js 构建一个 Blog，使用 Next 的最大原因其实是为了后续的内容和评论管理，配合 [Prisma](https://www.prisma.io/) 可以直接连上数据库，而使用这一套流程最好的方案是 [t3-app](https://create.t3.gg/)，于是我用其创建了这个 [Blog Repo](https://github.com/CottonCandyZ/blog-t3)。
+
+做这个 Blog 最大的契机实际上是看到了[戴兜](https://im.daidr.me/)在 v2 发帖展示自己的新 Blog，上面有趣的动画吸引着我，这成为了我想要自己手写而非使用现有的 Component UI 构建 Blog 的最大原因。
+
+这个 Blog 还在建设中，我的前端学习之路也在继续！

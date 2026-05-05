@@ -14,6 +14,13 @@ interface VideoProps {
   children?: React.ReactNode
 }
 
+function getVideoType(src?: string) {
+  if (!src) return undefined
+  if (src.endsWith('.mp4')) return 'video/mp4'
+  if (src.endsWith('.webm')) return 'video/webm'
+  return undefined
+}
+
 const Video: React.FC<VideoProps> = ({
   src,
   height,
@@ -41,7 +48,7 @@ const Video: React.FC<VideoProps> = ({
       loop={loop}
       {...props}
     >
-      {src && <source src={src} type={src.endsWith('.mp4') ? 'video/mp4' : src.endsWith('.webm') ? 'video/webm' : undefined} />}
+      {src && <source src={src} type={getVideoType(src)} />}
       {children}
       Your browser does not support the video tag.
     </video>

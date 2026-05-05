@@ -30,57 +30,24 @@ const BASE = {
   ],
   toy_cards: [
     {
-      title: 'ToysTitle',
+      title: '深度学习',
       project_list: [
         {
-          title: 'Toy Sample',
-          description: 'Toy Description',
-          href: 'https://github.com/CottonCandyZ/',
+          title: 'LFSA: CLIP Based Text-Image Person Search',
+          description: '利用 CLIP 做文本行人重识别，换上重新设计的 loss 和 sampler',
+          href: 'https://github.com/CottonCandyZ/LFSA',
           img_alt: 'Describe how loss and sampler work',
-          img_src: '/toyImages/example.webp',
-        },
-        {
-          title: 'Toy Sample',
-          description:
-            'Toy Description Toy Description Toy Description Toy Description Toy Description',
-          href: 'https://github.com/CottonCandyZ/',
-          img_alt: 'Describe how loss and sampler work',
-          img_src: '/toyImages/example.webp',
-        },
-        {
-          title: 'Toy Sample',
-          description: 'Toy Description',
-          href: 'https://github.com/CottonCandyZ/',
-          img_alt: 'Describe how loss and sampler work',
-          img_src: '/toyImages/example.webp',
+          img_src: '/toyImages/LFSA.webp',
         },
       ],
     },
   ],
   friend_link: [
     {
-      name: 'Blog Name',
-      description: 'Blog description',
-      href: 'https://google.com',
-      avatar_src: '/linkAvatar/AvatarSample.webp',
-    },
-    {
-      name: 'Blog Name',
-      description: 'Blog description Blog description',
-      href: 'https://google.com',
-      avatar_src: '/linkAvatar/AvatarSample.webp',
-    },
-    {
-      name: 'Blog Name',
-      description: 'Blog description Blog description',
-      href: 'https://google.com',
-      avatar_src: '/linkAvatar/AvatarSample.webp',
-    },
-    {
-      name: 'Blog Name',
-      description: 'Blog description',
-      href: 'https://google.com',
-      avatar_src: '/linkAvatar/AvatarSample.webp',
+      name: 'AULyPcのBlog',
+      description: '今日も生きててえらい ☁',
+      href: 'https://blog.aulypc0x0.online',
+      avatar_src: '/linkAvatar/favicon_amiya.webp',
     },
   ],
   footer_info: { name: 'CottonCandyZ' },

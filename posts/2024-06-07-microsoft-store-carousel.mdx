@@ -1,0 +1,705 @@
+---
+title: '我想要一个微软商店的轮播图！'
+date: '2024-06-07T04:58:35.615Z'
+tags:
+  - 动画
+abstract: 最近在边学边做 Bangumi 的 Electron 客户端，于是就想着 UI 得参考一些现有的 App，随后我盯上了 Microsoft Store。它的轮播图好漂亮！我要拿过来...
+---
+
+首先来看看我们要实现的效果：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/store-big-carousel.webm" />
+
+然后我后来发现它的 [web 版](https://apps.microsoft.com)，实际效果是差不多的（时间 24/6/7），可以直接去体验一波。另外注意他们已经全部 web component 化了，这结合它前几天的[文章](https://blogs.windows.com/msedgedev/2024/05/28/an-even-faster-microsoft-edge/)一起食用还挺有意思的。
+
+---
+
+## 我想要偷懒
+
+### 观摩小轮播
+
+在实现整个大轮播图之前，我想先把底下那种小的实现了，这个客户端的整体 UI 会用 shadcn 做，所以直接去找轮播组件就完事了。然后我发现 shadcn 是用 [Embla Carousel](https://www.embla-carousel.com/) 做的。这是一个封装的很严实的库（指能够自定义的部分其实很少，特别是动画），我用它做了基本的小轮播，同时还支持 responsive design：
+
+![small carousel](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/small-carousel.webp)
+
+我们来观察一下它的实现方式，外层提供一个 `Carousel` Context，用来管理各种状态，同时给出各种 config。里面用 `CarouselContent` 包裹，这里的实现是一个 flex，我们在里面指定 basis 就可以定义卡片的宽度，如果为不同 media queries 指定不同的 basis 就可以实现 responsive 的效果。
+
+```tsx
+<Carousel
+  opts={{
+    align: 'start',
+  }}
+  className="w-full"
+>
+  <CarouselContent>
+    {Array.from({ length: 24 }).map((_, index) => (
+      <CarouselItem key={index} className="basis-1/6">
+        {' '}
+        // [!code highlight]
+        <div className="p-1">
+          <Card>
+            <CardContent className="flex items-center justify-center p-6">
+              <span className="text-3xl font-semibold">{index + 1}</span>
+            </CardContent>
+          </Card>
+        </div>
+      </CarouselItem>
+    ))}
+  </CarouselContent>
+</Carousel>
+```
+
+值得注意的这里如果想改卡片的间隔的话，需要在 `CarouselContent` 上用一个负边距，然后再在每个 `CarouselItem` 加上对应的 padding，这个是为了方便计算卡片的宽度。
+
+### 我有一个想法
+
+那既然这样子的话，我直接去改变当前滚到的那个的宽度，然后做个 `transition-[flex-basis]` 呗，实际上都不需要我加这个，因为 shadcn 都帮我加好了，然后我是用 embla-carousel 的 [API event](https://www.embla-carousel.com/api/events/)，去 hook 它的状态，或者用 [classNamePlug](https://www.embla-carousel.com/plugins/class-names/) 也行对吧。
+
+很快啊，就实现了：
+
+```tsx
+const [api, setApi] = useState<CarouselApi>() // [!code ++]
+const [current, setCurrent] = useState(0) // [!code ++]
+
+useEffect(() => { // [!code ++]
+  if (!api) { // [!code ++]
+    return // [!code ++]
+  }
+
+  setCurrent(api.selectedScrollSnap()) // [!code ++]
+
+  api.on('select', () => { // [!code ++]
+    setCurrent(api.selectedScrollSnap()) // [!code ++]
+  }) // [!code ++]
+}, [api]) // [!code ++]
+<Carousel
+  opts={{
+    align: 'start',
+  }}
+  setApi={setApi} // [!code ++]
+  className="w-full"
+>
+<CarouselContent>
+    {Array.from({ length: 24 }).map((_, index) => (
+      <CarouselItem
+        key={index}
+        className={clsx('basis-1/6 transition-[flex-basis] duration-500', { // [!code ++]
+          'basis-3/6': current === index, // [!code ++]
+        })} // [!code ++]
+      >
+        <div className="p-1">
+          <Card>
+            <CardContent className="flex items-center justify-center p-6">
+              <span className="text-3xl font-semibold">{index + 1}</span>
+            </CardContent>
+          </Card>
+        </div>
+      </CarouselItem>
+    ))}
+  </CarouselContent>
+</Carousel>
+```
+
+效果（请无视掉上面那个稍微露出来一点的已经做好的）：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/lazy.webm" />
+
+好像有那么一回事了哈，但是总感觉，有什么不对...
+
+应该很快就会发现（或者是用 devtools 里面的 animation 工具吧），它实际上在分步骤完成，也就是在移动了整个 `CarouselContent` 后，才做了 `CarouselItem` 上的动画。那么给我的感觉这应该和 `api.on` 中的第一个参数有关，也就是决定了这个 set 的时机：
+
+```ts
+useEffect(() => {
+  if (!api) {
+    return
+  }
+
+  setCurrent(api.selectedScrollSnap())
+
+  api.on('select', () => {
+    // [!code focus]
+    setCurrent(api.selectedScrollSnap())
+  })
+}, [api])
+```
+
+但是试了其他一些选项，比如 `scroll`，其效果也和一样，如果想要改变它本身的动画，我们就只能自己写一个 plugin 了，因为我观察到社区有人想要 [Fade 效果](https://github.com/davidjerleke/embla-carousel/issues/39)，最后实际上是通过插件实现的，这里就不深究了，后面有时间再探索（咕咕咕）。
+
+好了，无法偷懒了，当然我这里只是想试试看 embla 能不能实现类似的效果，但是实际证明其能够被 hack 的部分实在有点少，这也是大部分组件库的特点，所以才有了 shadcn 这种相对分离的库。
+
+~~我想开摆了~~
+
+## 重新整理一下效果
+
+它其实还挺复杂的，有一些可能别的轮播图没有的功能：
+
+- 支持无限滚动
+- 后面可以点击相当远的距离，从而连续跳过多个
+- 可以前向滚动
+- 不做任何的 debounce 限制，你可以一直点仍然保持高度流畅
+
+很头大，首先我们来实现基本的动画，这里我不想折磨自己了，直接用 Framer Motion 吧（我花了亿点点时间研究一下这个库，它看上去完全可以实现我想要的功能）。当然想用 vanilla JS 也是可以的，考虑用 [Animation API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API) 的 keyframe 应该也可以吧。更新！现已增加 Animation API 的版本，在本文末尾。
+
+## 开始吧
+
+### 基本动画
+
+❗这里不是正确的代码噢！后面还有故事要说！❗
+
+首先我们要实现最基本的动画对吧，如果是一个轮播图的话，参考我们观摩的做法：
+
+1. 准备一个 flex，然后把 `overflow` 置 `hide`
+2. 根据里面卡片的宽度滚动距离
+3. 滚动的同时改变滚到的 width 宽度
+
+我们自己实现的目的是为了保证 2 和 3 同时发生。
+
+那我准备一个 state 然后不断的增加，重新计算 translate 的位置，然后根据 state 去判断当前滑到的元素就行了吧，于是就有了下面的代码：
+
+```tsx
+// 假设有个地方记录了之前的 state 为 before
+const [current, setCurrent] = useState(before)
+
+// 假设这里有 return
+<div className="overflow-hidden">
+  <motion.div
+    className="flex flex-row -ml-2"
+    initial={{ x: -big * current + 40 }}
+    animate={{ x: -big * current + 40 }}
+    transition={{ type: 'tween', duration: 0.5 }}
+    layout
+  >
+    {Array.from({ length: items }).map((_, index) => (
+      <div
+        className={clsx(`min-w-0 shrink-0 grow-0 pl-2 transition-[width] ease-ease duration-500`, {
+          'w-[32rem]': current === index,
+          'w-44': current !== index,
+        })}
+        key={index}
+        onClick={() => setCurrent(index)}
+      >
+        <div className="p-1">
+          <Card>
+            <CardContent className={clsx(`flex items-center justify-center p-6 h-80`)}>
+              <span className="text-3xl font-semibold">
+                {index + 1}
+              </span>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    ))}
+  </motion.div>
+</div>
+```
+
+### 无限滚动
+
+我想噢，如果我在前面加几个（好像一个就够了），然后再在后面加几个，当滚动到 items 长度时，继续往后滚一个，随后重新 set 状态到最开始的地方。我第一次注意到是在看 b 站 header 上有一个一直向下滚动的小 banner，打开控制台就可以看到它开头和最后重复了一下，这样就可以实现无限滚动，然后又注意到搜索栏的滚动提示也是这么实现的。
+
+那么我们完全可以参照类似的方法实现我们的无限滚动。当然这里我还去看了一下 embla 的无限滚动怎么实现的，它是通过 translate 一组不在视野外的元素到指定位置来实现的，当到达某个循环位置时再让它们回到原点，这个感觉有点复杂，而且不知道具体性能有没有单纯的重复好，有点类似于那种超长列表的优化。
+
+于是按照我的想法，实现类似的效果：
+
+```tsx
+const [[current, normal], setCurrent] = useState([before, false])
+<div className="relative group">
+  <Button
+    variant="outline"
+    size="icon"
+    onClick={() => {
+      setCurrent((current) => {
+        return [current[0] - 1, true]
+      })
+    }}
+    className="absolute z-10 left-2 top-1/2 -translate-y-1/2 opacity-0 h-8 w-8 rounded-full
+      group-hover:opacity-100 transition-opacity"
+  >
+    <ArrowLeft className="h-4 w-4" />
+  </Button>
+  <Button
+    variant="outline"
+    size="icon"
+    onClick={() => {
+      setCurrent((current) => {
+        return [current[0] + 1, true]
+      })
+    }}
+    className="absolute z-10 right-2 top-1/2 -translate-y-1/2 opacity-0 h-8 w-8 rounded-full
+    group-hover:opacity-100 transition-opacity"
+  >
+    <ArrowRight className="h-4 w-4" />
+  </Button>
+
+  <div className="overflow-hidden">
+    <motion.div
+      className="flex flex-row -ml-2"
+      initial={{ x: -big * current + 40 }}
+      animate={{ x: -big * current + 40 }}
+      transition={{ type: 'tween', duration: normal ? 0.5 : 0 }}
+      layout
+      onAnimationComplete={() => {
+        console.log('hello')
+        if (current == before - 1) setCurrent([before + items - 1, false])
+        if (current >= before + items) setCurrent([current - items, false])
+      }}
+    >
+      {Array.from({ length: items + before + after }).map((_, index) => (
+        <div
+          className={clsx(`min-w-0 shrink-0 grow-0 pl-2 `, {
+            'w-[32rem]': current === index,
+            'w-44': current !== index,
+            'transition-[width] ease-out duration-500': normal,
+          })}
+          key={index}
+          onClick={() => setCurrent([index, true])}
+        >
+          <div className="p-1">
+            <Card>
+              <CardContent className={clsx(`flex items-center justify-center p-6 h-80`)}>
+                <span className="text-3xl font-semibold">
+                  {index < before
+                    ? items - before + index + 1
+                    : index >= before + items
+                      ? index - items - before + 1
+                      : index - before + 1}
+                </span>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      ))}
+    </motion.div>
+  </div>
+</div>
+
+```
+
+最关键的就是这里：
+
+```tsx
+ <motion.div
+  className="flex flex-row -ml-2"
+  initial={{ x: -big * current + 40 }}
+  animate={{ x: -big * current + 40 }}
+  transition={{ type: 'tween', duration: normal ? 0.5 : 0 }}
+  layout
+  onAnimationComplete={() => { // [!code focus]
+    console.log('hello') // [!code focus]
+    if (current == before - 1) setCurrent([before + items - 1, false]) // [!code focus]
+    if (current >= before + items) setCurrent([current - items, false]) // [!code focus]
+  }}
+>
+```
+
+这里用了一些其奇怪的操作，来实现 duration 为 0 的动画，很奇怪对吧，我也觉得很奇怪，而且居然需要监听动画完成来 setState，这样能好好的工作么？我们来看看效果：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/first.webm" />
+
+好像...有那么点意思了！但是：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/first-e.webm" />
+
+我这里连续点击之后，它会卡顿。还记得我们之前的，[重新整理一下效果](#重新整理一下效果)么，里面最后一条是要保证动画的流畅不间断。
+
+那么？好像就差那么一点点就要成功了，然而...
+
+### 问题出在哪
+
+你在通过 State 管理两个连续的动画！前一个动画没有做完，后面就被重新 set，重新 set 导致 re-render 直接中断了之间的动画。我在想，我们是不是一开始思路就错了，到底应该先跳转到假的最后一个（也就是真实列表中的第一个）再做动画，还是先做动画，再跳转？
+
+我觉得前者可能更加合理，而且我观察了我一开始提到的这个商店的 web 版（~~有现成的为什么不早看看~~）。此外你可能还会发现一个有点致命的问题，就是我们这么写，动画管理非常非常麻烦，于是我在想办法简化这一切的逻辑，让我们之后补充动画的时候心智负担小一些（减少管理 State）。
+
+## 新思路
+
+❗从这里开始就是真实实现啦！放心食用吧！❗
+
+经过我反复观看 web 版的动画，我想到了如下的解决办法：
+
+1. 首先我们要考虑的是从哪里开始到哪里结束。
+2. 然后我们写一个 `animateFromTo` 的函数，这个函数表示从之前状态到下一个状态的转移，也就是我们想要脱离 react 去直接做动画。
+3. 然后我们再写一个 `fromTo` 函数，代表了实际位置到结束时应该映射到 `animateFromTo` 的表达。
+4. 我们在点击按钮时只需传入当前已经展开的卡片，并给出我们想要到达的位置。
+
+### 如何排布卡片
+
+这里我决定直接抄其 web 版的写法，因为确实合理。
+
+直接将所有的卡片重复两遍，然后我们把起点设置在中间。
+
+![start position](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/start.webp)
+
+这里我们直接来看它的动画：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/how-it-works.webm" />
+
+也就是点击第三个之后的会直接跳转到前面去，第三个是为了保证在跳转时最左侧是有的，所以从第三个开始。然后如果是在前面的话，点击前两个会从后面开始，那问题来了，后面那么多是干嘛的？是为了更好的实现循环跳动：
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/why.webm" />
+
+知道排布的方式和大致跳转的流程后，我们就可以根据我们定的新思路实现动画了。
+
+### 实现动画
+
+首先实现我们的 `animateFromTo`，它的作用就是确定我们每次动画的起点和终点，有了它就可以从任何地方起跳，它的参数就是真实的 index：
+
+```ts
+const animateFromTo = (begin: number, end: number) => {
+  const sequence: AnimationSequence = [
+    // 滑动动画，从起点到终点
+    [scope.current, { x: [-smallWidth * begin + bias, -smallWidth * end + bias] }, animateConfig],
+  ]
+  for (const [index, child] of Array.from(scope.current.children).entries()) {
+    if (index === begin)
+      // 起点的卡片由大变小 后面 at 参数表示大家从同一个起跑线启动
+      sequence.push([child, { width: [bigWidth, smallWidth] }, { ...animateConfig, at: '<' }])
+    else if (index === end)
+      // 终点的卡片由小变大
+      sequence.push([child, { width: [smallWidth, bigWidth] }, { ...animateConfig, at: '<' }])
+    // 其他的卡片全都还原小的，并且 duration 为 0
+    else sequence.push([child, { width: smallWidth }, { duration: 0, at: '<' }])
+  }
+  // 启动！
+  animate(sequence)
+}
+```
+
+然后我们实现 `fromTo` 用来映射跳转条件，其中 items 是非重复的长度，同时保留状态我们可以实现下面的小圆点，方便后续获得当前轮播的状态：
+
+```ts
+const fromTo = (begin: number, end: number) => {
+  if (begin === end) return
+  let nextIndex = end
+  if (begin >= items && end >= items + 2) {
+    // 直接从头开始滚
+    animateFromTo(begin - items, end - items)
+    nextIndex = end - items
+  } else if (end <= 1) {
+    // 从中间开始滚
+    animateFromTo(begin + items, end + items)
+    nextIndex = end + items
+  } else {
+    // 其他情况直接滚
+    animateFromTo(begin, end)
+  }
+  // 设置新状态
+  setCurrentIndex(nextIndex)
+}
+```
+
+接着我们为每个触发动作设置条件：
+
+```tsx
+<Button
+  variant="outline"
+  size="icon"
+  onClick={() => { // [!code focus]
+    fromTo(currentIndex, currentIndex - 1) // [!code focus]
+  }} // [!code focus]
+  className="absolute z-10 left-2 top-1/2 -translate-y-1/2 opacity-0 h-8 w-8 rounded-full
+    group-hover:opacity-100 transition-opacity"
+>
+```
+
+```tsx
+<div className="overflow-hidden">
+  <div className="-ml-2 flex flex-row" ref={scope}>
+    {Array.from({ length: items * 2 }).map((_, index) => (
+      <div
+        className="w-44 min-w-0 shrink-0 grow-0 pl-2"
+        key={index}
+        onClick={() => {
+          // [!code focus]
+          fromTo(currentIndex, index) // [!code focus]
+        }} // [!code focus]
+      >
+        <div className="p-1">
+          <Card>
+            <CardContent className={clsx(`flex h-80 items-center justify-center p-6`)}>
+              <span className="text-3xl font-semibold">{(index % items) + 1}</span>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+```
+
+如果我们后续想要增加动画的只需要往 animateFromTo 里的 `sequence` 里 `push` 就行啦，比之前奇怪的设计好了不少。
+
+完整的代码在这里：
+
+```tsx
+import { Button } from '@renderer/components/ui/button'
+import { Card, CardContent } from '@renderer/components/ui/card'
+import clsx from 'clsx'
+import { AnimationSequence, DynamicAnimationOptions, useAnimate } from 'framer-motion'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+
+const items = 5
+const smallWidth = 176
+const bias = 36 // (9)
+
+const bigWidth = 512
+
+const animateConfig = {
+  duration: 0.5,
+  type: 'tween',
+  ease: [0.25, 0.1, 0.25, 1],
+} as DynamicAnimationOptions
+
+export default function BigCarousel(): JSX.Element {
+  // index
+  const [currentIndex, setCurrentIndex] = useState(items)
+  const [scope, animate] = useAnimate<HTMLDivElement>()
+  const timeId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  useEffect(() => {
+    clearTimeout(timeId.current)
+    timeId.current = setTimeout(() => fromTo(currentIndex, currentIndex + 1), 5000)
+  }, [currentIndex])
+
+  useEffect(() => {
+    animate(scope.current, { x: -smallWidth * currentIndex + bias }, { duration: 0 })
+    for (const [index, child] of Array.from(scope.current.children).entries()) {
+      animate(child, { width: index === currentIndex ? bigWidth : smallWidth }, { duration: 0 })
+    }
+  }, [])
+
+  const animateFromTo = (begin: number, end: number) => {
+    const sequence: AnimationSequence = [
+      [scope.current, { x: [-smallWidth * begin + bias, -smallWidth * end + bias] }, animateConfig],
+    ]
+    for (const [index, child] of Array.from(scope.current.children).entries()) {
+      if (index === begin)
+        sequence.push([child, { width: [bigWidth, smallWidth] }, { ...animateConfig, at: '<' }])
+      else if (index === end)
+        sequence.push([child, { width: [smallWidth, bigWidth] }, { ...animateConfig, at: '<' }])
+      else sequence.push([child, { width: smallWidth }, { duration: 0, at: '<' }])
+    }
+    animate(sequence)
+  }
+
+  const fromTo = (begin: number, end: number) => {
+    if (begin === end) return
+    let nextIndex = end
+    if (begin >= items && end >= items + 2) {
+      // start from list begin
+      animateFromTo(begin - items, end - items)
+      nextIndex = end - items
+    } else if (end <= 1) {
+      // start from middle
+      animateFromTo(begin + items, end + items)
+      nextIndex = end + items
+    } else {
+      animateFromTo(begin, end)
+    }
+    setCurrentIndex(nextIndex)
+  }
+
+  return (
+    <div className="group relative">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          fromTo(currentIndex, currentIndex - 1)
+        }}
+        className="absolute left-2 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full opacity-0
+         transition-opacity group-hover:opacity-100"
+      >
+        <ArrowLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          fromTo(currentIndex, currentIndex + 1)
+        }}
+        className="absolute right-2 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full opacity-0
+        transition-opacity group-hover:opacity-100"
+      >
+        <ArrowRight className="h-4 w-4" />
+      </Button>
+
+      <div className="overflow-hidden">
+        <div className="-ml-2 flex flex-row" ref={scope}>
+          {Array.from({ length: items * 2 }).map((_, index) => (
+            <div
+              className="w-44 min-w-0 shrink-0 grow-0 pl-2"
+              key={index}
+              onClick={() => {
+                fromTo(currentIndex, index)
+              }}
+            >
+              <div className="p-1">
+                <Card>
+                  <CardContent className={clsx(`flex h-80 items-center justify-center p-6`)}>
+                    <span className="text-3xl font-semibold">{(index % items) + 1}</span>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### Animation API
+
+我发现 Framer Motion 没法使用 DevTools 里的 Animation 调试，我后来修改成了 Animation API 的版本，实际上没啥差别，还少用一个库：
+
+```tsx
+import { Button } from '@renderer/components/ui/button'
+import { Card, CardContent } from '@renderer/components/ui/card'
+import clsx from 'clsx'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+
+const items = 5
+const smallWidth = 176
+const bias = 36 // (9)
+
+const bigWidth = 512
+
+const animateConfig: KeyframeAnimationOptions = {
+  duration: 500,
+  fill: 'forwards',
+  easing: 'ease',
+}
+
+export default function BigCarousel(): JSX.Element {
+  // index
+  const [currentIndex, setCurrentIndex] = useState(items)
+  const flexBox = useRef<HTMLDivElement>(null)
+  const timeId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  useEffect(() => {
+    clearTimeout(timeId.current)
+    timeId.current = setTimeout(() => fromTo(currentIndex, currentIndex + 1), 5000)
+  }, [currentIndex])
+
+  useEffect(() => {
+    if (!flexBox.current) return
+    flexBox.current.animate(
+      {
+        transform: `translateX(${-smallWidth * currentIndex + bias}px)`,
+      },
+      { duration: 0, fill: 'forwards' },
+    )
+    for (const [index, child] of Array.from(flexBox.current.children).entries()) {
+      child.animate(
+        { width: index === currentIndex ? `${bigWidth}px` : `${smallWidth}px` },
+        { duration: 0, fill: 'forwards' },
+      )
+    }
+  }, [])
+
+  const animateFromTo = (begin: number, end: number) => {
+    if (!flexBox.current) return
+    flexBox.current.animate(
+      {
+        transform: [
+          `translateX(${-smallWidth * begin + bias}px)`,
+          `translateX(${-smallWidth * end + bias}px)`,
+        ],
+      },
+      animateConfig,
+    )
+    for (const [index, child] of Array.from(flexBox.current.children).entries()) {
+      if (index === begin)
+        child.animate({ width: [`${bigWidth}px`, `${smallWidth}px`] }, animateConfig)
+      else if (index === end)
+        child.animate({ width: [`${smallWidth}px`, `${bigWidth}px`] }, animateConfig)
+      else child.animate({ width: `${smallWidth}px` }, { duration: 0, fill: 'forwards' })
+    }
+  }
+
+  const fromTo = (begin: number, end: number) => {
+    if (begin === end) return
+    let nextIndex = end
+    if (begin >= items && end >= items + 2) {
+      // start from list begin
+      animateFromTo(begin - items, end - items)
+      nextIndex = end - items
+    } else if (end <= 1) {
+      // start from middle
+      animateFromTo(begin + items, end + items)
+      nextIndex = end + items
+    } else {
+      animateFromTo(begin, end)
+    }
+    setCurrentIndex(nextIndex)
+  }
+
+  return (
+    <div className="group relative">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          fromTo(currentIndex, currentIndex - 1)
+        }}
+        className="absolute left-2 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full opacity-0
+         transition-opacity group-hover:opacity-100"
+      >
+        <ArrowLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          fromTo(currentIndex, currentIndex + 1)
+        }}
+        className="absolute right-2 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full opacity-0
+        transition-opacity group-hover:opacity-100"
+      >
+        <ArrowRight className="h-4 w-4" />
+      </Button>
+
+      <div className="overflow-hidden">
+        <div className="-ml-2 flex flex-row" ref={flexBox}>
+          {Array.from({ length: items * 2 }).map((_, index) => (
+            <div
+              className="w-44 min-w-0 shrink-0 grow-0 pl-2"
+              key={index}
+              onClick={() => {
+                fromTo(currentIndex, index)
+              }}
+            >
+              <div className="p-1">
+                <Card>
+                  <CardContent className={clsx(`flex h-80 items-center justify-center p-6`)}>
+                    <span className="text-3xl font-semibold">{(index % items) + 1}</span>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+主要修改了 `animateFromTo`，现在就可以用 DevTools 回看动画了。
+
+## 效果展示
+
+到了激动人心的时刻，让我们来欣赏一下实现的结果，可以看到不再卡顿，且非常的流畅的说！（我好像忘了点前面 card 来展示返回效果了，实际上是完全没有问题的，后面有空会更新视频，当然最好的方案还是搬上来，让大家一起玩）
+
+<Video src="https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-06-07-microsoft-store-carousel/end.webm" />
+
+## 总结
+
+不要用 State 去管理连续的动画，连续动画就该用关键帧做。
+
+我后续可能会把它放到 blog 上来，但感觉没什么展示的途径，也可以直接嵌在这个 MDX 里（代办）。
+
+以上的新思路是我自己琢磨出来的，我觉得可能我需要看更多的代码以总结出更完善的思路，它肯定还不是最佳，仅供参考的说。
+
+如果你有什么建议的话，就在评论区留言吧。

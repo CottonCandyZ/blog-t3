@@ -2,11 +2,10 @@
   "compilerOptions": {
     "incremental": true,
     "target": "es2017",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "baseUrl": ".",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "paths": {
       "~/*": ["./src/*"]
     },
@@ -20,7 +19,11 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "plugins": [{ "name": "next" }]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     ".eslintrc.cjs",
@@ -29,7 +32,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

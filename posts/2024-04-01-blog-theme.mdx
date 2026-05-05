@@ -1,0 +1,72 @@
+---
+title: 'Next.js 下的主题切换问题'
+date: '2024-04-01T05:05:17.421Z'
+tags:
+  - 'Next.js'
+  - 'React.js'
+abstract: '可能你已经注意到了，点击 Header 的 Cotton Candy 可以更换主题，同时它会使用 LocalStorage 记住。如果我们想用 Next.js 做一个主题切换，同时能够记住，事情就会变得有点复杂，这将有关 Next.js 的 Render 方式...'
+---
+
+本来是想要在每一次刷新的时候，自动更换主题。如果是用 vite 或者 parcel，不配置，构建一个 SPA，理论上实现这个过程很简单，只要是一个 Client Component 就会在每次 reload (F5) 的时候触发 [Re-render](https://react.dev/learn/render-and-commit#step-1-trigger-a-render), 而且还是 init-rerender，因此我们只需要准备一个 State，然后给他每次初始化一个随机数就行了。当然如果我们没有改主题的需求，那直接放在 Component 外面也行，就像下面这样。
+
+```ts
+const randomThemeNumber = Math.floor(Math.random() * maxThemeNumber) + 1
+export function App() {
+  return <div className={`theme-${randomThemeNumber}`}>{...}</div>;
+}
+```
+
+当然 CSR 肯定会有各种问题：首次加载白屏、SEO 不友好、对用户设备性能有要求等等。因此有了 SSR，它有个各种[好处](https://nextjs.org/docs/app/building-your-application/rendering/server-components#benefits-of-server-rendering)，坏处就是 Server 的压力大一点，但是配合各种[缓存](https://nextjs.org/docs/app/building-your-application/caching)可以尽可能的减少负担。那其实传统的 SSR 会分为两种，一种是根据用户需要，在请求时 Server 生成相应的 HTML，一种是在 build 时生成静态 HTML。当然，对于一个现代的 React Web Application，肯定是两种东西混合使用的，因为有些内容在 99% 的时间都是不变的，比如 header 和 footer，以及网页整体的布局结构。如果是 Next.js 13 之前的 SSR，上面的代码没啥问题，对于 Blog，其会直接使用 SSG，也就是上述 SSR 的第一种情况。可是当我用上了 React 18 和 Next.js 13 后，事情发生了一些变化...
+
+## Next.js 13 是如何渲染 Server Component 的
+
+[这里](https://nextjs.org/docs/app/building-your-application/rendering/server-components#how-are-server-components-rendered)说的其实还算清楚。大致流程如下
+
+1. 先生成 React Server Component Payload (RSC Payload)，没有 Client Component，为他们留了一些嵌入位置。用 RSC Payload 而不是 HTML 是为了保证我们在 Server Component 重新 fetch 数据时，嵌在 Server Component 里的 Client Component 的状态不会被重置。注意数据是保存在 RSC 中的，这里有两种情况，第一种是 Static，此时构建 RSC Payload 的时间点是在 build 时，但是我们也可以手动使用 `revalidatePath` 或 `revalidateTag` 更新内容，构建好的 RSC Payload 会被放在 Full Route Cache 里，我在了解 [Nextjs 缓存](/posts/2024-05-07-from-next-cache-to-performance#路由下的缓存) 里有有聊到。第二种是 Dynamic，这将在请求时构建 RSC Payload。这两种情况下 fetch 的数据都会在 [Data Cache](/posts/2024-05-07-from-next-cache-to-performance#持久化缓存) 里缓存。
+2. 然后用 RSC 和 Client Component 的**指导**生成 HTML。（这里的指导时原文的 instructions，很奇怪对吧，不是嵌进去一起渲染，而是“指导”）同时这里的 HTML 也会遵循上面的策略缓存。
+
+然后到了客户端，Next.js 会把 HTML, RSC, Client Component 发给客户端。HTML 用来作为最初预览，然后客户端会用剩下来的两个生成可交互的部分，而**嵌入**的方式是使用 [hydrate](https://react.dev/reference/react-dom/client/hydrateRoot)，实际上就是绑定一些事件监听器。
+
+> Hydration is like watering the “dry” HTML with the “water” of interactivity and event handlers.
+>
+> —<cite>Dan Abramov</cite>
+
+值得注意的是，使用 RSC Payload 而不是直接使用 HTML Hydrate 的原因是为了保持 Client Component 的状态，同时支持流式传输 RSC Payload，异步更新页面上的内容。
+
+## 如何更换主题？
+
+那也就是说，Server 生成的 HTML 模版，会用于首次预览。那客户端拿到同样的 JS 之后会异步执行，并添加一些事件操作。这时候会有一些重复的内容，特别是一开始的默认值，也就是 State 的 init 的值。如果我们继续使用上述的代码构建，在 Component 外面定一个一个随机数，其会在 SSG 的时候执行一次（并且是个确定数），生成对应的 HTML。随后再在客户端执行一次，会和 SSG 的时候生成的不一样。在这种情况下，Next.js 的逻辑是先展现服务器渲染的结果，然后当 Client Component Hydrate 的时候会发生变化，所以当我们尝试刷新页面时，主题会发生闪烁，控制台里则有 [Text content does not match server-rendered HTML](https://nextjs.org/docs/messages/react-hydration-error) 的错误。
+
+我们实际上有两种方案解决这个问题，使用 [next-themes](https://github.com/pacocoursey/next-themes)，其原理是注入一个 script 块到 HTML 模版中，保证其在 DOM render 完成之前执行，使用它仍会导致上述的 Text content does not match server-rendered HTML 问题，那么作者给出的方案是直接在根 html 标签上添加 suppressHydrationWarning 属性忽视掉。第二个方案是使用 `useEffect` hook，确保 Client Component Hydrate 完成后更改主题，这种方案有个明显的缺陷，那就是很显然会出现闪烁。但是不会报 Hydrate 错误了，因为其是在 Hydrate 完成之后执行的，并且在 SSR 时，服务器是不会跑 `useEffect` hook 中的内容的。
+
+我这里选择了第二种方案，虽然确实会发生闪烁，但感觉第一种方案太 hack。而且实际上除了这个之外，任何对 LocalStorage 或者 SessionStorage 的操作都会导致这个问题，如果都通过注入 `script` 块的话，会很奇怪。那么，到这里就结束了么...
+
+我注意到一个非常奇怪的问题，就是早期的 Next.js 事实上没有这个问题，因为没有 suppressHydrationWarning 属性，且 [Text content does not match server-rendered HTML](https://nextjs.org/docs/messages/react-hydration-error) 也只在 App Router 下才有。那他之前是怎么 render 的，为什么现在不行了？
+
+## Page Router 的 Render 差异
+
+Client Component 的渲染位置问题，使用 Page Router 时，Client Component 会在客户端 hydrate。而使用 App Router 时会在 Client 会在服务器上执行用于指导生成初次的 HTML，同时也会在客户端上 hydrate。因为这个问题导致其渲染了“两次”。
+
+Next 对于 Client Component full page load 的[方法](https://nextjs.org/docs/app/building-your-application/rendering/client-components#how-are-client-components-rendered)和 Server Component 部分一模一样，并且在接下来的 Navigation 中， server 不会再生成新的 HTML。
+
+而 Next.js 13 使用这个方案的原因实际上来源于 React 18 的 Server Component。在这之前实际上没有所谓的 Server Component，所有的都是 Client Component，并且于[服务端渲染](https://github.com/reactwg/server-components/discussions/4)。
+
+## Server Component
+
+注意上文 next-themes 的解决方案，其是通过注入 `script` 块来规避这个问题的，也就是发给客户端的 HTML 中包含部分需要在 DOM 渲染完成之前的操作。而实际上在没有 Server Component 之前，这些 Client 的操作确实都是在 Client 上完成的。
+
+Server Component 的引入主要是为了解决服务器[数据预注入](https://www.joshwcomeau.com/react/server-components/#introduction-to-react-server-components-3)的问题，当它与 Client Component 各种嵌套后，Server 为了生成 HTML，需要先执行一遍 Client Component，包括其 `useState` 的内容，但不包含 `useEffect` 的内容。虽然说是嵌套，但由于无法在 Client Component 中 import Server Component，因此不会将 Props 传给它，不然传给它的是一个 State，那会影响 Server Component 的执行（因为他只执行一遍）。但是我们用了一些奇怪的技巧来传递 State，也就是使用 Context，这样就可以在两个 Client Component 中间传递状态，越过了那些作为 children 的 Server Component。
+
+为了渲染 Server Component，那就得先跑嵌套它的 Client Component，同时 Client Component 由于包含状态，因此会到 Client 再来一遍，执行两次就来了，那么对于 Static 的状态，Server Component 只会在 build 或 revalidate 的时候**执行一次**。
+
+## 怎么解决？
+
+就像我上面说的那样，一切涉及到用本地数据 init State 的，包括我之前的讨论 Tags 时[说到的](/posts/2024-03-29-blog-tags)，这个问题暂时可以先放在 `useEffect` 中，或者使用 hack 的方法注入 `script` 的 tag。最后这种方法我觉得只是临时的解决方案，因为这个操作非常常见。那么解决方案要么维持客户端和服务器内容的初始内容一致性，要么就考虑允许阻塞渲染执行部分 script。
+
+## 状态究竟应该保存在哪？
+
+我觉得这是个永恒的问题，实际上面还有一种解决方案，就是使用 cookie 确保每次 SSR 都是正确的结果就行了，但这会导致 Next 认为整个页面都是 dynamic 的，导致其余的东西也会 dynamic SSR，~~这部分是值得继续优化的~~ 已被优化，详见下文。
+
+## 24.4.12 更新 PPR
+
+上文提到的使用 cookie 来更新应该是最终的解决方案。Next.js 14 带来了 [PPR](https://nextjs.org/learn/dashboard-app/partial-prerendering)，虽然还是实验性功能，但本站已经启用，其配合 cookie 可以很好的解决这个问题，现在已经不会闪烁 🎉。

@@ -19,12 +19,7 @@ function AuthButton({ Auth }: { Auth: (formData: FormData) => Promise<void> }) {
       formAction={Auth}
       disabled={pending}
       className={clsx(
-        `block h-min w-full shrink-0 rounded-md px-3.5 py-2.5 text-center text-base
-    font-semibold text-primary shadow-sm 
-    ring-1 ring-inset ring-primary-light 
-    hover:bg-primary-extralight hover:shadow-inner
-    focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
+        `block h-min w-full shrink-0 rounded-md px-3.5 py-2.5 text-center text-base font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary-light hover:bg-primary-extralight hover:shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           'bg-primary-extralight shadow-inner': pending,
         },
@@ -42,12 +37,7 @@ function RegButton({ Reg }: { Reg: (formData: FormData) => Promise<void> }) {
       formAction={Reg}
       disabled={pending}
       className={clsx(
-        `block h-min shrink-0 rounded-md px-3.5 py-2.5 text-center text-base
-    font-semibold text-primary shadow-sm 
-    ring-1 ring-inset ring-primary-light 
-    hover:bg-primary-extralight hover:shadow-inner
-    focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
+        `block h-min shrink-0 rounded-md px-3.5 py-2.5 text-center text-base font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary-light hover:bg-primary-extralight hover:shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           'bg-primary-extralight shadow-inner': pending,
         },
@@ -68,7 +58,7 @@ function AuthRegForm() {
 
     let localRes
     try {
-      localRes = await startRegistration(optionRes.data)
+      localRes = await startRegistration({ optionsJSON: optionRes.data })
     } catch (e) {
       console.error(e)
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED)
@@ -86,7 +76,7 @@ function AuthRegForm() {
 
     let localRes
     try {
-      localRes = await startAuthentication(optionRes.data)
+      localRes = await startAuthentication({ optionsJSON: optionRes.data })
     } catch (e) {
       console.error(e)
       setMessage(ERROR_MESSAGE.CLIENT_USER_CANCELED)
@@ -116,9 +106,7 @@ function AuthRegForm() {
             name="username"
             placeholder="名字，别太长，验证可以不用填哦"
             autoComplete="username webauthn"
-            className={`block w-full rounded-md border-0 bg-primary-bg px-3.5 py-2.5
-      shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light
-      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small`}
+            className={`block w-full rounded-md border-0 bg-primary-bg px-3.5 py-2.5 shadow-sm ring-1 ring-inset ring-primary-light placeholder:font-bold placeholder:text-primary-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small`}
           />
         </div>
         <RegButton Reg={Reg} />

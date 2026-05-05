@@ -14,12 +14,7 @@ function AddButton() {
       type="submit"
       disabled={pending}
       className={clsx(
-        `block h-min shrink-0 rounded-md px-3.5 py-2.5 text-center text-base
-    font-semibold text-primary shadow-sm 
-    ring-1 ring-inset ring-primary-light 
-    hover:bg-primary-extralight hover:shadow-inner
-    focus-visible:outline focus-visible:outline-2 
-    focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
+        `block h-min shrink-0 rounded-md px-3.5 py-2.5 text-center text-base font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary-light hover:bg-primary-extralight hover:shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           'bg-primary-extralight shadow-inner': pending,
         },
@@ -39,7 +34,7 @@ const AddDevice: React.FC<{ setMessage: Dispatch<SetStateAction<string>> }> = ({
 
     let localRes
     try {
-      localRes = await startRegistration(optionRes.data)
+      localRes = await startRegistration({ optionsJSON: optionRes.data })
     } catch (e) {
       setMessage(ERROR_MESSAGE.ADD_DEVICE_CANCELED)
       return

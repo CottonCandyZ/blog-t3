@@ -6,16 +6,14 @@ import { cookies, headers } from 'next/headers'
 import { isoBase64URL } from '@simplewebauthn/server/helpers'
 import { revalidatePath } from 'next/cache'
 import {
+  type AuthenticationResponseJSON,
+  type AuthenticatorTransportFuture,
+  type RegistrationResponseJSON,
   generateAuthenticationOptions,
   generateRegistrationOptions,
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from '@simplewebauthn/server'
-import type {
-  AuthenticationResponseJSON,
-  AuthenticatorTransportFuture,
-  RegistrationResponseJSON,
-} from '@simplewebauthn/types'
 import {
   ERROR_MESSAGE,
   SUCCEED_MESSAGE,
@@ -174,11 +172,11 @@ async function verifyRegistrationRes(
 
   if (!verified || !registrationInfo) return resMessageError('VERIFY_REG_RESPONSE_FAILED')
 
-  const { credentialPublicKey, credentialID, counter, aaguid } = registrationInfo
+  const { aaguid, credential } = registrationInfo
   const newAuthenticator = {
-    credentialID,
-    credentialPublicKey: Buffer.from(credentialPublicKey),
-    counter,
+    credentialID: credential.id,
+    credentialPublicKey: Buffer.from(credential.publicKey),
+    counter: credential.counter,
     transports: JSON.stringify(localResponse.response.transports),
     aaguid,
   }
@@ -255,10 +253,10 @@ export async function vAuthResAction(options: AuthenticationResponseJSON) {
       expectedChallenge: currentSession.currentChallenge,
       expectedOrigin: origin,
       expectedRPID: rpID,
-      authenticator: {
-        ...authenticator,
-        credentialID: authenticator.credentialID,
-        credentialPublicKey: new Uint8Array(authenticator.credentialPublicKey),
+      credential: {
+        id: authenticator.credentialID,
+        publicKey: new Uint8Array(authenticator.credentialPublicKey),
+        counter: authenticator.counter,
         transports: authenticator.transports
           ? (JSON.parse(authenticator.transports) as AuthenticatorTransportFuture[])
           : undefined,

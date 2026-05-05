@@ -8,7 +8,7 @@ interface heading {
   level: number
 }
 
-interface headings extends Array<heading> {}
+type headings = heading[]
 
 function useHeadings() {
   const [headings, setHeadings] = useState<headings>([])

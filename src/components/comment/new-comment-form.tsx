@@ -1,6 +1,6 @@
 'use client'
 import clsx from 'clsx'
-import { useActionState, useRef } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
 import { useFormStatus } from 'react-dom'
 import { createCommentAction } from '~/server/action/comments-list'
 
@@ -11,10 +11,7 @@ function Submit() {
       type="submit"
       disabled={pending}
       className={clsx(
-        `block w-full rounded-md px-3.5 py-2.5 text-center text-base font-semibold text-primary shadow-sm 
-ring-1 ring-inset ring-primary-light 
-hover:bg-primary-extralight hover:shadow-inner
-focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
+        `block w-full rounded-md px-3.5 py-2.5 text-center text-base font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary-light hover:bg-primary-extralight hover:shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
         {
           'bg-primary-extralight shadow-inner': pending,
         },
@@ -31,7 +28,10 @@ const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
     data: undefined,
   })
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
-  if (formState.success) textAreaRef.current!.value = ''
+
+  useEffect(() => {
+    if (formState.success && textAreaRef.current) textAreaRef.current.value = ''
+  }, [formState.success])
 
   return (
     <form className="flex flex-row flex-wrap gap-2" action={formAction}>
@@ -46,9 +46,7 @@ const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
           rows={4}
           placeholder="请保持友善"
           required
-          className={`mt-2 block w-full rounded-md border-0 px-3.5 py-2
-      shadow-sm ring-1 ring-inset ring-primary-light placeholder:text-primary-light
-      focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small`}
+          className={`mt-2 block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset ring-primary-light placeholder:text-primary-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small`}
         />
       </div>
       <Submit />

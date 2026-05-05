@@ -1,0 +1,38 @@
+---
+title: '观 Next.js 缓存设计'
+date: '2024-05-07T07:06:38.864Z'
+tags:
+  - 缓存
+  - 性能
+abstract: '因为缓存问题头疼，看看文档，水篇文章...'
+---
+
+首先奉上链接 [Caching in Next.js](https://nextjs.org/docs/app/building-your-application/caching)（我之后做一个链接的 embed 吧，先放在 Project 的待办里）
+
+然后是其官网上的一副图：
+
+![Caching Overview](https://sam4az8fssxfjja3.public.blob.vercel-storage.com/images/2024-05-07-from-next-cache-to-performance/caching-overview.avif)
+
+## 使组件变得可复用
+
+首先是减少渲染时重复的请求的 [Request Memoization](https://nextjs.org/docs/app/building-your-application/caching#request-memoization)。这个是在渲染时会用的，无论是 SSR 还是 SSG 都会用到，其**生命**是一个渲染周期。这主要是为了**降低开发的难度**，React 在介绍 Server Component 的[视频](https://www.youtube.com/watch?v=TQQPAU21ZUw)中谈及过这个问题。主要是我们想要让每个组件尽可能的保持独立，当我们把数据的请求放在每个组件中，而不是使用 Props 传递时（使用 Props 传递会提高维护的成本），如果有多个重复的组件，或是就是想获取相同的数据，那么这种请求显然是重复的。所以这个缓存旨在减少渲染时，重复的请求。
+
+## 持久化缓存
+
+然后是真正的缓存，也就是 [Data Cache](https://nextjs.org/docs/app/building-your-application/caching#data-cache)。这个应该就是一个纯粹的数据缓存，也就是我们通常说的持久化数据。在 Next.js 里实际上有一些非常常见的操作，在没有数据库的情况下，我们从别的 API 接口获取数据（如果包含密钥，考虑再在 Router 里包一层）然后直接传给 Component，那么这里的缓存主要就是应对这种情况的。
+
+这里比较有趣的是他过期的验证方式，走的是 [`stale-while-revalidate`](https://web.dev/case-studies/ads-case-study-stale-while-revalidate) 这个 `cache-control` 选项，有个专门的 [SWR](https://swr.vercel.app/zh-CN) 库。Guillermo Rauch，也就是 Vercel 的 CEO 也[参与了设计](https://rauchg.com/about)，所以这个项目属于 Vercel 下的。那么很显然，这里的实现应该是用了或者参考了 SWR。
+
+另外我们也可以强制使用 `revalidatePath` 或 `revalidateTag` 来请求新数据，这个其实是在 Server Action 中非常常见的操作。比如做一个 TODO 或者评论区，我们在用户提交数据后要更新页面上的内容，这时用这个两个就可以异步更新页面上内容。配合 Server Component Fetch 数据，可以流式更新页面上的部分内容。
+
+## 路由下的缓存
+
+由于 Next.js 有 SSR 和 SSG 混用的情况，当然现在如果不开 PPR，那么实际上他们的分割点就在路由上。如果一个页面包含动态内容（包括根据 cookie 的判断，或者 TODO 和评论区），那么这个路由整个就会变成动态的。对于动态路由，Next 选择不为其设置 [Full Route Cache](https://nextjs.org/docs/app/building-your-application/caching#full-route-cache)，而对于静态的路由，其会在 build 时就缓存，这些缓存包括 RSC Payload 和一些 HTML，**但是注意，虽然是 SSG，但是实际上只要 revalidate Data Cache 就可以更新它**。也就是说，动态路由只吃 Data Cache，不吃 Full Route Cache 的。但是估计 Next.js 15 可能会有一些变化，因为 14 引入了 PPR，并且其为现在优先开发的功能，所以估计后面的分割点就在 React 的 Suspense 上了，只有 Suspense 里面的 Component 无法吃到 Full Route Cache，其他部分则均可以使用这个缓存。
+
+除了在服务器端的 Full Route Cache 外，还有在**客户端**的 [Router Cache](https://nextjs.org/docs/app/building-your-application/caching#router-cache)。官方说这和 [bfcache](https://web.dev/articles/bfcache) 差不多，但是还包含了 Prefetch Cache，也就是 [pre-fetching](https://dev.to/addyosmani/speed-up-next-page-navigations-with-prefetching-4285) 下的缓存。这个在客户端的缓存显然可被动态路由使用，但会在用户刷新时失效。并且默认是 30 秒的失效。
+
+## 总结
+
+整个缓存设计非常有趣，有为了方便维护的 Request Memoization。还有遵循[唯一可信来源](https://developer.android.com/topic/architecture#single-source-of-truth) 而设计的 Data Cache。以及为了 SSR 和 SSG 设计的 Full Route Cache 和 Router Cache。我们在更新 Data Cache 时，其 Full Route Cache 和 Router Cache 也会更新，这保证了我们数据的来源的唯一性。
+
+这些设计给了我们以后去设计客户端、全栈又或是 CDN 缓存提供了参考。后面如果有时间我再仔细研究一下他的实现。
