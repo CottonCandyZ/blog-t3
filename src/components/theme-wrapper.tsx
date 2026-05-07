@@ -4,12 +4,12 @@ const ThemeWrapper: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <body>
       <ThemeProvider
-        defaultTheme="theme-1"
+        defaultTheme="theme-4"
         attribute="class"
         enableSystem={false}
         themes={[1, 2, 3, 4].map((i) => `theme-${i}`)}
       >
-        <div className='bg-primary-extralight'>{children}</div>
+        <div className="bg-primary-extralight">{children}</div>
       </ThemeProvider>
     </body>
   )

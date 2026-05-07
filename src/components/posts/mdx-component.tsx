@@ -7,6 +7,7 @@ import OrderedList from '~/components/posts/content/lists/ordered-list'
 import ListItem from '~/components/posts/content/lists/list-item'
 import CodeBlock from '~/components/posts/content/Codeblock'
 import MDXLink from '~/components/posts/content/link'
+import Tldr from '~/components/posts/content/Tldr'
 
 export const components = {
   h1: tagRenderer('h1'),
@@ -28,6 +29,7 @@ export const components = {
   del: tagRenderer('del'),
   img: Image,
   Video: Video,
+  Tldr: Tldr,
   ul: UnorderedList,
   ol: OrderedList,
   li: ListItem,

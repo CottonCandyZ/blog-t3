@@ -1,0 +1,303 @@
+---
+title: 'PowerShell 的 winget 更新翻车'
+date: '2026-05-07T13:50:31.891Z'
+tags:
+  - Windows
+  - PowerShell
+  - winget
+abstract: 一次 PowerShell 7 更新失败，最后发现是 winget 包的安装技术切换和本地旧卸载项残留撞在了一起。
+aiGenerated: true
+aiNotice: 这篇文章有 AI 参与整理。我后续会在收集更多资料后改为人工编写。
+---
+
+<Tldr>
+
+- 更新 `PowerShell` 出现 `No installed package found matching input criteria.`
+
+- winget 在分发 `Microsoft.PowerShell` 这个包时混了不同的 installer type，本地还留下了一条旧卸载记录。
+- 需要清理之前的版本和注册表之后重新安装对应的分发版本。
+
+</Tldr>
+
+事情从一条非常普通的命令开始：
+
+```powershell
+winget upgrade --id Microsoft.PowerShell --source winget
+```
+
+然后经典：
+
+```text
+No installed package found matching input criteria.
+```
+
+一开始我还以为是 `winget` 源没了，因为前面确实发生过一次更离谱的：
+
+```text
+No sources match the given value: winget
+The configured sources are:
+  msstore
+  winget-font
+```
+
+这个好解决，恢复源就行，属于第一层倒霉：
+
+```powershell
+winget source reset --force
+winget source update
+winget source list
+```
+
+正常应该至少有：
+
+```text
+msstore
+winget
+```
+
+但恢复源之后，问题并没结束。真正恶心的地方不在源，而在“它到底觉得我装了个什么东西”。
+
+## 现象
+
+`winget upgrade` 的总表里能看到 PowerShell：
+
+```text
+Name                   Id                   Version Available Source
+--------------------------------------------------------------------
+PowerShell 7.5.5.0-x64 Microsoft.PowerShell 7.5.5.0 7.6.1.0   winget
+```
+
+但是精确升级它：
+
+```powershell
+winget upgrade --id Microsoft.PowerShell -e
+```
+
+却是：
+
+```text
+No installed package found matching input criteria.
+```
+
+如果改用名字：
+
+```powershell
+winget upgrade --name "PowerShell 7.5.5.0-x64"
+```
+
+它又换了一个错误：
+
+```text
+A newer version was found, but the install technology is different from the current version installed.
+Please uninstall the package and install the newer version.
+```
+
+每个词都认识，连起来不知道在说什么。我去翻了下 Windows 下安装包的那点破事，才算搞明白。
+
+## 真正的问题
+
+检查下来，机器上有两条 PowerShell 安装记录。注意，是两条“记录”，不是我真的想装两份：
+
+```text
+PowerShell 7-x64       Microsoft.PowerShell 7.6.1.0 winget
+PowerShell 7.5.5.0-x64 Microsoft.PowerShell 7.5.5.0 winget
+```
+
+实际跑起来的 `pwsh` 已经是新的：
+
+```powershell
+pwsh --version
+```
+
+```text
+PowerShell 7.6.1
+```
+
+路径也是正常的：
+
+```text
+C:\Program Files\PowerShell\7\pwsh.exe
+```
+
+但是注册表里还残留着旧的卸载项：
+
+```text
+HKLM\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{cac8e818-d8ea-4633-a39f-8604cb101a19}
+DisplayName: PowerShell 7.5.5.0-x64
+DisplayVersion: 7.5.5.0
+```
+
+新的 7.6.1 则是另一条：
+
+```text
+HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\{7DB6AE45-EA0D-4E0A-A65A-2ECD74328B1E}
+DisplayName: PowerShell 7-x64
+DisplayVersion: 7.6.1.0
+```
+
+所以 `winget` 枚举已安装软件时，被旧卸载项污染了。它一边知道 `Microsoft.PowerShell` 有新版本，一边又在精确匹配时没法稳定选中唯一的安装项。你说它完全坏了吧，它总表能列出来；你说它没坏吧，它一升级就装死。
+
+我之前还遇到过安装卡住然后直接重启，现在回头看，很可能就是那次把状态弄脏了：文件可能已经更新了，但旧版本的卸载登记没清掉。
+
+## 为什么会这样
+
+重点是：一直用 `winget` 不代表底层安装方式一直一样。这事我也没想到，直觉上会觉得“我不是一直 winget 吗，那你怎么还能给我换技术栈”。
+
+但 `winget` 只是调度器，它背后可以调很多安装技术，比如：
+
+```text
+msi / wix
+exe / burn
+msix
+msstore
+portable
+```
+
+Microsoft.PowerShell 这个包在 winget 仓库里同时有 MSIX 和 WiX/MSI。`winget` 自己还有一套 installer type 的优先级规则：没装过的时候按优先级挑，装过之后尽量和当前保持一致。这套逻辑单看没问题，问题是分发侧调整过 manifest，或者本地残留项记录了旧技术，它就可能陷入这种看得到、升不了的状态。
+
+GitHub 上有人贴了几乎一样的复现[^powershell-issue]，所以这事不是我一个人撞上。
+
+## 解决
+
+我的目标很简单：
+
+1. 更新到最新。
+2. 下次 update 正常。
+3. 只走一个分发源。
+
+所以处理方式也很粗暴：保留实际可用的 `7.6.1`，清掉旧的 `7.5.5` 卸载登记。
+
+先验证当前实际版本：
+
+```powershell
+pwsh --version
+Get-Command pwsh | Format-List Source,Version
+```
+
+确认是 `PowerShell 7.6.1` 和 `C:\Program Files\PowerShell\7\pwsh.exe`。
+
+然后看注册表里的 PowerShell 卸载项：
+
+```powershell
+Get-ItemProperty `
+  'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', `
+  'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*' `
+  -ErrorAction SilentlyContinue |
+  Where-Object { $_.DisplayName -like '*PowerShell*' } |
+  Select-Object PSPath,DisplayName,DisplayVersion,UninstallString
+```
+
+如果确认旧项只是残留，先备份一下：
+
+```powershell
+reg export "HKLM\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{cac8e818-d8ea-4633-a39f-8604cb101a19}" ".\powershell-7.5.5-uninstall-reg-backup.reg" /y
+```
+
+再删：
+
+```powershell
+sudo reg delete "HKLM\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{cac8e818-d8ea-4633-a39f-8604cb101a19}" /f
+```
+
+或者用 UAC 方式：
+
+```powershell
+Start-Process -FilePath "$env:SystemRoot\System32\reg.exe" `
+  -ArgumentList @(
+    'delete',
+    'HKLM\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{cac8e818-d8ea-4633-a39f-8604cb101a19}',
+    '/f'
+  ) `
+  -Verb RunAs `
+  -Wait
+```
+
+注意别去跑旧卸载器，万一它又把 `C:\Program Files\PowerShell\7` 动了呢？我只想清掉 `winget` 读到的旧登记，让它别再以为自己看到了两份 PowerShell。
+
+## 验证
+
+清完之后：
+
+```powershell
+winget list PowerShell
+```
+
+应该只剩：
+
+```text
+Name             Id                   Version Source
+-----------------------------------------------------
+PowerShell 7-x64 Microsoft.PowerShell 7.6.1.0 winget
+```
+
+再精确查：
+
+```powershell
+winget list --id Microsoft.PowerShell -e
+```
+
+也只有一条。到这里，`winget` 终于不精神分裂了。
+
+最后验证更新：
+
+```powershell
+winget upgrade --id Microsoft.PowerShell -e --source winget
+```
+
+当前已经最新，返回：
+
+```text
+No available upgrade found.
+```
+
+以后更新我会固定用：
+
+```powershell
+winget upgrade --id Microsoft.PowerShell -e --source winget --installer-type wix
+```
+
+如果以后又遇到安装技术切换，再考虑：
+
+```powershell
+winget install --id Microsoft.PowerShell -e --source winget --installer-type wix --uninstall-previous --force
+```
+
+但现在这台机器已经干净了，至少 `winget` 眼里是这样。
+
+## Windows 安装包简史（顺便吐槽）
+
+“安装技术不一样”这句话到底啥意思？我研究了一下，顺便当个笔记。
+
+最早大家最熟的是 `.exe` 安装器。它想怎么写就怎么写：复制文件、写注册表、放快捷方式、装服务、弹 UI，全看作者心情。卸载能不能干净，全凭良心。你电脑里那些“卸载之后还剩一堆文件夹”的东西，多半就是这种自由带来的美妙体验。
+
+然后是 `.msi`（Windows Installer）。它更像一个安装数据库，里面描述了 feature、component、registry、file、shortcut 这些东西。Windows 自己的 `msiexec.exe` 负责执行。优点是“声明式”和“可管理”，适合企业分发。
+
+手写 MSI 很痛苦，于是有了 WiX Toolset，用 XML 生成 MSI。PowerShell 这类开源项目也长期用 WiX/MSI 做传统安装包。`winget` 里看到的 `InstallerType: wix` 就是这条路线。
+
+再往外是 bootstrapper。很多软件不是一个 MSI 能解决的，需要先装运行时、驱动、依赖，再装主程序，于是做个外层 `.exe` 串联多个包。WiX 里的 Burn 就是干这个的。你在卸载项里看到的 `PowerShell-7.5.5-win-x64.exe /uninstall`，更像是这种 EXE/Burn 路线留下的痕迹。
+
+然后微软又搞了 Store/UWP/AppX，再后来是 MSIX。MSIX 想解决传统 Win32 安装的脏问题：有包身份、签名、声明式 manifest，安装卸载更干净，更新更可控。
+
+所以问题来了：`winget` 只是包管理器，不是某一种安装器。一个 `Microsoft.PowerShell` 包，背后可以挂不同技术：
+
+```text
+msi / wix
+exe / burn
+msix
+msstore
+portable
+```
+
+当 `winget` 看到“你当前装的是 A 技术，新版本默认是 B 技术”时，它不会自动帮你卸 A 装 B。这个其实能理解，因为这种迁移可能会丢配置、换路径、换包身份、影响 PATH，甚至产生两个并存安装。`winget` 维护者也提过这个思路[^winget-discussion]，不能默认替用户决定。于是它扔出那句：
+
+```text
+A newer version was found, but the install technology is different from the current version installed.
+```
+
+这也是为什么我最后要显式指定 `--installer-type wix`。我不想从传统 `C:\Program Files\PowerShell\7` 跳到 MSIX 那套里，只想继续走同一条传统安装路径，让 `pwsh.exe`、PATH、卸载项和以后的 `winget upgrade` 都稳定一点。
+
+毕竟我只是想更新一个 shell，不是想考古 Windows 安装体系。
+
+[^powershell-issue]: [PowerShell issue #26325](https://github.com/PowerShell/PowerShell/issues/26325)，报错和这次很像：总表看得到 PowerShell，精确 ID 升级失败，按名字又提示安装技术不同。
+
+[^winget-discussion]: [winget-cli discussion #2155](https://github.com/microsoft/winget-cli/discussions/2155)，讨论的就是 `install technology is different` 这类问题。

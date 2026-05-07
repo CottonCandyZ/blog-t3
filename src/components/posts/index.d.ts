@@ -6,4 +6,6 @@ export interface PostFrontmatter {
   tags?: string[]
   cover?: string[]
   draft?: boolean
+  aiGenerated?: boolean
+  aiNotice?: string
 }
