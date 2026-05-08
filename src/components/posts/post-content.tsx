@@ -1,15 +1,19 @@
+import { cookies } from 'next/headers'
 import { getPostContent } from '~/server/fetch/posts'
 import TableOfContents from '~/components/posts/table-of-contents'
 import PostInfo from '~/components/posts/post-info'
 import Comments from '~/components/comment'
 import AIGeneratedBanner from '~/components/posts/ai-generated-banner'
-import { getPostViews } from '~/server/fetch/post-views'
+import { POST_VIEW_VISITOR_COOKIE } from '~/lib/post-view-cookie'
+import { getPostViews, hasPostViewVisit } from '~/server/fetch/post-views'
 
 export default async function PostContent({ slug }: { slug: string }) {
   const decodedSlug = decodeURIComponent(slug)
-  const [{ content, frontmatter }, views] = await Promise.all([
+  const visitorId = (await cookies()).get(POST_VIEW_VISITOR_COOKIE)?.value
+  const [{ content, frontmatter }, views, hasViewed] = await Promise.all([
     getPostContent(`posts/${decodedSlug}.mdx`),
     getPostViews(decodedSlug),
+    visitorId ? hasPostViewVisit(decodedSlug, visitorId) : Promise.resolve(false),
   ])
 
   return (
@@ -30,6 +34,7 @@ export default async function PostContent({ slug }: { slug: string }) {
                 views={views}
                 slug={decodedSlug}
                 incrementViews
+                hasViewed={hasViewed}
               />
             </div>
           </header>

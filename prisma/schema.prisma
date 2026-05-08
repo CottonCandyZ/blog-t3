@@ -63,3 +63,14 @@ model PostView {
   views     Int      @default(0)
   updatedAt DateTime @updatedAt
 }
+
+model PostViewVisit {
+  id        String   @id @default(uuid())
+  slug      String
+  visitorId String
+  createdAt DateTime @default(now())
+
+  @@unique([slug, visitorId])
+  @@index([visitorId])
+  @@index([createdAt])
+}

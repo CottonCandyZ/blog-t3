@@ -8,7 +8,8 @@ const PostInfo: React.FC<{
   views?: number
   slug?: string
   incrementViews?: boolean
-}> = ({ date, tags, views, slug, incrementViews }) => {
+  hasViewed?: boolean
+}> = ({ date, tags, views, slug, incrementViews, hasViewed }) => {
   return (
     <div className="mt-4 flex flex-row flex-wrap items-center gap-3">
       <div className="flex flex-row items-center gap-2">
@@ -28,7 +29,12 @@ const PostInfo: React.FC<{
             <span className="i-mingcute-eye-2-line size-6" />
           </div>
           <h2 className="min-w-max font-semibold text-primary-dark">
-            <PostViewCount slug={slug} views={views} incrementViews={incrementViews} />
+            <PostViewCount
+              slug={slug}
+              views={views}
+              incrementViews={incrementViews}
+              hasViewed={hasViewed}
+            />
           </h2>
         </div>
       )}

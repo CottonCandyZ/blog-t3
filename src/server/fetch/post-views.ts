@@ -1,5 +1,11 @@
 import { unstable_noStore as noStore } from 'next/cache'
-import { dbIncrementPostViews, dbReadAllPostViews, dbReadPostViews } from '~/server/db/post-views'
+import {
+  dbHasPostViewVisit,
+  dbIncrementPostViews,
+  dbIncrementPostViewsForVisitor,
+  dbReadAllPostViews,
+  dbReadPostViews,
+} from '~/server/db/post-views'
 
 export async function getPostViews(slug: string) {
   noStore()
@@ -27,6 +33,18 @@ export async function getAllPostViewsMap() {
   }
 }
 
+export async function hasPostViewVisit(slug: string, visitorId: string) {
+  noStore()
+  if (!process.env.POSTGRES_PRISMA_URL) return false
+
+  try {
+    return await dbHasPostViewVisit(slug, visitorId)
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}
+
 export async function incrementPostViews(slug: string) {
   noStore()
   if (!process.env.POSTGRES_PRISMA_URL) return 0
@@ -34,6 +52,19 @@ export async function incrementPostViews(slug: string) {
   try {
     const postViews = await dbIncrementPostViews(slug)
     return postViews.views
+  } catch (e) {
+    console.error(e)
+    return await getPostViews(slug)
+  }
+}
+
+export async function incrementPostViewsForVisitor(slug: string, visitorId: string) {
+  noStore()
+  if (!process.env.POSTGRES_PRISMA_URL) return 0
+
+  try {
+    const postViews = await dbIncrementPostViewsForVisitor(slug, visitorId)
+    return postViews?.views ?? 0
   } catch (e) {
     console.error(e)
     return await getPostViews(slug)

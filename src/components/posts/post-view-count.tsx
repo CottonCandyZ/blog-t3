@@ -1,33 +1,44 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
+import { incrementPostViewAction } from '~/server/action/post-views'
 
 interface PostViewCountProps {
   slug?: string
   views: number
   incrementViews?: boolean
+  hasViewed?: boolean
 }
 
-const PostViewCount: React.FC<PostViewCountProps> = ({ slug, views, incrementViews = false }) => {
-  const [viewCount, setViewCount] = useState(views)
+const PostViewCount: React.FC<PostViewCountProps> = ({
+  slug,
+  views,
+  incrementViews = false,
+  hasViewed = false,
+}) => {
+  const [incrementState, formAction] = useActionState(incrementPostViewAction, {})
   const didIncrement = useRef(false)
+  const formRef = useRef<HTMLFormElement>(null)
+  const shouldIncrement = Boolean(slug && incrementViews && !hasViewed)
+  const viewCount = incrementState.views ?? (shouldIncrement ? views + 1 : views)
 
   useEffect(() => {
-    if (!slug || !incrementViews || didIncrement.current) return
+    if (!shouldIncrement || didIncrement.current) return
 
     didIncrement.current = true
+    formRef.current?.requestSubmit()
+  }, [shouldIncrement])
 
-    fetch(`/api/views/${encodeURIComponent(slug)}`, { method: 'POST' })
-      .then((res) => (res.ok ? res.json() : undefined))
-      .then((data: { views?: number } | undefined) => {
-        if (typeof data?.views === 'number') setViewCount(data.views)
-      })
-      .catch((e: unknown) => {
-        console.error(e)
-      })
-  }, [incrementViews, slug])
-
-  return <span>{viewCount.toLocaleString()}</span>
+  return (
+    <>
+      <span>{viewCount.toLocaleString()}</span>
+      {shouldIncrement && (
+        <form ref={formRef} action={formAction} hidden>
+          <input name="slug" value={slug} readOnly />
+        </form>
+      )}
+    </>
+  )
 }
 
 export default PostViewCount
