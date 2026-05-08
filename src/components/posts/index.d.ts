@@ -8,4 +8,5 @@ export interface PostFrontmatter {
   draft?: boolean
   aiGenerated?: boolean
   aiNotice?: string
+  views?: number
 }

@@ -38,7 +38,7 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
               {frontmatter.aiGenerated && <AIGeneratedBadge />}
             </h1>
             <div className="mt-4">
-              <PostInfo date={frontmatter.date} tags={frontmatter.tags} />
+              <PostInfo date={frontmatter.date} tags={frontmatter.tags} views={frontmatter.views} />
             </div>
             <p className="mt-5 text-sm leading-relaxed">{frontmatter.abstract}</p>
             <div className="mt-3 flex flex-row items-center gap-1">

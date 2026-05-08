@@ -18,6 +18,7 @@ import rehypeSlug from 'rehype-slug'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import type { PostFrontmatter } from '~/components/posts'
 import { components } from '~/components/posts/mdx-component'
+import { getAllPostViewsMap } from '~/server/fetch/post-views'
 
 /**
  * Extract frontmatter info.
@@ -40,12 +41,16 @@ const getAllPostsSlug = async () => {
  */
 export const getLatestPostsListInfo = async () => {
   const postsSlug = await getAllPostsSlug()
+  const postViews = await getAllPostViewsMap()
   const allPostsListInfo = await Promise.all(
     postsSlug.map(async (slug) => {
       const frontmatter = await getPostFrontmatter(slug)
       return {
         slug,
-        frontmatter,
+        frontmatter: {
+          ...frontmatter,
+          views: postViews.get(slug) ?? 0,
+        },
       }
     }),
   )

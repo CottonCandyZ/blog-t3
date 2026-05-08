@@ -57,3 +57,9 @@ model Device {
   removed             Boolean  @default(false)
   aaguid              String
 }
+
+model PostView {
+  slug      String   @id
+  views     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}

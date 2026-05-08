@@ -3,9 +3,14 @@ import TableOfContents from '~/components/posts/table-of-contents'
 import PostInfo from '~/components/posts/post-info'
 import Comments from '~/components/comment'
 import AIGeneratedBanner from '~/components/posts/ai-generated-banner'
+import { getPostViews } from '~/server/fetch/post-views'
 
 export default async function PostContent({ slug }: { slug: string }) {
-  const { content, frontmatter } = await getPostContent(decodeURIComponent(`posts/${slug}.mdx`))
+  const decodedSlug = decodeURIComponent(slug)
+  const [{ content, frontmatter }, views] = await Promise.all([
+    getPostContent(`posts/${decodedSlug}.mdx`),
+    getPostViews(decodedSlug),
+  ])
 
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
@@ -19,7 +24,13 @@ export default async function PostContent({ slug }: { slug: string }) {
             </h1>
             {frontmatter.aiGenerated && <AIGeneratedBanner notice={frontmatter.aiNotice} />}
             <div className="mt-4">
-              <PostInfo date={frontmatter.date} tags={frontmatter.tags} />
+              <PostInfo
+                date={frontmatter.date}
+                tags={frontmatter.tags}
+                views={views}
+                slug={decodedSlug}
+                incrementViews
+              />
             </div>
           </header>
           <hr className="mb-8 border-t border-dotted border-primary-medium"></hr>
@@ -29,7 +40,7 @@ export default async function PostContent({ slug }: { slug: string }) {
           {content}
         </article>
         <div className="mt-4 rounded-2xl bg-primary-bg px-8 py-5 shadow-cxs">
-          <Comments slug={slug} />
+          <Comments slug={decodedSlug} />
         </div>
       </div>
       <aside className="sticky top-28 hidden h-max max-h-[calc(-112px+100vh)] w-56 shrink-0 overflow-auto p-2 lg:block lg:gap-4">
