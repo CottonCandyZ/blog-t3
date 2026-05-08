@@ -31,4 +31,10 @@ export const PostViewCountSkeleton: React.FC = () => {
   )
 }
 
+export const PostViewCountFallback: React.FC<{ views?: number }> = ({ views }) => {
+  if (typeof views !== 'number') return <PostViewCountSkeleton />
+
+  return <span>{views.toLocaleString()}</span>
+}
+
 export default PostViewCountLoader

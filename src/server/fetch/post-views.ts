@@ -1,4 +1,4 @@
-import { unstable_noStore as noStore } from 'next/cache'
+import { cacheLife, unstable_noStore as noStore } from 'next/cache'
 import { cache } from 'react'
 import {
   dbHasPostViewVisit,
@@ -33,6 +33,25 @@ export const getAllPostViewsMap = cache(async () => {
     return new Map<string, number>()
   }
 })
+
+export async function getStaleAllPostViewsMap() {
+  'use cache'
+  cacheLife({
+    stale: 300,
+    revalidate: 30,
+    expire: 3600,
+  })
+
+  if (!process.env.POSTGRES_PRISMA_URL) return new Map<string, number>()
+
+  try {
+    const postViews = await dbReadAllPostViews()
+    return new Map(postViews.map(({ slug, views }) => [slug, views]))
+  } catch (e) {
+    console.error(e)
+    return new Map<string, number>()
+  }
+}
 
 export async function hasPostViewVisit(slug: string, visitorId: string) {
   noStore()

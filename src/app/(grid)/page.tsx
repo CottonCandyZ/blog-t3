@@ -1,8 +1,9 @@
 import { Suspense } from 'react'
 import PostsList from '~/components/posts/posts-list'
 import PostViewCountLoader, {
-  PostViewCountSkeleton,
+  PostViewCountFallback,
 } from '~/components/posts/post-view-count-loader'
+import { getStaleAllPostViewsMap } from '~/server/fetch/post-views'
 import { getLatestPostsFrontmatterListInfo } from '~/server/fetch/posts'
 
 export const metadata = {
@@ -10,10 +11,15 @@ export const metadata = {
   description: '棉花糖的 Blog',
 }
 export default async function Page() {
-  const latestPostsListInfo = (await getLatestPostsFrontmatterListInfo()).map((post) => ({
+  const [posts, staleViews] = await Promise.all([
+    getLatestPostsFrontmatterListInfo(),
+    getStaleAllPostViewsMap(),
+  ])
+
+  const latestPostsListInfo = posts.map((post) => ({
     ...post,
     viewCount: (
-      <Suspense fallback={<PostViewCountSkeleton />}>
+      <Suspense fallback={<PostViewCountFallback views={staleViews.get(post.slug)} />}>
         <PostViewCountLoader slug={post.slug} batchViews />
       </Suspense>
     ),
