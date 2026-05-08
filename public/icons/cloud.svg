@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Cotton cloud">
+  <rect width="512" height="512" rx="128" fill="#e96aa3"/>
+  <g filter="url(#shadow)">
+    <path
+      fill="#fff"
+      d="M146 319c-39 0-70-29-70-65 0-34 27-62 62-65 14-48 59-83 113-83 50 0 93 29 111 71 42 7 74 41 74 82 0 46-40 83-90 83H146Z"
+    />
+    <path
+      fill="#fbe6f0"
+      d="M132 245c10-22 31-38 57-41 8-37 41-66 83-72-7-2-14-3-21-3-45 0-83 30-95 72-30 3-53 27-53 56 0 17 8 32 21 42-4-8-6-17-6-27 0-10 5-20 14-27Z"
+      opacity=".72"
+    />
+  </g>
+  <defs>
+    <filter id="shadow" x="56" y="92" width="400" height="282" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#b93d73" flood-opacity=".28"/>
+    </filter>
+  </defs>
+</svg>
