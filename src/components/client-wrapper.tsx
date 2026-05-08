@@ -11,7 +11,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { animate } from 'motion'
 import ProfileCard from '~/components/profile/profile-card'
@@ -22,7 +21,11 @@ interface TagsContextType {
   setToggledTags: Dispatch<SetStateAction<Set<string>>>
 }
 export const TagsContext = createContext({} as TagsContextType)
-const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, children }) => {
+const ClientWrapper: React.FC<PropsWithChildren<{ showTags?: boolean; tags?: tagProps }>> = ({
+  showTags = false,
+  tags,
+  children,
+}) => {
   const [toggledTags, setToggledTags] = useState(new Set<string>())
   const [tagsExpanded, setTagsExpanded] = useState(false)
   const tagsPanelId = useId()
@@ -30,11 +33,20 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
   const tagsAnimationRef = useRef<ReturnType<typeof animate> | null>(null)
   const tagsPanelMountedRef = useRef(false)
   const value = useMemo(() => ({ toggledTags, setToggledTags }), [toggledTags, setToggledTags])
-  const home = usePathname() === '/'
 
   useEffect(() => {
-    const saveTags = sessionStorage.getItem('tags')
-    if (saveTags) setToggledTags(new Set(JSON.parse(saveTags) as Array<string>))
+    try {
+      const saveTags = sessionStorage.getItem('tags')
+      if (!saveTags) return
+
+      const parsedTags = JSON.parse(saveTags)
+      if (Array.isArray(parsedTags)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage is client-only, so restore it after the SSG hydration snapshot.
+        setToggledTags(new Set(parsedTags.filter((tag): tag is string => typeof tag === 'string')))
+      }
+    } catch {
+      sessionStorage.removeItem('tags')
+    }
   }, [])
 
   useLayoutEffect(() => {
@@ -96,11 +108,11 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
       <TagsContext.Provider value={value}>
         <section
           className={clsx(`col-span-full h-full md:col-start-2 md:block`, {
-            hidden: !home,
+            hidden: !showTags,
           })}
         >
           <div className="md:sticky md:top-[72px] md:flex md:flex-col md:gap-4">
-            {home && (
+            {showTags && tags && (
               <search className="relative row-start-1 h-min rounded-2xl bg-primary-bg px-3 py-2.5 shadow-cxs md:rounded-xl md:px-3 md:py-2">
                 <div
                   className="flex cursor-pointer select-none items-center justify-between gap-2 rounded-lg text-left active:scale-[0.99]"
@@ -178,8 +190,8 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
         </section>
         <section
           className={clsx(`col-span-full md:col-start-1 md:col-end-1 md:row-start-1`, {
-            'row-start-2': home,
-            'row-start-1': !home,
+            'row-start-2': showTags,
+            'row-start-1': !showTags,
           })}
         >
           {children}

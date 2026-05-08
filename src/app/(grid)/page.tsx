@@ -1,10 +1,11 @@
 import { Suspense } from 'react'
+import ClientWrapper from '~/components/client-wrapper'
 import PostsList from '~/components/posts/posts-list'
 import PostViewCountLoader, {
   PostViewCountFallback,
 } from '~/components/posts/post-view-count-loader'
 import { getStaleAllPostViewsMap } from '~/server/fetch/post-views'
-import { getLatestPostsFrontmatterListInfo } from '~/server/fetch/posts'
+import { getAllTags, getLatestPostsFrontmatterListInfo } from '~/server/fetch/posts'
 
 export const metadata = {
   title: {
@@ -13,9 +14,10 @@ export const metadata = {
   description: 'Cotton',
 }
 export default async function Page() {
-  const [posts, staleViews] = await Promise.all([
+  const [posts, staleViews, tags] = await Promise.all([
     getLatestPostsFrontmatterListInfo(),
     getStaleAllPostViewsMap(),
+    getAllTags(),
   ])
 
   const latestPostsListInfo = posts.map((post) => ({
@@ -27,5 +29,9 @@ export default async function Page() {
     ),
   }))
 
-  return <PostsList posts={latestPostsListInfo} />
+  return (
+    <ClientWrapper showTags tags={tags}>
+      <PostsList posts={latestPostsListInfo} />
+    </ClientWrapper>
+  )
 }

@@ -272,13 +272,12 @@ function MobileThemePicker({
         aria-label="关闭主题切换"
         className="absolute inset-0 z-0 size-full touch-none cursor-default bg-transparent [-webkit-tap-highlight-color:transparent]"
         onPointerDown={(event) => {
-          event.preventDefault()
           event.stopPropagation()
-          onClose()
         }}
         onClick={(event) => {
           event.preventDefault()
           event.stopPropagation()
+          onClose()
         }}
         onTouchMove={(event) => {
           event.preventDefault()
