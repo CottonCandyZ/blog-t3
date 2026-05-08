@@ -221,7 +221,6 @@ function Header() {
             }}
             onChangeMode={(mode) => {
               changeThemeMode(mode)
-              setMobileThemeOpen(false)
             }}
             onClose={() => setMobileThemeOpen(false)}
           />
@@ -261,19 +260,33 @@ function MobileThemePicker({
 }) {
   return (
     <div
+      aria-hidden={!open}
+      inert={!open}
       className={clsx(
         'pointer-events-none fixed inset-0 z-20 md:hidden',
         open && 'pointer-events-auto',
       )}
-      onPointerDown={(event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        onClose()
-      }}
     >
+      <button
+        type="button"
+        aria-label="关闭主题切换"
+        className="absolute inset-0 z-0 size-full touch-none cursor-default bg-transparent [-webkit-tap-highlight-color:transparent]"
+        onPointerDown={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          onClose()
+        }}
+        onClick={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+        }}
+        onTouchMove={(event) => {
+          event.preventDefault()
+        }}
+      />
       <div
         className={clsx(
-          `absolute right-6 top-14 flex w-[min(19rem,calc(100vw-2rem))] -translate-y-1 flex-col gap-3 rounded-2xl
+          `absolute right-6 top-14 z-10 flex w-[min(19rem,calc(100vw-2rem))] -translate-y-1 flex-col gap-3 rounded-2xl
           bg-primary-bg/95 px-3 py-3 opacity-0 shadow-cxs ring-1 ring-primary-light/60 backdrop-blur transition duration-200`,
           open && 'translate-y-0 opacity-100',
         )}

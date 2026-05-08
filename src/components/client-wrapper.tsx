@@ -5,6 +5,8 @@ import {
   type SetStateAction,
   createContext,
   useEffect,
+  useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -23,8 +25,10 @@ export const TagsContext = createContext({} as TagsContextType)
 const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, children }) => {
   const [toggledTags, setToggledTags] = useState(new Set<string>())
   const [tagsExpanded, setTagsExpanded] = useState(false)
+  const tagsPanelId = useId()
   const tagsPanelRef = useRef<HTMLDivElement>(null)
   const tagsAnimationRef = useRef<ReturnType<typeof animate> | null>(null)
+  const tagsPanelMountedRef = useRef(false)
   const value = useMemo(() => ({ toggledTags, setToggledTags }), [toggledTags, setToggledTags])
   const home = usePathname() === '/'
 
@@ -33,11 +37,20 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
     if (saveTags) setToggledTags(new Set(JSON.parse(saveTags) as Array<string>))
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const panel = tagsPanelRef.current
     if (!panel) return
 
     tagsAnimationRef.current?.stop()
+
+    if (!tagsPanelMountedRef.current) {
+      tagsPanelMountedRef.current = true
+      panel.style.height = tagsExpanded ? 'auto' : '0px'
+      panel.style.opacity = tagsExpanded ? '1' : '0'
+      panel.style.transform = tagsExpanded ? 'translateY(0px)' : 'translateY(-4px)'
+      return
+    }
+
     panel.style.height = `${panel.offsetHeight}px`
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -94,6 +107,7 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
                   role="button"
                   tabIndex={0}
                   aria-expanded={tagsExpanded}
+                  aria-controls={tagsPanelId}
                   onClick={() => setTagsExpanded((expanded) => !expanded)}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
@@ -144,6 +158,7 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
                   </span>
                 </div>
                 <div
+                  id={tagsPanelId}
                   ref={tagsPanelRef}
                   className="overflow-hidden"
                   style={{ height: 0, opacity: 0, transform: 'translateY(-4px)' }}
