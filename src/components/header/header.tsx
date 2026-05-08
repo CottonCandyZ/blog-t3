@@ -720,7 +720,7 @@ function ModeButton({
       aria-label={label}
       className={clsx(
         'flex items-center justify-center rounded-full transition-colors hover:bg-primary-small hover:text-white active:bg-primary-small/90',
-        large ? 'size-6' : medium ? 'size-5' : 'size-4',
+        large ? 'size-6' : medium ? 'size-[22px]' : 'size-4',
         active
           ? 'bg-primary-small text-white shadow-sm ring-1 ring-primary-medium/80'
           : 'bg-primary-light/80 text-primary ring-1 ring-primary-medium/30',
@@ -730,7 +730,7 @@ function ModeButton({
         onClick(mode)
       }}
     >
-      <span className={clsx(iconClassName, large ? 'size-4' : medium ? 'size-3.5' : 'size-3', 'shrink-0')} />
+      <span className={clsx(iconClassName, large ? 'size-4' : medium ? 'size-4' : 'size-3', 'shrink-0')} />
     </button>
   )
 }
