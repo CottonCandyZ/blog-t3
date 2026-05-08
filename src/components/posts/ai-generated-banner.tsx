@@ -1,3 +1,5 @@
+import clsx from 'clsx'
+
 interface AIGeneratedBannerProps {
   notice?: string
 }
@@ -16,9 +18,14 @@ const AIGeneratedBanner = ({ notice = defaultNotice }: AIGeneratedBannerProps) =
   )
 }
 
-export const AIGeneratedBadge = () => {
+export const AIGeneratedBadge = ({ className }: { className?: string }) => {
   return (
-    <span className="ml-2 inline-flex translate-y-[-2px] rounded-md bg-primary-light/70 px-2 py-0.5 text-xs font-semibold text-primary">
+    <span
+      className={clsx(
+        'inline-flex rounded-md bg-primary-light/70 px-2 py-0.5 text-xs font-semibold text-primary',
+        className,
+      )}
+    >
       AI
     </span>
   )

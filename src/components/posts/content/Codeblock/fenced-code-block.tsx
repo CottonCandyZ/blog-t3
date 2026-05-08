@@ -21,26 +21,17 @@ const FencedCodeBlock: React.FC<FencedCodeBlockProps> = ({ codeContent, language
   }
 
   return (
-    <div className="relative mb-5 mt-10 rounded-2xl bg-gray-50">
-      <div
-        className={`absolute -top-7 right-10 size-fit rounded-t-lg
-            bg-gray-50 px-3 pt-1 font-semibold text-primary-small`}
-      >
-        {language.toUpperCase()}
-      </div>
-      <div className="flex flex-row">
-        <div
-          className="mdx-fenced-codeblock w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: codeContent }}
-        />
-        <div>
-          <div className="h-full w-12 rounded-r-2xl ">
-            <div className="ml-1 mt-4 inline-block fill-primary">
-              <CopyButton copied={copied} onCopy={onCopy} />
-            </div>
-          </div>
+    <div className="relative mb-4 mt-5 overflow-hidden rounded-xl bg-[rgb(var(--color-code-bg))] ring-1 ring-primary-light/70 md:mb-5 md:mt-8 md:rounded-2xl">
+      <div className="flex h-8 items-center justify-between border-b border-primary-light/80 bg-[rgb(var(--color-code-header))] px-2.5 md:h-9 md:px-3">
+        <div className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.7rem] font-semibold leading-none text-primary-small md:text-xs">
+          {language.toUpperCase()}
         </div>
+        <CopyButton copied={copied} onCopy={onCopy} />
       </div>
+      <div
+        className="mdx-fenced-codeblock w-full overflow-hidden"
+        dangerouslySetInnerHTML={{ __html: codeContent }}
+      />
     </div>
   )
 }

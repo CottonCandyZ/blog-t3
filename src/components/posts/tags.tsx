@@ -25,6 +25,11 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
     if (include) tags.forEach((tag) => otherTagsSet.add(tag))
   })
   const currentTags = new Set([...otherTagsSet].concat([...toggledTags]))
+  const scrollToTop = () => {
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    })
+  }
   // 这个地方写的有点恶心
   // TODO: Need to rewrite. Including simplified code and useReducer.
   const toggle = (tagName: string) => {
@@ -83,13 +88,9 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
       }
       setToggledTags(new Set(toggledTags))
       sessionStorage.setItem('tags', JSON.stringify([...toggledTags]))
+      scrollToTop()
     }
   }
-  const clearTag = () => {
-    setToggledTags(new Set())
-    sessionStorage.setItem('tags', JSON.stringify([]))
-  }
-  const noToggled = toggledTags.size === 0
   return (
     <div className="flex flex-col justify-start gap-2">
       <div className="flex flex-row flex-wrap gap-2">
@@ -98,7 +99,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
           return (
             <button
               className={clsx(
-                `flex flex-row items-center rounded-xl px-2 py-0.5 font-medium transition-all `,
+                `flex flex-row items-center rounded-xl px-2 py-0.5 text-sm font-medium transition-all md:text-base`,
                 {
                   'bg-primary-light/60 text-primary md:hover:bg-primary-small md:hover:text-white md:hover:shadow-md':
                     !isToggled && currentTags.has(tagName),
@@ -116,19 +117,6 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
           )
         })}
       </div>
-      <button
-        className={clsx(
-          `mr-auto rounded-xl bg-primary-light/60 px-2 py-0.5 font-semibold text-primary 
-          md:hover:bg-primary-small md:hover:text-white md:hover:shadow-md`,
-          {
-            hidden: noToggled,
-          },
-        )}
-        type="button"
-        onClick={clearTag}
-      >
-        Clear
-      </button>
     </div>
   )
 }

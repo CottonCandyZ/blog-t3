@@ -20,16 +20,28 @@ $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
   --color-primary-medium: #{getColorValue(color.mix($primary-color, white, 40%))};
   --color-primary-light: #{getColorValue(color.mix($primary-color, white, 15%))};
   --color-primary-extralight: #{getColorValue(color.mix($primary-color, white, 10%))};
+  --color-candy-soft: #{getColorValue(color.mix($primary-color, white, 15%))};
+  --color-candy-highlight: #{getColorValue(color.mix($primary-color, white, 10%))};
+  --color-candy-stick: #{getColorValue(#d7f3ff)};
+  --color-candy-stick-shadow: #{getColorValue(#bdebff)};
+  --color-code-bg: #{getColorValue(color.mix($primary-color, #fff, 2.5%))};
+  --color-code-header: #{getColorValue(color.mix($primary-color, #fff, 7%))};
 }
 
 @mixin theme-primary-dark-map($primary-color) {
-  --color-primary-bg: #{getColorValue(#161616)};
-  --color-primary-dark: #{getColorValue(color.mix($primary-color, white, 40%))};
-  --color-primary: #{getColorValue($primary-color)};
-  --color-primary-small: #{getColorValue(color.mix($primary-color, black, 65%))};
-  --color-primary-medium: #{getColorValue(color.mix($primary-color, white, 40%))};
-  --color-primary-light: #{getColorValue(color.mix($primary-color, white, 15%))};
-  --color-primary-extralight: #{getColorValue(color.mix($primary-color, white, 5%))};
+  --color-primary-bg: #{getColorValue(color.mix($primary-color, #181a20, 6%))};
+  --color-primary-dark: #{getColorValue(color.mix($primary-color, #e5e7eb, 14%))};
+  --color-primary: #{getColorValue(color.mix($primary-color, #f8fafc, 60%))};
+  --color-primary-small: #{getColorValue(color.mix($primary-color, #cbd5e1, 44%))};
+  --color-primary-medium: #{getColorValue(color.mix($primary-color, #334155, 30%))};
+  --color-primary-light: #{getColorValue(color.mix($primary-color, #1f2937, 18%))};
+  --color-primary-extralight: #{getColorValue(color.mix($primary-color, #101114, 6%))};
+  --color-candy-soft: #{getColorValue(color.mix($primary-color, #f8fafc, 42%))};
+  --color-candy-highlight: #{getColorValue(color.mix($primary-color, #e5e7eb, 24%))};
+  --color-candy-stick: #{getColorValue(color.mix($primary-color, #d7f3ff, 10%))};
+  --color-candy-stick-shadow: #{getColorValue(color.mix($primary-color, #bdebff, 14%))};
+  --color-code-bg: #{getColorValue(color.mix($primary-color, #151720, 5%))};
+  --color-code-header: #{getColorValue(color.mix($primary-color, #242433, 12%))};
 }
 
 @for $i from 1 through list.length($themeColorList) {
@@ -37,9 +49,29 @@ $themeColorList: (#0891b2 #16a34a #ea580c #db2777);
   .theme-#{$i} {
     @include theme-primary-map($color);
   }
-  .dark {
-    &.theme-#{$i} {
-      @include theme-primary-dark-map($color);
+  .theme-#{$i}-dark {
+    @include theme-primary-dark-map($color);
+
+    &.cotton-candy,
+    .cotton-candy {
+      filter: saturate(0.84) brightness(0.92);
+    }
+  }
+  html.theme-#{$i} {
+    color-scheme: light;
+    background-color: rgb(var(--color-primary-extralight));
+  }
+  html.theme-#{$i}-dark {
+    color-scheme: dark;
+    background-color: rgb(var(--color-primary-extralight));
+
+    img {
+      filter: brightness(0.78) saturate(0.88) contrast(0.96);
+      transition: filter 160ms ease;
+    }
+
+    img[data-no-dark-filter='true'] {
+      filter: none;
     }
   }
 }

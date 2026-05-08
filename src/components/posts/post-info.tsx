@@ -14,10 +14,10 @@ const PostInfo: React.FC<{
   const shouldShowViews = viewCount !== undefined || typeof views === 'number'
 
   return (
-    <div className="mt-4 flex flex-row flex-wrap items-center gap-3">
-      <div className="flex flex-row items-center gap-2">
-        <div className="flex rounded-lg bg-primary-light/60 p-1.5 text-primary-small">
-          <span className="i-mingcute-calendar-line size-6" />
+    <div className="mt-3 flex flex-row flex-wrap items-center gap-x-3 gap-y-2 text-xs md:mt-4 md:gap-2.5 md:text-base">
+      <div className="flex flex-row items-center gap-1.5">
+        <div className="flex rounded-md bg-primary-light/45 p-1 text-primary-small">
+          <span className="i-mingcute-calendar-line size-4 md:size-[1.125rem]" />
         </div>
         <h2 className="min-w-max font-semibold text-primary-dark">
           <time dateTime={date} suppressHydrationWarning>
@@ -27,9 +27,9 @@ const PostInfo: React.FC<{
       </div>
 
       {shouldShowViews && (
-        <div className="flex flex-row items-center gap-2">
-          <div className="flex rounded-lg bg-primary-light/60 p-1.5 text-primary-small">
-            <span className="i-mingcute-eye-2-line size-6" />
+        <div className="flex flex-row items-center gap-1.5">
+          <div className="flex rounded-md bg-primary-light/45 p-1 text-primary-small">
+            <span className="i-mingcute-eye-2-line size-4 md:size-[1.125rem]" />
           </div>
           <h2 className="min-w-max font-semibold text-primary-dark">
             {viewCount ?? (
@@ -44,11 +44,11 @@ const PostInfo: React.FC<{
         </div>
       )}
       {tags && (
-        <div className="flex flex-row items-center gap-2">
-          <div className="flex rounded-lg bg-primary-light/60 p-1.5 text-primary-small">
-            <span className="i-mingcute-hashtag-line size-6" />
+        <div className="flex min-w-0 flex-row items-center gap-1.5">
+          <div className="flex rounded-md bg-primary-light/45 p-1 text-primary-small">
+            <span className="i-mingcute-hashtag-line size-4 md:size-[1.125rem]" />
           </div>
-          <div className="flex min-w-max flex-row gap-1 font-semibold text-primary-dark">
+          <div className="flex min-w-0 flex-row flex-wrap gap-1 font-semibold text-primary-dark">
             {tags.map((item, index) => (
               <Fragment key={item}>
                 <span>{item}</span>

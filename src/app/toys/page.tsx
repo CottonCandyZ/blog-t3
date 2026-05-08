@@ -7,21 +7,21 @@ export const metadata = {
 
 export default function page() {
   return (
-    <div className="mt-4 flex max-w-6xl flex-col gap-6">
+    <div className="mt-4 flex max-w-6xl flex-col gap-5 md:gap-6">
       {CONFIG.toy_cards.map((info) => {
         return (
           <div key={info.title}>
             <h2
-              className={`relative pl-4 text-xl font-semibold text-primary
-            before:absolute before:inset-y-0 before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-medium`}
+              className={`relative pl-3 text-lg font-semibold text-primary md:pl-4 md:text-xl
+            before:absolute before:inset-y-0 before:left-0 before:h-full before:w-1 before:rounded-md before:bg-primary-medium md:before:w-1.5`}
             >
               {info.title}
             </h2>
-            <div className="flex-wap mt-4 flex flex-row flex-wrap gap-5">
+            <div className="flex-wap mt-3 flex flex-row flex-wrap gap-3 md:mt-4 md:gap-5">
               {info.project_list.map((project_info) => (
                 <div
                   key={project_info.title}
-                  className="h-min rounded-2xl bg-primary-bg p-4 shadow-cxs md:w-80"
+                  className="h-min w-full rounded-xl bg-primary-bg p-3 shadow-cxs md:w-80 md:rounded-2xl md:p-4"
                 >
                   <ToyCard {...project_info} />
                 </div>

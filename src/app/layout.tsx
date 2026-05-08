@@ -1,4 +1,5 @@
 import '~/styles/globals.scss'
+import type { Metadata } from 'next'
 import { Noto_Sans, Noto_Sans_Mono, Noto_Sans_SC } from 'next/font/google'
 import Footer from '~/components/footer'
 import MobileNav from '~/components/nav/mobile-nav'
@@ -21,11 +22,20 @@ const noto_sans_mono = Noto_Sans_Mono({
   weight: ['500', '600'],
   variable: '--font-noto-sans-mono',
 })
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Cotton',
+    template: '%s | Cotton',
+  },
+  description: 'Cotton',
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       suppressHydrationWarning
-      lang="en"
+      lang="zh-CN"
       className={`antialiased ${noto_sans.variable} ${noto_sans_sc.variable} ${noto_sans_mono.variable}`}
     >
       <ThemeWrapper>

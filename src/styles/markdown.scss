@@ -1,5 +1,5 @@
 .markdown-body {
-  @apply break-words text-base;
+  @apply break-words text-sm md:text-base;
 
   // Heading
   .anchor {
@@ -23,16 +23,16 @@
     }
   }
   .mdx-h1 {
-    @apply mt-4 text-3xl;
+    @apply mt-4 text-2xl md:text-3xl;
   }
   .mdx-h2 {
-    @apply mt-4 text-2xl;
+    @apply mt-4 text-xl md:text-2xl;
   }
   .mdx-h3 {
-    @apply mt-4 text-xl;
+    @apply mt-4 text-lg md:text-xl;
   }
   .mdx-h4 {
-    @apply mt-2 text-lg;
+    @apply mt-2 text-base md:text-lg;
   }
   .mdx-h5 {
     @apply mt-2 text-base;
@@ -43,13 +43,13 @@
 
   // Paragraph
   .mdx-p {
-    @apply mb-4 text-base leading-7;
+    @apply mb-4 text-sm leading-7 md:text-base;
   }
 
   // Blockquote
   .mdx-blockquote {
-    @apply relative my-12 px-8
-    before:absolute before:left-0 before:h-full before:w-1.5 before:rounded-md before:bg-primary-medium;
+    @apply relative my-8 px-5 md:my-12 md:px-8
+    before:absolute before:left-0 before:h-full before:w-1 before:rounded-md before:bg-primary-medium md:before:w-1.5;
     p {
       @apply font-medium text-primary-dark;
     }
@@ -57,16 +57,16 @@
 
   // Table
   .mdx-table {
-    @apply my-8 w-full border-collapse text-left;
+    @apply my-6 w-full border-collapse text-left text-sm md:my-8 md:text-base;
     .mdx-thead,
     .mdx-tbody .mdx-tr:not(:last-child) {
       @apply border-b border-primary-dark;
     }
     .mdx-th {
-      @apply whitespace-nowrap p-2.5;
+      @apply whitespace-nowrap p-2 md:p-2.5;
     }
     .mdx-td {
-      @apply p-2.5;
+      @apply p-2 md:p-2.5;
     }
   }
 
@@ -88,7 +88,7 @@
   // List
   .mdx-ul,
   .mdx-ol {
-    @apply my-6 leading-7;
+    @apply my-5 leading-7 md:my-6;
     .mdx-p {
       @apply m-0;
     }
@@ -117,16 +117,45 @@
 
   // CodeBlock
   .mdx-fenced-codeblock {
+    .shiki,
+    .shiki span {
+      color: color-mix(in srgb, var(--shiki-light) 82%, rgb(var(--color-primary-dark)) 18%) !important;
+      background-color: transparent !important;
+      font-style: var(--shiki-light-font-style) !important;
+      font-weight: var(--shiki-light-font-weight) !important;
+      text-decoration: var(--shiki-light-text-decoration) !important;
+    }
+
     .shiki {
-      @apply max-h-[36rem] overflow-auto p-6;
+      @apply max-h-[22rem] overflow-auto p-2.5 md:max-h-[34rem] md:p-4;
+      scrollbar-width: thin;
+      scrollbar-color: rgb(var(--color-primary-medium)) rgb(var(--color-primary-light) / 0.45);
+
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgb(var(--color-primary-light) / 0.45);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgb(var(--color-primary-medium));
+        border-radius: 999px;
+      }
     }
     code {
-      @apply block w-fit min-w-full text-sm leading-6;
+      @apply block w-fit min-w-full text-xs leading-5 md:text-[0.8125rem];
       .remove,
       .add,
       .highlighted {
-        width: calc(100% + 48px);
-        @apply relative -mx-6 inline-block px-6;
+        width: calc(100% + 20px);
+        @apply relative -mx-2.5 inline-block px-2.5 md:-mx-4 md:px-4;
+
+        @media (min-width: 768px) {
+          width: calc(100% + 32px);
+        }
       }
       .remove {
         @apply bg-red-500/10 opacity-70;
@@ -143,7 +172,7 @@
         }
       }
       .highlighted {
-        @apply bg-gray-200/50;
+        @apply bg-primary-light/60;
         &.error {
           @apply bg-red-500/10;
         }
@@ -183,5 +212,18 @@
 
   video {
     @apply mx-auto my-6 aspect-video rounded-md;
+  }
+}
+
+html[class$='-dark'] .markdown-body {
+  .mdx-fenced-codeblock {
+    .shiki,
+    .shiki span {
+      color: var(--shiki-dark) !important;
+      background-color: transparent !important;
+      font-style: var(--shiki-dark-font-style) !important;
+      font-weight: var(--shiki-dark-font-weight) !important;
+      text-decoration: var(--shiki-dark-text-decoration) !important;
+    }
   }
 }

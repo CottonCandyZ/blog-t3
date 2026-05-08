@@ -7,8 +7,10 @@ import { getStaleAllPostViewsMap } from '~/server/fetch/post-views'
 import { getLatestPostsFrontmatterListInfo } from '~/server/fetch/posts'
 
 export const metadata = {
-  title: '棉花糖',
-  description: '棉花糖的 Blog',
+  title: {
+    absolute: 'Cotton',
+  },
+  description: 'Cotton',
 }
 export default async function Page() {
   const [posts, staleViews] = await Promise.all([

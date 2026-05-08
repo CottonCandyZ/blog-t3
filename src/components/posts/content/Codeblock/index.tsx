@@ -7,7 +7,7 @@ import {
   transformerNotationFocus,
   transformerNotationErrorLevel
 } from '@shikijs/transformers'
-import {} from 'shiki/themes/vitesse-light.mjs'
+import {} from 'shiki/themes/rose-pine-dawn.mjs'
 
 interface CodeblockProps {
   className?: string
@@ -23,20 +23,16 @@ const CodeBlock: React.FC<CodeblockProps> = async ({ children, className }) => {
   const code = await codeToHtml(children, {
     lang: language ? language : 'plaintext',
     themes: {
-      light: 'vitesse-light',
+      light: 'rose-pine-dawn',
       dark: 'nord',
     },
+    defaultColor: false,
     transformers: [
       transformerNotationDiff(),
       transformerNotationHighlight(),
       transformerNotationWordHighlight(),
       transformerNotationFocus(),
       transformerNotationErrorLevel(),
-      {
-        pre(node) {
-          delete node.properties.style
-        },
-      },
     ],
   })
   return <FencedCodeBlock language={language!} codeContent={code} />

@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react'
+import clsx from 'clsx'
 
 export const Dot: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
@@ -46,7 +47,7 @@ export const Unchecked: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   )
 }
 
-export const CottonCandy: React.FC<SVGProps<SVGSVGElement>> = (props) => {
+export const CottonCandy: React.FC<SVGProps<SVGSVGElement>> = ({ className, ...props }) => {
   return (
     <svg
       width="1em"
@@ -54,30 +55,72 @@ export const CottonCandy: React.FC<SVGProps<SVGSVGElement>> = (props) => {
       viewBox="0 0 534 534"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={clsx('cotton-candy', className)}
       {...props}
     >
-      <circle className="fill-primary-light" cx="260.5" cy="116.5" r="107.5" />
-      <circle className="fill-primary-light" cx="195" cy="316" r="113" />
-      <circle className="fill-primary-light" cx="191" cy="180" r="96" />
-      <circle className="fill-primary-light" cx="327" cy="352" r="77" />
-      <circle className="fill-primary-light" cx="355" cy="267" r="94" />
-      <circle className="fill-primary-extralight" cx="369.5" cy="253.5" r="82.5" />
-      <circle className="fill-primary-light" cx="367.5" cy="157.5" r="59.5" />
-      <circle className="fill-primary-extralight" cx="262" cy="113" r="104" />
-      <circle className="fill-primary-extralight" cx="202.5" cy="157.5" r="90.5" />
-      <circle className="fill-primary-extralight" cx="346.5" cy="154.5" r="53.5" />
-      <circle className="fill-primary-extralight" cx="302.5" cy="180.5" r="52.5" />
-      <rect x="237" y="407" width="50" height="119" rx="25" fill="#D7F3FF" />
-      <rect x="237" y="419" width="24" height="103" rx="12" fill="#BDEBFF" />
-      <rect x="255" y="410" width="25" height="14" rx="7" fill="#BDEBFF" />
+      <circle className="fill-[rgb(var(--color-candy-soft))]" cx="260.5" cy="116.5" r="107.5" />
+      <circle className="fill-[rgb(var(--color-candy-soft))]" cx="195" cy="316" r="113" />
+      <circle className="fill-[rgb(var(--color-candy-soft))]" cx="191" cy="180" r="96" />
+      <circle className="fill-[rgb(var(--color-candy-soft))]" cx="327" cy="352" r="77" />
+      <circle className="fill-[rgb(var(--color-candy-soft))]" cx="355" cy="267" r="94" />
+      <circle
+        className="fill-[rgb(var(--color-candy-highlight))]"
+        cx="369.5"
+        cy="253.5"
+        r="82.5"
+      />
+      <circle className="fill-[rgb(var(--color-candy-soft))]" cx="367.5" cy="157.5" r="59.5" />
+      <circle className="fill-[rgb(var(--color-candy-highlight))]" cx="262" cy="113" r="104" />
+      <circle
+        className="fill-[rgb(var(--color-candy-highlight))]"
+        cx="202.5"
+        cy="157.5"
+        r="90.5"
+      />
+      <circle
+        className="fill-[rgb(var(--color-candy-highlight))]"
+        cx="346.5"
+        cy="154.5"
+        r="53.5"
+      />
+      <circle
+        className="fill-[rgb(var(--color-candy-highlight))]"
+        cx="302.5"
+        cy="180.5"
+        r="52.5"
+      />
       <rect
+        className="fill-[rgb(var(--color-candy-stick))]"
+        x="237"
+        y="407"
+        width="50"
+        height="119"
+        rx="25"
+      />
+      <rect
+        className="fill-[rgb(var(--color-candy-stick-shadow))]"
+        x="237"
+        y="419"
+        width="24"
+        height="103"
+        rx="12"
+      />
+      <rect
+        className="fill-[rgb(var(--color-candy-stick-shadow))]"
+        x="255"
+        y="410"
+        width="25"
+        height="14"
+        rx="7"
+      />
+      <rect
+        className="fill-[rgb(var(--color-candy-stick-shadow))]"
         x="245"
         y="421.96"
         width="25"
         height="14"
         rx="7"
         transform="rotate(-28.5816 245 421.96)"
-        fill="#BDEBFF"
       />
       <path
         className="fill-primary"

@@ -1,15 +1,22 @@
 import { ThemeProvider } from 'next-themes'
 import { type PropsWithChildren } from 'react'
+import ScrollToTopButton from '~/components/scroll-to-top-button'
+
+const colorThemes = [1, 2, 3, 4].flatMap((i) => [`theme-${i}`, `theme-${i}-dark`])
+
 const ThemeWrapper: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <body>
       <ThemeProvider
-        defaultTheme="theme-4"
+        defaultTheme="theme-1"
         attribute="class"
         enableSystem={false}
-        themes={[1, 2, 3, 4].map((i) => `theme-${i}`)}
+        themes={colorThemes}
       >
-        <div className="bg-primary-extralight">{children}</div>
+        <div className="min-h-dvh bg-primary-extralight text-primary-dark transition-colors duration-300">
+          {children}
+          <ScrollToTopButton />
+        </div>
       </ThemeProvider>
     </body>
   )

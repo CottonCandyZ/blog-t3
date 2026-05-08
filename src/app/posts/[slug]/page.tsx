@@ -1,6 +1,11 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import PostContent from '~/components/posts/post-content'
-import { getLatestPostsFrontmatterListInfo, getPostFrontmatter } from '~/server/fetch/posts'
+import {
+  getLatestPostsFrontmatterListInfo,
+  getPostFrontmatter,
+  isPostFileNotFoundError,
+} from '~/server/fetch/posts'
 import '~/styles/markdown.scss'
 
 export async function generateStaticParams() {
@@ -16,7 +21,16 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const frontmatter = await getPostFrontmatter(decodeURIComponent(slug))
+  const decodedSlug = decodeURIComponent(slug)
+  let frontmatter: Awaited<ReturnType<typeof getPostFrontmatter>>
+
+  try {
+    frontmatter = await getPostFrontmatter(decodedSlug)
+  } catch (error) {
+    if (isPostFileNotFoundError(error)) notFound()
+    throw error
+  }
+
   return {
     title: frontmatter.title,
   }

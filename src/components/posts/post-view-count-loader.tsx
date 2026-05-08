@@ -25,7 +25,7 @@ const PostViewCountLoader: React.FC<{
 
 export const PostViewCountSkeleton: React.FC = () => {
   return (
-    <span className="inline-flex h-6 w-12 animate-pulse rounded-md bg-gray-200 align-middle">
+    <span className="inline-flex h-6 w-12 animate-pulse rounded-md bg-primary-light/70 align-middle">
       <span className="sr-only">Loading...</span>
     </span>
   )

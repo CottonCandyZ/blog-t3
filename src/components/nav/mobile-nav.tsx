@@ -11,11 +11,42 @@ const MobileNav: React.FC = () => {
   return (
     <div className="relative h-0 md:hidden">
       <button
-        className="fixed right-8 top-[26px] z-20 text-primary"
+        className="fixed right-6 top-3 z-20 flex size-8 items-center justify-center text-primary"
         onClick={() => setExpend(!expend)}
         type="button"
+        aria-label={expend ? '关闭导航菜单' : '打开导航菜单'}
       >
-        {expend ? <span className="i-mingcute-close-line size-9" /> : <span className="i-mingcute-menu-line size-9" />}
+        <svg
+          className="size-6 overflow-visible"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="2.4"
+        >
+          <path
+            className={clsx(
+              'origin-center transition-transform duration-300 ease-out [transform-box:fill-box]',
+              expend && 'translate-y-[5px] rotate-45',
+            )}
+            d="M5 7h14"
+          />
+          <path
+            className={clsx(
+              'origin-center transition-all duration-200 ease-out [transform-box:fill-box]',
+              expend && 'scale-x-0 opacity-0',
+            )}
+            d="M5 12h14"
+          />
+          <path
+            className={clsx(
+              'origin-center transition-transform duration-300 ease-out [transform-box:fill-box]',
+              expend && '-translate-y-[5px] -rotate-45',
+            )}
+            d="M5 17h14"
+          />
+        </svg>
       </button>
       <div
         className={clsx('fixed inset-0 z-10', {

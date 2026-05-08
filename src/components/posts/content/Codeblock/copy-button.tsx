@@ -22,13 +22,13 @@ const CopyButton: React.FC<CopyButtonProps> = ({ copied, onCopy }) => {
     >
       <button
         onClick={onCopy}
-        className="relative size-8 rounded-md hover:border-2 hover:border-primary-small flex"
+        className="relative flex size-6 rounded-md hover:border hover:border-primary-small md:size-7"
         type="button"
       >
         {copied ? (
-          <span className="m-auto size-5 i-mingcute-check-line text-primary" />
+          <span className="i-mingcute-check-line m-auto size-3.5 text-primary md:size-4" />
         ) : (
-          <span className="i-mingcute-copy-2-line text-primary m-auto size-5" />
+          <span className="i-mingcute-copy-2-line m-auto size-3.5 text-primary md:size-4" />
         )}
       </button>
     </div>

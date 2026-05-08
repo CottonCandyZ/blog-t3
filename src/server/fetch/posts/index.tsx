@@ -20,6 +20,15 @@ import type { PostFrontmatter } from '~/components/posts'
 import { components } from '~/components/posts/mdx-component'
 import { getAllPostViewsMap } from '~/server/fetch/post-views'
 
+export function isPostFileNotFoundError(error: unknown) {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 'ENOENT'
+  )
+}
+
 /**
  * Extract frontmatter info.
  * @param slug Post path name without `.mdx` suffix.

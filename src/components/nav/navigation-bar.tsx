@@ -4,12 +4,19 @@ import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { CONFIG } from '~/config'
 
+const selectedIconMap: Record<string, string> = {
+  'i-mingcute-home-2-line': 'i-mingcute-home-2-fill',
+  'i-mingcute-toy-horse-line': 'i-mingcute-toy-horse-fill',
+  'i-mingcute-link-line': 'i-mingcute-link-fill',
+  'i-mingcute-message-4-line': 'i-mingcute-message-4-fill',
+}
+
 export default function NavigationBar() {
   const pathname = usePathname()
   const router_content = CONFIG.nav_router
   return (
     <nav>
-      <ul className="flex justify-center gap-4">
+      <ul className="flex items-center justify-center gap-1.5">
         {router_content.map((item) => (
           <ListItem
             key={item.name}
@@ -35,26 +42,28 @@ function ListItem({
   href: string
   current?: boolean
 }) {
+  const displayIcon = current ? (selectedIconMap[icon] ?? icon) : icon
+
   return (
-    <li>
+    <li className="flex items-center">
       <Link
         href={href}
         className={clsx(
-          `relative z-0 mx-auto flex w-max items-center
-          leading-8 transition-all duration-300 before:absolute before:inset-x-0
-          before:bottom-0 before:-z-10 before:rounded-xl before:bg-primary-light active:scale-90 active:duration-0
+          `relative z-0 mx-auto flex h-8 w-max items-center justify-center px-3 leading-none
+          transition-all duration-300 before:absolute before:bottom-0 before:-z-10
+          before:bg-primary-light active:scale-90 active:duration-0
            `,
           {
-            [`pointer-events-none px-3 before:h-full before:bg-primary-light before:shadow-sm`]:
+            [`pointer-events-none before:inset-x-0 before:h-full before:rounded-xl before:bg-primary-light before:shadow-sm`]:
               current === true,
-            [`group before:h-1 before:bg-primary-light before:transition-all before:duration-300 hover:px-3
-            hover:before:h-full hover:before:bg-primary-light hover:before:shadow-sm`]:
+            [`group before:inset-x-0 before:h-full before:rounded-xl before:bg-primary-light before:opacity-0
+            before:transition before:duration-300 hover:before:opacity-100 hover:before:shadow-sm`]:
               current === false,
           },
         )}
       >
         <span
-          className={clsx(icon, {
+          className={clsx(displayIcon, {
             [`mr-1 text-[1em]`]: current === true,
             [`group-hover:animate-backshake mr-0 text-[0px] transition-all duration-300 group-hover:mr-1 group-hover:text-[1em]`]:
               current === false,
