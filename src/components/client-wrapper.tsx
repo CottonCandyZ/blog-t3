@@ -4,12 +4,13 @@ import {
   type PropsWithChildren,
   type SetStateAction,
   createContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
-import { AnimatePresence, motion } from 'motion/react'
+import { motion } from 'motion/react'
 import ProfileCard from '~/components/profile/profile-card'
 import Tags, { type tagProps } from '~/components/posts/tags'
 
@@ -23,6 +24,10 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
   const [tagsExpanded, setTagsExpanded] = useState(false)
   const value = useMemo(() => ({ toggledTags, setToggledTags }), [toggledTags, setToggledTags])
   const home = usePathname() === '/'
+  useEffect(() => {
+    const saveTags = sessionStorage.getItem('tags')
+    if (saveTags) setToggledTags(new Set(JSON.parse(saveTags) as Array<string>))
+  }, [])
   const clearTags = () => {
     setToggledTags(new Set())
     sessionStorage.setItem('tags', JSON.stringify([]))
@@ -96,22 +101,21 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
                     />
                   </span>
                 </div>
-              <AnimatePresence initial={false}>
-                {tagsExpanded && (
-                  <motion.div
-                    key="tags-panel"
-                    initial={{ height: 0, opacity: 0, y: -4 }}
-                    animate={{ height: 'auto', opacity: 1, y: 0 }}
-                    exit={{ height: 0, opacity: 0, y: -4 }}
-                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="mt-3 h-min">
-                      <Tags {...tags} />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: tagsExpanded ? 'auto' : 0,
+                    opacity: tagsExpanded ? 1 : 0,
+                    y: tagsExpanded ? 0 : -4,
+                  }}
+                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  className="overflow-hidden"
+                  aria-hidden={!tagsExpanded}
+                >
+                  <div className="mt-3 h-min">
+                    <Tags {...tags} />
+                  </div>
+                </motion.div>
               </search>
             )}
             <div className="mt-4 hidden rounded-2xl bg-primary-bg shadow-cxs md:mt-0 md:block">

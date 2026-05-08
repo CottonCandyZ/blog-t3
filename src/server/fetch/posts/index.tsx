@@ -107,7 +107,7 @@ export const getAllTags = async () => {
     })
   })
   uniqueTags = new Set([...uniqueTags].sort((a, b) => a.localeCompare(b)))
-  return { uniqueTags, oTags }
+  return { uniqueTags: [...uniqueTags], oTags }
 }
 
 /**

@@ -1,19 +1,15 @@
 'use client'
 import clsx from 'clsx'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { TagsContext } from '~/components/client-wrapper'
 
 export interface tagProps {
-  uniqueTags: Set<string>
+  uniqueTags: string[]
   oTags: string[][]
 }
 
 const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
   const { toggledTags, setToggledTags } = useContext(TagsContext)
-  useEffect(() => {
-    const saveTags = sessionStorage.getItem('tags')
-    if (saveTags) setToggledTags(new Set(JSON.parse(saveTags) as Array<string>))
-  }, [setToggledTags])
 
   const otherTagsSet = new Set<string>()
   oTags.forEach((tags) => {
@@ -94,7 +90,7 @@ const Tags: React.FC<tagProps> = ({ uniqueTags, oTags }) => {
   return (
     <div className="flex flex-col justify-start gap-2">
       <div className="flex flex-row flex-wrap gap-2">
-        {Array.from(uniqueTags).map((tagName) => {
+        {uniqueTags.map((tagName) => {
           const isToggled = toggledTags.has(tagName)
           return (
             <button
