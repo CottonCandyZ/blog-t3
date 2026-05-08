@@ -6,11 +6,12 @@ import {
   createContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
-import { motion } from 'motion/react'
+import { animate } from 'motion'
 import ProfileCard from '~/components/profile/profile-card'
 import Tags, { type tagProps } from '~/components/posts/tags'
 
@@ -22,12 +23,53 @@ export const TagsContext = createContext({} as TagsContextType)
 const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, children }) => {
   const [toggledTags, setToggledTags] = useState(new Set<string>())
   const [tagsExpanded, setTagsExpanded] = useState(false)
+  const tagsPanelRef = useRef<HTMLDivElement>(null)
+  const tagsAnimationRef = useRef<ReturnType<typeof animate> | null>(null)
   const value = useMemo(() => ({ toggledTags, setToggledTags }), [toggledTags, setToggledTags])
   const home = usePathname() === '/'
+
   useEffect(() => {
     const saveTags = sessionStorage.getItem('tags')
     if (saveTags) setToggledTags(new Set(JSON.parse(saveTags) as Array<string>))
   }, [])
+
+  useEffect(() => {
+    const panel = tagsPanelRef.current
+    if (!panel) return
+
+    tagsAnimationRef.current?.stop()
+    panel.style.height = `${panel.offsetHeight}px`
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion) {
+      panel.style.height = tagsExpanded ? 'auto' : '0px'
+      panel.style.opacity = tagsExpanded ? '1' : '0'
+      panel.style.transform = tagsExpanded ? 'translateY(0px)' : 'translateY(-4px)'
+      return
+    }
+
+    const controls = animate(
+      panel,
+      {
+        height: tagsExpanded ? `${panel.scrollHeight}px` : '0px',
+        opacity: tagsExpanded ? 1 : 0,
+        y: tagsExpanded ? 0 : -4,
+      },
+      { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+    )
+    tagsAnimationRef.current = controls
+
+    void controls.then(() => {
+      if (tagsAnimationRef.current === controls && tagsExpanded) {
+        panel.style.height = 'auto'
+      }
+    })
+
+    return () => {
+      controls.stop()
+    }
+  }, [tagsExpanded])
+
   const clearTags = () => {
     setToggledTags(new Set())
     sessionStorage.setItem('tags', JSON.stringify([]))
@@ -101,21 +143,17 @@ const ClientWrapper: React.FC<PropsWithChildren<{ tags: tagProps }>> = ({ tags, 
                     />
                   </span>
                 </div>
-                <motion.div
-                  initial={false}
-                  animate={{
-                    height: tagsExpanded ? 'auto' : 0,
-                    opacity: tagsExpanded ? 1 : 0,
-                    y: tagsExpanded ? 0 : -4,
-                  }}
-                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                <div
+                  ref={tagsPanelRef}
                   className="overflow-hidden"
+                  style={{ height: 0, opacity: 0, transform: 'translateY(-4px)' }}
                   aria-hidden={!tagsExpanded}
+                  inert={!tagsExpanded}
                 >
                   <div className="mt-3 h-min">
                     <Tags {...tags} />
                   </div>
-                </motion.div>
+                </div>
               </search>
             )}
             <div className="mt-4 hidden rounded-2xl bg-primary-bg shadow-cxs md:mt-0 md:block">
