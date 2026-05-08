@@ -5,12 +5,16 @@ import PostInfo from '~/components/posts/post-info'
 import Comments from '~/components/comment'
 import AIGeneratedBanner from '~/components/posts/ai-generated-banner'
 import PostViewCountLoader, {
-  PostViewCountSkeleton,
+  PostViewCountFallback,
 } from '~/components/posts/post-view-count-loader'
+import { getStalePostViews } from '~/server/fetch/post-views'
 
 export default async function PostContent({ slug }: { slug: string }) {
   const decodedSlug = decodeURIComponent(slug)
-  const { content, frontmatter } = await getPostContent(`posts/${decodedSlug}.mdx`)
+  const [{ content, frontmatter }, staleViews] = await Promise.all([
+    getPostContent(`posts/${decodedSlug}.mdx`),
+    getStalePostViews(decodedSlug),
+  ])
 
   return (
     <div className="flex flex-row justify-center gap-10 lg:justify-normal">
@@ -28,7 +32,7 @@ export default async function PostContent({ slug }: { slug: string }) {
                 date={frontmatter.date}
                 tags={frontmatter.tags}
                 viewCount={
-                  <Suspense fallback={<PostViewCountSkeleton />}>
+                  <Suspense fallback={<PostViewCountFallback views={staleViews} />}>
                     <PostViewCountLoader slug={decodedSlug} incrementViews />
                   </Suspense>
                 }

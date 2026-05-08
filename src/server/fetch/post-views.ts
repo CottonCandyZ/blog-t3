@@ -53,6 +53,25 @@ export async function getStaleAllPostViewsMap() {
   }
 }
 
+export async function getStalePostViews(slug: string) {
+  'use cache'
+  cacheLife({
+    stale: 300,
+    revalidate: 30,
+    expire: 3600,
+  })
+
+  if (!process.env.POSTGRES_PRISMA_URL) return 0
+
+  try {
+    const postViews = await dbReadPostViews(slug)
+    return postViews?.views ?? 0
+  } catch (e) {
+    console.error(e)
+    return 0
+  }
+}
+
 export async function hasPostViewVisit(slug: string, visitorId: string) {
   noStore()
   if (!process.env.POSTGRES_PRISMA_URL) return false
