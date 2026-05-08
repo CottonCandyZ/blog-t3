@@ -26,12 +26,16 @@ import { getAllPostViewsMap } from '~/server/fetch/post-views'
  * @returns `PostFrontmatter`.
  */
 export const getPostFrontmatter = async (slug: string) => {
+  'use cache'
+
   const rawMdx = await fs.readFile(path.join(process.cwd(), `posts/${slug}.mdx`), 'utf8')
   const frontmatter = matter(rawMdx).data as PostFrontmatter
   return frontmatter
 }
 
 const getAllPostsSlug = async () => {
+  'use cache'
+
   return (await getAllPostsPathName()).map((path) => getPostSlug(path))
 }
 
@@ -39,18 +43,16 @@ const getAllPostsSlug = async () => {
  * Get sorted and filtered posts info.
  * @returns Sorted by day and filtered `slug` and `frontmatter`.
  */
-export const getLatestPostsListInfo = async () => {
+export const getLatestPostsFrontmatterListInfo = async () => {
+  'use cache'
+
   const postsSlug = await getAllPostsSlug()
-  const postViews = await getAllPostViewsMap()
   const allPostsListInfo = await Promise.all(
     postsSlug.map(async (slug) => {
       const frontmatter = await getPostFrontmatter(slug)
       return {
         slug,
-        frontmatter: {
-          ...frontmatter,
-          views: postViews.get(slug) ?? 0,
-        },
+        frontmatter,
       }
     }),
   )
@@ -63,12 +65,29 @@ export const getLatestPostsListInfo = async () => {
     })
 }
 
+export const getLatestPostsListInfo = async () => {
+  const [posts, postViews] = await Promise.all([
+    getLatestPostsFrontmatterListInfo(),
+    getAllPostViewsMap(),
+  ])
+
+  return posts.map(({ slug, frontmatter }) => ({
+    slug,
+    frontmatter: {
+      ...frontmatter,
+      views: postViews.get(slug) ?? 0,
+    },
+  }))
+}
+
 /**
  * Get all tags appear in posts.
  * @returns All tags in posts.
  */
 export const getAllTags = async () => {
-  const posts = await getLatestPostsListInfo()
+  'use cache'
+
+  const posts = await getLatestPostsFrontmatterListInfo()
   const oTags: string[][] = []
   let uniqueTags = new Set<string>()
 
@@ -88,6 +107,8 @@ export const getAllTags = async () => {
  * @returns `code` and `frontmatter` parsed by `bundleMDX`.
  */
 export const getPostContent = async (mdxPath: string) => {
+  'use cache'
+
   const source = await fs.readFile(path.join(process.cwd(), mdxPath), 'utf8')
 
   const mdxSource = await compileMDX<PostFrontmatter>({
@@ -115,6 +136,8 @@ export const getPostContent = async (mdxPath: string) => {
  * @returns Posts path name.
  */
 async function getAllPostsPathName() {
+  'use cache'
+
   return await glob('posts/**/*.mdx')
 }
 

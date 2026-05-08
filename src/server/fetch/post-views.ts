@@ -1,4 +1,5 @@
 import { unstable_noStore as noStore } from 'next/cache'
+import { cache } from 'react'
 import {
   dbHasPostViewVisit,
   dbIncrementPostViews,
@@ -20,7 +21,7 @@ export async function getPostViews(slug: string) {
   }
 }
 
-export async function getAllPostViewsMap() {
+export const getAllPostViewsMap = cache(async () => {
   noStore()
   if (!process.env.POSTGRES_PRISMA_URL) return new Map<string, number>()
 
@@ -31,7 +32,7 @@ export async function getAllPostViewsMap() {
     console.error(e)
     return new Map<string, number>()
   }
-}
+})
 
 export async function hasPostViewVisit(slug: string, visitorId: string) {
   noStore()

@@ -1,6 +1,8 @@
 import { CONFIG } from '~/config'
 
-export default function Footer() {
+export default async function Footer() {
+  'use cache'
+
   return (
     <footer className="mx-auto max-w-7xl gap-1 px-2 md:px-10">
       <div className="flex w-full flex-col items-center rounded-t-2xl bg-primary-bg p-4 shadow-cxs">

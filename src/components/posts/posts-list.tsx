@@ -1,13 +1,13 @@
 'use client'
 import Link from 'next/link'
-import { useContext } from 'react'
+import { type ReactNode, useContext } from 'react'
 import { TagsContext } from '~/components/client-wrapper'
 import type { PostFrontmatter } from '~/components/posts'
 import { AIGeneratedBadge } from '~/components/posts/ai-generated-banner'
 import PostInfo from '~/components/posts/post-info'
 
 export interface PostListProps {
-  posts: { slug: string; frontmatter: PostFrontmatter }[]
+  posts: { slug: string; frontmatter: PostFrontmatter; viewCount?: ReactNode }[]
 }
 
 const PostsList: React.FC<PostListProps> = ({ posts }) => {
@@ -25,7 +25,7 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {posts.map(({ slug, frontmatter }) => (
+      {posts.map(({ slug, frontmatter, viewCount }) => (
         <article
           key={slug}
           className="group cursor-pointer rounded-2xl bg-primary-bg px-5 py-3 shadow-cxs md:px-8 md:py-5"
@@ -38,7 +38,7 @@ const PostsList: React.FC<PostListProps> = ({ posts }) => {
               {frontmatter.aiGenerated && <AIGeneratedBadge />}
             </h1>
             <div className="mt-4">
-              <PostInfo date={frontmatter.date} tags={frontmatter.tags} views={frontmatter.views} />
+              <PostInfo date={frontmatter.date} tags={frontmatter.tags} viewCount={viewCount} />
             </div>
             <p className="mt-5 text-sm leading-relaxed">{frontmatter.abstract}</p>
             <div className="mt-3 flex flex-row items-center gap-1">

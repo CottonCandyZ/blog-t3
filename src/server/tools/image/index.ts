@@ -1,12 +1,13 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import { cache } from 'react'
 import { getPlaiceholder } from '~/server/tools/image/plaiceholder'
 
 export type ImageProps = Awaited<ReturnType<typeof getImageMetaAndPlaceHolder>>
 
 export async function loadAsset(src: string): Promise<Buffer> {
+  'use cache'
+
   const decoded = decodeURIComponent(src)
 
   // 判断是否远程资源
@@ -26,6 +27,8 @@ export async function loadAsset(src: string): Promise<Buffer> {
 }
 
 export const getImageMetaAndPlaceHolder = async (src: string) => {
+  'use cache'
+
   const buffer = await loadAsset(src)
 
   const {

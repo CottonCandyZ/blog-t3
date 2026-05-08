@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
 import PostContent from '~/components/posts/post-content'
-import { getLatestPostsListInfo, getPostFrontmatter } from '~/server/fetch/posts'
+import { getLatestPostsFrontmatterListInfo, getPostFrontmatter } from '~/server/fetch/posts'
 import '~/styles/markdown.scss'
 
-export const dynamicParams = false
-
 export async function generateStaticParams() {
-  const postsInfo = await getLatestPostsListInfo()
+  const postsInfo = await getLatestPostsFrontmatterListInfo()
   return postsInfo.map((postInfo) => ({
     slug: postInfo.slug,
   }))
