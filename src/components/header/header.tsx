@@ -2,7 +2,8 @@
 import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from 'react'
+import { flushSync } from 'react-dom'
 import { animate } from 'motion'
 import { motion } from 'motion/react'
 import NavigationBar from '~/components/nav/navigation-bar'
@@ -15,13 +16,24 @@ import {
   themePresetHexes,
 } from '~/utils/theme-color'
 
-const themeNamePattern = /^theme-(\d)(?:-dark)?$/
-const themeNumbers = [1, 2, 3, 4]
+const themeNamePattern = /^theme-(?:light|dark)$/
+const themeClassNames = ['theme-light', 'theme-dark']
+const legacyThemeColorNumbers = themePresetHexes.map((_, index) => index + 1)
+const themePresetOptions = themePresetHexes.map((colorHex, index) => ({
+  colorHex,
+  label: index + 1,
+}))
 const legacyThemeColorStorageKey = 'cotton-theme-color'
 const themeColorHexStorageKey = 'cotton-theme-color-hex'
 const themeModeStorageKey = 'cotton-theme-mode'
 
 type ThemeModePreference = 'auto' | 'light' | 'dark'
+type ThemeModeClickEvent = MouseEvent<HTMLButtonElement>
+type DocumentWithViewTransition = Document & {
+  startViewTransition?: (callback: () => void | Promise<void>) => {
+    ready: Promise<void>
+  }
+}
 
 function getDocumentTheme() {
   if (typeof document === 'undefined') return undefined
@@ -41,7 +53,7 @@ function subscribeTheme(onStoreChange: () => void) {
 }
 
 function getThemeSnapshot() {
-  return getDocumentTheme() ?? 'theme-1'
+  return getDocumentTheme() ?? 'theme-light'
 }
 
 function prefersDarkMode() {
@@ -51,7 +63,7 @@ function prefersDarkMode() {
 function getStoredLegacyThemeColor() {
   const color = Number(localStorage.getItem(legacyThemeColorStorageKey))
 
-  return themeNumbers.includes(color) ? color : 1
+  return legacyThemeColorNumbers.includes(color) ? color : 1
 }
 
 function getStoredThemeColorHex() {
@@ -74,20 +86,11 @@ function resolveDarkMode(mode: ThemeModePreference) {
 function buildThemeName(mode: ThemeModePreference) {
   const dark = resolveDarkMode(mode)
 
-  return `theme-1${dark ? '-dark' : ''}`
+  return dark ? 'theme-dark' : 'theme-light'
 }
 
 function setDocumentTheme(themeName: string) {
-  document.documentElement.classList.remove(
-    'theme-1',
-    'theme-1-dark',
-    'theme-2',
-    'theme-2-dark',
-    'theme-3',
-    'theme-3-dark',
-    'theme-4',
-    'theme-4-dark',
-  )
+  document.documentElement.classList.remove(...themeClassNames)
   document.documentElement.classList.add(themeName)
 }
 
@@ -106,6 +109,80 @@ function applyThemeColor(hex: string, mode: ThemeModePreference) {
   applyThemeColorVariables(hex, dark)
 }
 
+function canUseAppearanceTransition() {
+  const documentWithViewTransition = document as DocumentWithViewTransition
+
+  return typeof documentWithViewTransition.startViewTransition === 'function'
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function startAppearanceTransition({
+  event,
+  nextDark,
+  updateTheme,
+}: {
+  event: ThemeModeClickEvent
+  nextDark: boolean
+  updateTheme: () => void
+}) {
+  const documentWithViewTransition = document as DocumentWithViewTransition
+
+  if (!canUseAppearanceTransition()) {
+    updateTheme()
+    return
+  }
+
+  const x = event.clientX
+  const y = event.clientY
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y),
+  )
+  const root = document.documentElement
+
+  root.classList.add('theme-view-transitioning')
+  const cleanupTimer = window.setTimeout(() => {
+    root.classList.remove('theme-view-transitioning')
+  }, 700)
+  const cleanupTransitionClass = () => {
+    window.clearTimeout(cleanupTimer)
+    root.classList.remove('theme-view-transitioning')
+  }
+
+  const transition = documentWithViewTransition.startViewTransition?.(() => {
+    updateTheme()
+  })
+
+  if (!transition) {
+    cleanupTransitionClass()
+    return
+  }
+
+  transition.ready
+    .then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ]
+      const animation = root.animate(
+        { clipPath: nextDark ? [...clipPath].reverse() : clipPath },
+        {
+          duration: 400,
+          easing: 'ease-out',
+          fill: 'forwards',
+          pseudoElement: nextDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+        } as KeyframeAnimationOptions & { pseudoElement: string },
+      )
+
+      void animation.finished.finally(() => {
+        cleanupTransitionClass()
+      })
+    })
+    .catch(() => {
+      cleanupTransitionClass()
+    })
+}
+
 function Header() {
   const [mobileThemeOpen, setMobileThemeOpen] = useState(false)
   const [themeModePreference, setThemeModePreference] =
@@ -113,8 +190,8 @@ function Header() {
   const [themeColorHex, setThemeColorHex] = useState<string>(defaultThemeColorHex)
   const themeColorHexRef = useRef<string>(defaultThemeColorHex)
   const mobileThemeRef = useRef<HTMLDivElement>(null)
-  const currentTheme = useSyncExternalStore(subscribeTheme, getThemeSnapshot, () => 'theme-1')
-  const isDark = currentTheme.endsWith('-dark')
+  const currentTheme = useSyncExternalStore(subscribeTheme, getThemeSnapshot, () => 'theme-light')
+  const isDark = currentTheme === 'theme-dark'
   const pathname = usePathname()
   const applyTheme = (themeName: string) => {
     setDocumentTheme(themeName)
@@ -175,11 +252,31 @@ function Header() {
     const themeName = buildThemeName(themeModePreference)
     if (themeName !== currentTheme) applyTheme(themeName)
   }
-  const changeThemeMode = (mode: ThemeModePreference) => {
+  const changeThemeMode = (mode: ThemeModePreference, event?: ThemeModeClickEvent) => {
+    const colorHex = themeColorHexRef.current
+    const nextThemeName = buildThemeName(mode)
+    const nextDark = nextThemeName === 'theme-dark'
+    const currentDark = currentTheme === 'theme-dark'
+    const updateTheme = () => {
+      flushSync(() => {
+        setThemeModePreference(mode)
+      })
+      applyThemeColor(colorHex, mode)
+      applyTheme(nextThemeName)
+    }
+
     storeThemeMode(mode)
-    setThemeModePreference(mode)
-    applyThemeColor(themeColorHex, mode)
-    applyTheme(buildThemeName(mode))
+
+    if (!event || currentDark === nextDark) {
+      updateTheme()
+      return
+    }
+
+    startAppearanceTransition({
+      event,
+      nextDark,
+      updateTheme,
+    })
   }
   return (
     <header className="flex h-10 flex-row items-center justify-between md:h-9">
@@ -219,8 +316,8 @@ function Header() {
             onChangeTheme={(colorHex) => {
               changeColorHex(colorHex)
             }}
-            onChangeMode={(mode) => {
-              changeThemeMode(mode)
+            onChangeMode={(mode, event) => {
+              changeThemeMode(mode, event)
             }}
             onClose={() => setMobileThemeOpen(false)}
           />
@@ -255,7 +352,7 @@ function MobileThemePicker({
   onChangeTheme: (colorHex: string) => void
   onPreviewTheme: (colorHex: string) => void
   onCommitTheme: () => void
-  onChangeMode: (mode: ThemeModePreference) => void
+  onChangeMode: (mode: ThemeModePreference, event: ThemeModeClickEvent) => void
   onClose: () => void
 }) {
   return (
@@ -298,13 +395,11 @@ function MobileThemePicker({
           <ModeButton mode="dark" active={modePreference === 'dark'} onClick={onChangeMode} large />
           <ModeButton mode="auto" active={modePreference === 'auto'} onClick={onChangeMode} large />
           <span className="h-3.5 w-px rounded-full bg-primary-light/70" />
-          {themeNumbers.map((number) => {
-            const colorHex = themePresetHexes[number - 1] ?? defaultThemeColorHex
-
+          {themePresetOptions.map(({ colorHex, label }) => {
             return (
               <ThemeDot
                 key={colorHex}
-                themeNumber={number}
+                label={label}
                 colorHex={colorHex}
                 isDark={isDark}
                 active={themeColorHex === colorHex}
@@ -342,12 +437,14 @@ function DesktopThemePicker({
   modePreference: ThemeModePreference
   onPreviewColorHex: (colorHex: string) => void
   onCommitColorHex: () => void
-  onChangeMode: (mode: ThemeModePreference) => void
+  onChangeMode: (mode: ThemeModePreference, event: ThemeModeClickEvent) => void
 }) {
   const [open, setOpen] = useState(false)
   const draggingRef = useRef(false)
   const pickerRef = useRef<HTMLDivElement>(null)
   const commitTimerRef = useRef<number | undefined>(undefined)
+  const keepOpenUntilRef = useRef(0)
+  const keepOpenTimerRef = useRef<number | undefined>(undefined)
   const commitAfterClose = () => {
     window.clearTimeout(commitTimerRef.current)
     commitTimerRef.current = window.setTimeout(() => {
@@ -363,8 +460,27 @@ function DesktopThemePicker({
   }
   const closePicker = () => {
     if (draggingRef.current) return
+    if (performance.now() < keepOpenUntilRef.current) return
+
     setOpen(false)
     commitAfterClose()
+  }
+  const holdPickerOpen = () => {
+    window.clearTimeout(keepOpenTimerRef.current)
+    keepOpenUntilRef.current = performance.now() + 520
+    setOpen(true)
+    keepOpenTimerRef.current = window.setTimeout(() => {
+      keepOpenUntilRef.current = 0
+      const picker = pickerRef.current
+      const focusedInside = picker?.contains(document.activeElement)
+      const hovered = picker?.matches(':hover')
+
+      if (!focusedInside && !hovered) closePicker()
+    }, 560)
+  }
+  const changeModeFromDesktop = (mode: ThemeModePreference, event: ThemeModeClickEvent) => {
+    holdPickerOpen()
+    onChangeMode(mode, event)
   }
   const finishDragging = (clientX: number, clientY: number) => {
     setDraggingState(false)
@@ -379,7 +495,10 @@ function DesktopThemePicker({
     if (!pointerInside) closePicker()
   }
   useEffect(() => {
-    return () => window.clearTimeout(commitTimerRef.current)
+    return () => {
+      window.clearTimeout(commitTimerRef.current)
+      window.clearTimeout(keepOpenTimerRef.current)
+    }
   }, [])
 
   return (
@@ -409,9 +528,9 @@ function DesktopThemePicker({
           transition={{ duration: open ? 0.14 : 0.08 }}
           style={{ pointerEvents: open ? 'auto' : 'none' }}
         >
-          <ModeButton mode="light" active={modePreference === 'light'} onClick={onChangeMode} medium />
-          <ModeButton mode="dark" active={modePreference === 'dark'} onClick={onChangeMode} medium />
-          <ModeButton mode="auto" active={modePreference === 'auto'} onClick={onChangeMode} medium />
+          <ModeButton mode="light" active={modePreference === 'light'} onClick={changeModeFromDesktop} medium />
+          <ModeButton mode="dark" active={modePreference === 'dark'} onClick={changeModeFromDesktop} medium />
+          <ModeButton mode="auto" active={modePreference === 'auto'} onClick={changeModeFromDesktop} medium />
           <span className="h-4 w-px shrink-0 rounded-full bg-primary-light/70" />
         </motion.div>
         <ColorHueSlider
@@ -638,7 +757,6 @@ function ColorHueSlider({
 }
 
 function ThemeDotVisual({
-  themeNumber,
   colorHex,
   isDark,
   active,
@@ -647,8 +765,7 @@ function ThemeDotVisual({
   medium = false,
   large = false,
 }: {
-  themeNumber: number
-  colorHex?: string
+  colorHex: string
   isDark: boolean
   active: boolean
   layoutId?: string
@@ -675,7 +792,6 @@ function ThemeDotVisual({
       <span
         style={colorHex ? { backgroundColor: colorHex } : undefined}
         className={clsx(
-          !colorHex && `theme-${themeNumber}${isDark ? '-dark' : ''}`,
           'block rounded-full transition-[height,width,box-shadow] duration-75 ease-out',
           colorClassName,
           innerSizeClassName,
@@ -711,7 +827,7 @@ function ModeButton({
 }: {
   mode: ThemeModePreference
   active: boolean
-  onClick: (mode: ThemeModePreference) => void
+  onClick: (mode: ThemeModePreference, event: ThemeModeClickEvent) => void
   medium?: boolean
   large?: boolean
 }) {
@@ -738,8 +854,8 @@ function ModeButton({
           : 'bg-primary-light/80 text-primary ring-1 ring-primary-medium/30',
       )}
       onMouseDown={(event) => event.preventDefault()}
-      onClick={() => {
-        onClick(mode)
+      onClick={(event) => {
+        onClick(mode, event)
       }}
     >
       <span className={clsx(iconClassName, large ? 'size-4' : medium ? 'size-4' : 'size-3', 'shrink-0')} />
@@ -748,7 +864,7 @@ function ModeButton({
 }
 
 function ThemeDot({
-  themeNumber,
+  label,
   colorHex,
   isDark,
   active,
@@ -757,8 +873,8 @@ function ThemeDot({
   large = false,
   layoutId,
 }: {
-  themeNumber: number
-  colorHex?: string
+  label: number
+  colorHex: string
   isDark: boolean
   active: boolean
   onClick: () => void
@@ -769,7 +885,7 @@ function ThemeDot({
   return (
     <button
       type="button"
-      aria-label={`切换到颜色 ${colorHex ?? themeNumber}`}
+      aria-label={`切换到颜色 ${label}`}
       className={clsx(
         'flex items-center justify-center rounded-full transition active:scale-95',
         large ? 'size-6' : medium ? 'size-5' : 'size-3.5',
@@ -780,7 +896,6 @@ function ThemeDot({
       }}
     >
       <ThemeDotVisual
-        themeNumber={themeNumber}
         colorHex={colorHex}
         isDark={isDark}
         active={active}

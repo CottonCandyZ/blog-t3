@@ -103,8 +103,8 @@ const themeBootstrapScript = `
     const mode = storedMode === 'light' || storedMode === 'dark' || storedMode === 'auto' ? storedMode : 'auto';
     const dark = mode === 'dark' || (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     const root = document.documentElement;
-    root.classList.remove('theme-1', 'theme-1-dark', 'theme-2', 'theme-2-dark', 'theme-3', 'theme-3-dark', 'theme-4', 'theme-4-dark');
-    root.classList.add(dark ? 'theme-1-dark' : 'theme-1');
+    root.classList.remove('theme-light', 'theme-dark');
+    root.classList.add(dark ? 'theme-dark' : 'theme-light');
     Object.entries(variables(colorHex, dark)).forEach(([name, value]) => root.style.setProperty(name, value));
   } catch {}
 })();

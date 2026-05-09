@@ -215,7 +215,7 @@
   }
 }
 
-html[class$='-dark'] .markdown-body {
+html.theme-dark .markdown-body {
   .mdx-fenced-codeblock {
     .shiki,
     .shiki span {
