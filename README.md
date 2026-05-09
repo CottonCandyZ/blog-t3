@@ -16,7 +16,7 @@ A DataFlow Pic drawn with FigJam:
 - [x] Friends link page
 - [x] About me page
 - [x] Comments 🎉
-- [ ] Dark Mode
+- [x] Dark Mode
 - [ ] SiteMap
 - [ ] i18n
 - [ ] Support KaTeX
