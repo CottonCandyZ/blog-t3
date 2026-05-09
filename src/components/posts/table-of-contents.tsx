@@ -10,12 +10,22 @@ interface Heading {
 
 type Headings = Heading[]
 
-const headingSelector = 'article.markdown-body :is(h2, h3, h4, h5, h6)[id]'
+const headingSelector = ':is(h2, h3, h4, h5, h6)[id]'
 
-function collectHeadings(): Headings {
+function findTocRoot(rootKey: string) {
+  return Array.from(document.querySelectorAll('article.markdown-body[data-toc-root]')).find(
+    (element): element is HTMLElement =>
+      element instanceof HTMLElement && element.dataset.tocRoot === rootKey,
+  )
+}
+
+function collectHeadings(rootKey: string): Headings {
+  const root = findTocRoot(rootKey)
+  if (!root) return []
+
   const usedIds = new Set<string>()
 
-  return Array.from(document.querySelectorAll(headingSelector))
+  return Array.from(root.querySelectorAll(headingSelector))
     .filter((element): element is HTMLElement => element instanceof HTMLElement)
     .reduce<Headings>((items, element) => {
       const id = element.id.trim()
@@ -36,15 +46,15 @@ function collectHeadings(): Headings {
     }, [])
 }
 
-function useHeadings() {
+function useHeadings(rootKey: string) {
   const [headings, setHeadings] = useState<Headings>([])
 
   useEffect(() => {
-    const updateHeadings = () => setHeadings(collectHeadings())
+    const updateHeadings = () => setHeadings(collectHeadings(rootKey))
 
     updateHeadings()
 
-    const markdownBody = document.querySelector('article.markdown-body')
+    const markdownBody = findTocRoot(rootKey)
     if (!markdownBody) return undefined
 
     const observer = new MutationObserver(updateHeadings)
@@ -56,25 +66,37 @@ function useHeadings() {
     })
 
     return () => observer.disconnect()
-  }, [])
+  }, [rootKey])
   return headings
 }
 
-function useScrollSpy(headings: Headings) {
+function useScrollSpy(headings: Headings, rootKey: string) {
   const [activeId, setActiveId] = useState<string>()
 
   useEffect(() => {
-    const elements = headings
-      .map(({ id }) => document.getElementById(id))
-      .filter((element): element is HTMLElement => element instanceof HTMLElement)
+    const root = findTocRoot(rootKey)
+    const elements = root
+      ? headings
+          .map(({ id }) =>
+            Array.from(root.querySelectorAll('[id]')).find(
+              (element): element is HTMLElement =>
+                element instanceof HTMLElement && element.id === id,
+            ),
+          )
+          .filter((element): element is HTMLElement => element instanceof HTMLElement)
+      : []
+
+    let frame: number | undefined
 
     if (elements.length === 0) {
-      setActiveId(undefined)
-      return undefined
+      const emptyFrame = window.requestAnimationFrame(() => {
+        setActiveId(undefined)
+      })
+
+      return () => window.cancelAnimationFrame(emptyFrame)
     }
 
     const offset = 112
-    let frame: number | undefined
 
     const updateActiveHeading = () => {
       let currentId = ''
@@ -116,14 +138,14 @@ function useScrollSpy(headings: Headings) {
       window.removeEventListener('scroll', scheduleUpdate)
       window.removeEventListener('resize', scheduleUpdate)
     }
-  }, [headings])
+  }, [headings, rootKey])
 
   return activeId
 }
 
-const TableOfContents: React.FC = () => {
-  const headings = useHeadings()
-  const activeId = useScrollSpy(headings)
+const TableOfContents: React.FC<{ rootKey: string }> = ({ rootKey }) => {
+  const headings = useHeadings(rootKey)
+  const activeId = useScrollSpy(headings, rootKey)
   return (
     <ul className="flex list-none flex-col gap-2">
       {headings.map((heading) => {
