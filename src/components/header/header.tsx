@@ -29,10 +29,13 @@ const themeModeStorageKey = 'cotton-theme-mode'
 
 type ThemeModePreference = 'auto' | 'light' | 'dark'
 type ThemeModeClickEvent = MouseEvent<HTMLButtonElement>
+type AppearanceTransition = {
+  finished: Promise<void>
+  ready: Promise<void>
+  skipTransition: () => void
+}
 type DocumentWithViewTransition = Document & {
-  startViewTransition?: (callback: () => void | Promise<void>) => {
-    ready: Promise<void>
-  }
+  startViewTransition?: (callback: () => void | Promise<void>) => AppearanceTransition
 }
 
 function getDocumentTheme() {
@@ -112,24 +115,28 @@ function applyThemeColor(hex: string, mode: ThemeModePreference) {
 function canUseAppearanceTransition() {
   const documentWithViewTransition = document as DocumentWithViewTransition
 
-  return typeof documentWithViewTransition.startViewTransition === 'function'
-    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return (
+    typeof documentWithViewTransition.startViewTransition === 'function' &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
 }
 
 function startAppearanceTransition({
   event,
   nextDark,
+  isCurrent,
   updateTheme,
 }: {
   event: ThemeModeClickEvent
   nextDark: boolean
+  isCurrent: () => boolean
   updateTheme: () => void
-}) {
+}): AppearanceTransition | undefined {
   const documentWithViewTransition = document as DocumentWithViewTransition
 
   if (!canUseAppearanceTransition()) {
     updateTheme()
-    return
+    return undefined
   }
 
   const x = event.clientX
@@ -142,37 +149,40 @@ function startAppearanceTransition({
 
   root.classList.add('theme-view-transitioning')
   const cleanupTimer = window.setTimeout(() => {
-    root.classList.remove('theme-view-transitioning')
+    if (isCurrent()) root.classList.remove('theme-view-transitioning')
   }, 700)
   const cleanupTransitionClass = () => {
     window.clearTimeout(cleanupTimer)
-    root.classList.remove('theme-view-transitioning')
+    if (isCurrent()) root.classList.remove('theme-view-transitioning')
   }
 
-  const transition = documentWithViewTransition.startViewTransition?.(() => {
+  let transition: AppearanceTransition | undefined
+  try {
+    transition = documentWithViewTransition.startViewTransition?.(() => {
+      if (isCurrent()) updateTheme()
+    })
+  } catch {
+    cleanupTransitionClass()
     updateTheme()
-  })
+    return undefined
+  }
 
   if (!transition) {
     cleanupTransitionClass()
-    return
+    return undefined
   }
 
   transition.ready
     .then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ]
-      const animation = root.animate(
-        { clipPath: nextDark ? [...clipPath].reverse() : clipPath },
-        {
-          duration: 400,
-          easing: 'ease-out',
-          fill: 'forwards',
-          pseudoElement: nextDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
-        } as KeyframeAnimationOptions & { pseudoElement: string },
-      )
+      if (!isCurrent()) return
+
+      const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`]
+      const animation = root.animate({ clipPath: nextDark ? [...clipPath].reverse() : clipPath }, {
+        duration: 400,
+        easing: 'ease-out',
+        fill: 'forwards',
+        pseudoElement: nextDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+      } as KeyframeAnimationOptions & { pseudoElement: string })
 
       void animation.finished.finally(() => {
         cleanupTransitionClass()
@@ -181,18 +191,23 @@ function startAppearanceTransition({
     .catch(() => {
       cleanupTransitionClass()
     })
+
+  return transition
 }
 
 function Header() {
-  const [mobileThemeOpen, setMobileThemeOpen] = useState(false)
+  const pathname = usePathname()
+  const [mobileThemeState, setMobileThemeState] = useState({ pathname, open: false })
   const [themeModePreference, setThemeModePreference] =
     useState<ThemeModePreference>('auto')
   const [themeColorHex, setThemeColorHex] = useState<string>(defaultThemeColorHex)
   const themeColorHexRef = useRef<string>(defaultThemeColorHex)
+  const themeChangeIdRef = useRef(0)
+  const activeAppearanceTransitionRef = useRef<AppearanceTransition>(null)
   const mobileThemeRef = useRef<HTMLDivElement>(null)
   const currentTheme = useSyncExternalStore(subscribeTheme, getThemeSnapshot, () => 'theme-light')
   const isDark = currentTheme === 'theme-dark'
-  const pathname = usePathname()
+  const mobileThemeOpen = mobileThemeState.pathname === pathname && mobileThemeState.open
   const applyTheme = (themeName: string) => {
     setDocumentTheme(themeName)
   }
@@ -221,7 +236,7 @@ function Header() {
 
   useEffect(() => {
     const closeThemePicker = () => {
-      setMobileThemeOpen(false)
+      setMobileThemeState((state) => (state.open ? { ...state, open: false } : state))
     }
 
     window.addEventListener('scroll', closeThemePicker, { passive: true })
@@ -230,9 +245,6 @@ function Header() {
       window.removeEventListener('scroll', closeThemePicker)
     }
   }, [])
-  useEffect(() => {
-    setMobileThemeOpen(false)
-  }, [pathname])
   const changeColorHex = (colorHex: string) => {
     storeThemeColor(colorHex)
     themeColorHexRef.current = colorHex
@@ -253,11 +265,15 @@ function Header() {
     if (themeName !== currentTheme) applyTheme(themeName)
   }
   const changeThemeMode = (mode: ThemeModePreference, event?: ThemeModeClickEvent) => {
+    const changeId = ++themeChangeIdRef.current
     const colorHex = themeColorHexRef.current
     const nextThemeName = buildThemeName(mode)
     const nextDark = nextThemeName === 'theme-dark'
     const currentDark = currentTheme === 'theme-dark'
+    const isCurrent = () => themeChangeIdRef.current === changeId
     const updateTheme = () => {
+      if (!isCurrent()) return
+
       flushSync(() => {
         setThemeModePreference(mode)
       })
@@ -266,17 +282,34 @@ function Header() {
     }
 
     storeThemeMode(mode)
+    activeAppearanceTransitionRef.current?.skipTransition()
+    activeAppearanceTransitionRef.current = null
 
     if (!event || currentDark === nextDark) {
+      document.documentElement.classList.remove('theme-view-transitioning')
       updateTheme()
       return
     }
 
-    startAppearanceTransition({
+    const appearanceTransition = startAppearanceTransition({
       event,
       nextDark,
+      isCurrent,
       updateTheme,
     })
+    activeAppearanceTransitionRef.current = appearanceTransition ?? null
+    appearanceTransition?.finished.then(
+      () => {
+        if (activeAppearanceTransitionRef.current === appearanceTransition) {
+          activeAppearanceTransitionRef.current = null
+        }
+      },
+      () => {
+        if (activeAppearanceTransitionRef.current === appearanceTransition) {
+          activeAppearanceTransitionRef.current = null
+        }
+      },
+    )
   }
   return (
     <header className="flex h-10 flex-row items-center justify-between md:h-9">
@@ -300,7 +333,12 @@ function Header() {
             type="button"
             aria-label="打开主题切换"
             className="flex size-10 items-center justify-center rounded-xl active:scale-95 active:bg-primary-light/30"
-            onClick={() => setMobileThemeOpen((open) => !open)}
+            onClick={() => {
+              setMobileThemeState((state) => ({
+                pathname,
+                open: state.pathname === pathname ? !state.open : true,
+              }))
+            }}
           >
             <span
               className="size-4 rounded-full bg-primary/70 shadow-sm"
@@ -319,7 +357,9 @@ function Header() {
             onChangeMode={(mode, event) => {
               changeThemeMode(mode, event)
             }}
-            onClose={() => setMobileThemeOpen(false)}
+            onClose={() => {
+              setMobileThemeState((state) => (state.open ? { ...state, open: false } : state))
+            }}
           />
         </div>
         <DesktopThemePicker
