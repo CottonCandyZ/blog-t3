@@ -1,57 +1,123 @@
 'use client'
-import clsx from 'clsx'
-import { useActionState, useEffect, useRef } from 'react'
+import { useActionState, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { createCommentAction } from '~/server/action/comments-list'
+import { createCommentAction, type CommentFormState } from '~/server/action/comments-list'
+
+const initialState: CommentFormState = {
+  status: 'idle',
+  message: '',
+  content: '',
+  revision: 0,
+}
 
 function Submit() {
-  const { pending } = useFormStatus()
+  const { pending, data } = useFormStatus()
+  const pendingContent = data?.get('content')
+
   return (
     <button
       type="submit"
       disabled={pending}
-      className={clsx(
-        `block w-full rounded-md px-3.5 py-2.5 text-center text-base font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary-light hover:bg-primary-extralight hover:shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-small`,
-        {
-          'bg-primary-extralight shadow-inner': pending,
-        },
-      )}
+      aria-label={pending ? '正在发布评论' : '发布评论'}
+      className="inline-flex min-w-28 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-bg shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
     >
-      {pending ? '发送中...' : '发送'}
+      {pending ? (
+        <>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary-bg/40 border-t-primary-bg" />
+          发布中
+        </>
+      ) : (
+        <>
+          <span className="icon-[mingcute--send-plane-fill] text-base" aria-hidden="true" />
+          发布评论
+        </>
+      )}
+      {pending && typeof pendingContent === 'string' ? (
+        <span className="sr-only">，共 {pendingContent.length} 个字符</span>
+      ) : null}
     </button>
   )
 }
-const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
-  const [formState, formAction] = useActionState(createCommentAction.bind(null, slug), {
-    message: '',
-    success: false,
-    data: undefined,
-  })
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => {
-    if (formState.success && textAreaRef.current) textAreaRef.current.value = ''
-  }, [formState.success])
+const NewCommentForm: React.FC<{ slug: string }> = ({ slug }) => {
+  const [formState, formAction] = useActionState(createCommentAction.bind(null, slug), initialState)
+  return (
+    <form
+      className="rounded-2xl border border-primary-light/60 bg-primary-extralight/45 p-3 shadow-sm sm:p-4"
+      action={formAction}
+    >
+      <label
+        htmlFor="content"
+        className="flex items-center gap-2 text-sm font-semibold text-primary-dark"
+      >
+        <span className="icon-[mingcute--edit-3-line] text-lg text-primary" aria-hidden="true" />
+        写下你的想法
+      </label>
+      <CommentEditor
+        key={formState.revision}
+        initialContent={formState.content}
+        invalid={Boolean(formState.fieldError)}
+      />
+      <div className="mt-3 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div
+          id="comment-feedback"
+          className="min-h-5 text-sm font-medium"
+          role="status"
+          aria-live="polite"
+        >
+          {formState.message ? (
+            <p
+              className={
+                formState.status === 'success'
+                  ? 'text-primary-dark'
+                  : 'text-red-600 dark:text-red-300'
+              }
+            >
+              <span
+                className={
+                  formState.status === 'success'
+                    ? 'icon-[mingcute--check-circle-fill] mr-1.5 align-[-0.15em] text-primary'
+                    : 'icon-[mingcute--alert-fill] mr-1.5 align-[-0.15em]'
+                }
+                aria-hidden="true"
+              />
+              {formState.fieldError ?? formState.message}
+            </p>
+          ) : (
+            <p className="text-primary-light">你的评论会公开显示在这篇内容下方</p>
+          )}
+        </div>
+        <Submit />
+      </div>
+    </form>
+  )
+}
+
+function CommentEditor({ initialContent, invalid }: { initialContent: string; invalid: boolean }) {
+  const [length, setLength] = useState(initialContent.length)
 
   return (
-    <form className="flex flex-row flex-wrap gap-2" action={formAction}>
-      <div className="w-full">
-        <label htmlFor="content" className="block w-full text-base font-semibold text-primary">
-          发送一个评论吧！
-        </label>
-        <textarea
-          ref={textAreaRef}
-          id="content"
-          name="content"
-          rows={4}
-          placeholder="请保持友善"
-          required
-          className={`mt-2 block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset ring-primary-light placeholder:text-primary-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-small`}
-        />
-      </div>
-      <Submit />
-      <p className="p-2 font-medium text-primary">{formState.message}</p>
-    </form>
+    <div className="relative mt-3">
+      <textarea
+        id="content"
+        name="content"
+        rows={5}
+        maxLength={1000}
+        defaultValue={initialContent}
+        onInput={(event) => setLength(event.currentTarget.value.length)}
+        placeholder="友善交流，认真表达。支持换行，最多 1000 字。"
+        required
+        aria-describedby="comment-help comment-feedback"
+        aria-invalid={invalid}
+        className="block min-h-32 w-full resize-y rounded-xl border-0 bg-primary-bg px-4 py-3 pb-9 text-base leading-7 text-primary-dark shadow-sm ring-1 ring-inset ring-primary-light/80 transition placeholder:text-primary-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+      />
+      <span
+        id="comment-help"
+        className="pointer-events-none absolute bottom-2.5 right-3 text-xs tabular-nums text-primary-light"
+      >
+        {length} / 1000
+      </span>
+    </div>
   )
 }
 

@@ -4,49 +4,72 @@ import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { dbReadLoggedInUserInfoBySession } from '~/server/db/user'
 import { dbCreateNewComment } from '~/server/db/comments-list'
-import { resMessageError, resMessageSuccess } from '~/server/message'
+
+export interface CommentFormState {
+  status: 'idle' | 'error' | 'success'
+  message: string
+  fieldError?: string
+  content: string
+  revision: number
+}
+
+const commentSchema = z.object({
+  content: z
+    .string({ error: '评论内容格式不正确' })
+    .trim()
+    .min(1, '还没有写评论呢')
+    .max(1000, '评论最多 1000 个字符'),
+})
+
+const errorState = (
+  previousState: CommentFormState,
+  message: string,
+  content: string,
+  fieldError?: string,
+): CommentFormState => ({
+  status: 'error',
+  message,
+  fieldError,
+  content,
+  revision: previousState.revision + 1,
+})
 
 export async function createCommentAction(
   slug: string,
-  prevState: { message: string },
+  previousState: CommentFormState,
   formData: FormData,
-) {
-  // DATA CHECK
-  const schema = z.object({
-    content: z.string(),
-  })
-  let data
-  try {
-    data = schema.parse({
-      content: formData.get('content'),
-    })
-  } catch (e) {
-    console.error(e)
-    return resMessageError('ZOD_FORM_DATA_TYPE_ERROR')
+): Promise<CommentFormState> {
+  const submittedContent = formData.get('content')
+  const content = typeof submittedContent === 'string' ? submittedContent : ''
+  const parsed = commentSchema.safeParse({ content: submittedContent })
+  if (!parsed.success) {
+    return errorState(previousState, '评论还没有发送', content, parsed.error.issues[0]?.message)
   }
-  if (data.content === '') return resMessageError('NEW_COMMENT_COMMENT_EMPTY')
 
-  // SESSION CHECK
   const sessionId = (await cookies()).get('session-id')?.value
-  if (!sessionId) return resMessageError('SESSION_NOT_FOUND')
+  if (!sessionId) return errorState(previousState, '登录状态已失效，请重新验证', content)
 
-  // USER CHECK
   let userInfo
   try {
     userInfo = await dbReadLoggedInUserInfoBySession(sessionId)
-  } catch (e) {
-    console.error(e)
-    return resMessageError('DB_ERROR')
+  } catch (error) {
+    console.error('Failed to read the commenting user', error)
+    return errorState(previousState, '暂时无法连接评论服务，请稍后重试', content)
   }
-  if (!userInfo) return resMessageError('SESSION_EXPIRE')
+  if (!userInfo) return errorState(previousState, '登录状态已过期，请重新验证', content)
 
-  // CREATE
   try {
-    await dbCreateNewComment(data.content, slug, userInfo.id)
-    revalidatePath('/posts/[slug]', 'page')
-    revalidatePath('/about')
-  } catch (e) {
-    return resMessageError('DB_ERROR')
+    await dbCreateNewComment(parsed.data.content, slug, userInfo.id)
+    revalidatePath(slug === 'about' ? '/about' : `/posts/${encodeURIComponent(slug)}`)
+  } catch (error) {
+    console.error('Failed to create comment', error)
+    return errorState(previousState, '评论发送失败，请稍后再试', content)
   }
-  return resMessageSuccess('COMMENT_SUCCEED')
+
+  return {
+    status: 'success',
+    message: '评论已发布，感谢你的分享',
+    content: '',
+    revision: previousState.revision + 1,
+  }
 }

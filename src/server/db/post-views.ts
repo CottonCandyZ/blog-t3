@@ -1,23 +1,18 @@
-import prisma from '~/server/db'
+import { getPrisma } from '~/server/db'
 
 function isUniqueConstraintError(error: unknown) {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    error.code === 'P2002'
-  )
+  return typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002'
 }
 
 export async function dbReadPostViews(slug: string) {
-  return await prisma.postView.findUnique({
+  return await getPrisma().postView.findUnique({
     where: { slug },
     select: { views: true },
   })
 }
 
 export async function dbReadAllPostViews() {
-  return await prisma.postView.findMany({
+  return await getPrisma().postView.findMany({
     select: {
       slug: true,
       views: true,
@@ -26,7 +21,7 @@ export async function dbReadAllPostViews() {
 }
 
 export async function dbHasPostViewVisit(slug: string, visitorId: string) {
-  const visit = await prisma.postViewVisit.findUnique({
+  const visit = await getPrisma().postViewVisit.findUnique({
     where: {
       slug_visitorId: {
         slug,
@@ -42,7 +37,7 @@ export async function dbHasPostViewVisit(slug: string, visitorId: string) {
 }
 
 export async function dbIncrementPostViews(slug: string) {
-  return await prisma.postView.upsert({
+  return await getPrisma().postView.upsert({
     where: { slug },
     create: {
       slug,
@@ -61,7 +56,7 @@ export async function dbIncrementPostViews(slug: string) {
 
 export async function dbIncrementPostViewsForVisitor(slug: string, visitorId: string) {
   try {
-    return await prisma.$transaction(async (tx) => {
+    return await getPrisma().$transaction(async (tx) => {
       await tx.postViewVisit.create({
         data: {
           slug,

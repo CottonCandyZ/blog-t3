@@ -1,11 +1,11 @@
 import { cache } from 'react'
 import type { AuthenticatorInfo } from '~/server/action/webauthn'
-import prisma from '~/server/db'
+import { getPrisma } from '~/server/db'
 
 // READ
 export const dbReadLoggedInUserInfoBySession = cache(async (sessionId: string) => {
-  return await prisma.session
-    .findUnique({
+  return await getPrisma()
+    .session.findUnique({
       where: {
         id: sessionId,
       },
@@ -14,7 +14,7 @@ export const dbReadLoggedInUserInfoBySession = cache(async (sessionId: string) =
 })
 
 export async function dbReadAuthenticatorById(credentialID: string) {
-  return await prisma.device.findUnique({
+  return await getPrisma().device.findUnique({
     where: {
       credentialID,
       removed: false,
@@ -23,7 +23,7 @@ export async function dbReadAuthenticatorById(credentialID: string) {
 }
 
 export const dbReadAuthenticatorsByUserId = cache(async (userId: string) => {
-  return await prisma.device.findMany({
+  return await getPrisma().device.findMany({
     select: {
       createAt: true,
       credentialID: true,
@@ -37,7 +37,7 @@ export const dbReadAuthenticatorsByUserId = cache(async (userId: string) => {
 })
 
 export async function dbReadAuthSessionData(sessionId: string) {
-  return await prisma.authSession.findUnique({
+  return await getPrisma().authSession.findUnique({
     where: {
       id: sessionId,
     },
@@ -50,7 +50,7 @@ export async function dbCreateAuthSession(
   userId?: string,
   userName?: string,
 ) {
-  return await prisma.authSession.create({
+  return await getPrisma().authSession.create({
     data: {
       userId,
       userName,
@@ -64,7 +64,7 @@ export async function dbCreateUser(
   userName: string,
   newAuthenticator: AuthenticatorInfo,
 ) {
-  return await prisma.user.create({
+  return await getPrisma().user.create({
     data: {
       id: userId,
       name: userName,
@@ -78,7 +78,7 @@ export async function dbCreateUser(
 }
 
 export async function dbCreateSession(userId: string) {
-  return await prisma.session.create({
+  return await getPrisma().session.create({
     data: {
       userId,
     },
@@ -89,7 +89,7 @@ export async function dbCreateAuthenticatorForUser(
   userId: string,
   newAuthenticator: AuthenticatorInfo,
 ) {
-  await prisma.device.create({
+  await getPrisma().device.create({
     data: {
       ...newAuthenticator,
       userId,
@@ -99,7 +99,7 @@ export async function dbCreateAuthenticatorForUser(
 
 // UPDATE
 export async function dbUpdateAuthenticatorCounter(credentialID: string, counter: number) {
-  return await prisma.device.update({
+  return await getPrisma().device.update({
     where: {
       credentialID,
     },
@@ -111,7 +111,7 @@ export async function dbUpdateAuthenticatorCounter(credentialID: string, counter
 
 // Remove
 export async function dbRemoveAuthenticatorCounter(userId: string, credentialID: string) {
-  return await prisma.device.update({
+  return await getPrisma().device.update({
     where: {
       userId,
       credentialID,

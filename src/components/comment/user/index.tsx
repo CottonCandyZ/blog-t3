@@ -10,7 +10,7 @@ const User: React.FC<{ slug: string }> = async ({ slug }) => {
 
   return (
     <>
-      <div>
+      <div className="rounded-2xl border border-primary-extralight bg-primary-bg p-3 sm:p-4">
         {user ? (
           <UserInfo
             user={user}
@@ -21,7 +21,11 @@ const User: React.FC<{ slug: string }> = async ({ slug }) => {
           <AuthRegForm />
         )}
       </div>
-      <div className="mt-5">{user ? <NewCommentForm slug={slug} /> : null}</div>
+      {user ? (
+        <div className="mt-3">
+          <NewCommentForm slug={slug} />
+        </div>
+      ) : null}
     </>
   )
 }

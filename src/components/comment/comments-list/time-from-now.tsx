@@ -1,32 +1,42 @@
 'use client'
 
-import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+const relativeTime = new Intl.RelativeTimeFormat('zh-CN', { numeric: 'auto' })
+const absoluteTime = new Intl.DateTimeFormat('zh-CN', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+})
+
+function formatTimeFromNow(time: Date) {
+  const diff = time.getTime() - Date.now()
+  const seconds = Math.round(diff / 1000)
+  if (Math.abs(seconds) < 60) return relativeTime.format(seconds, 'second')
+
+  const minutes = Math.round(diff / 60_000)
+  if (Math.abs(minutes) < 60) return relativeTime.format(minutes, 'minute')
+
+  const hours = Math.round(diff / 3_600_000)
+  if (Math.abs(hours) < 24) return relativeTime.format(hours, 'hour')
+
+  const days = Math.round(diff / 86_400_000)
+  if (Math.abs(days) < 31) return relativeTime.format(days, 'day')
+
+  return new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium' }).format(time)
+}
 
 const TimeFromNow: React.FC<{ time: Date }> = ({ time }) => {
-  const timeString = () => {
-    const diff = new Date().getTime() - time.getTime()
-    if (diff < 0) return ''
-    const sec = Math.floor(diff / 1000)
-    if (sec < 60) return `${sec}秒`
+  const [fromNow, setFromNow] = useState(() => formatTimeFromNow(time))
 
-    const min = Math.floor(diff / 60000)
-    if (min < 60) return `${min}分钟`
+  useEffect(() => {
+    const interval = window.setInterval(() => setFromNow(formatTimeFromNow(time)), 30_000)
+    return () => window.clearInterval(interval)
+  }, [time])
 
-    const hours = Math.floor(diff / (60000 * 60))
-    if (hours < 24) return `${hours}小时`
-
-    const days = Math.floor(diff / (60000 * 60 * 24))
-    if (days < 31) return `${days}天`
-
-    return dayjs(time).format('YYYY年MM月DD日')
-  }
-
-  const [fromNow, setFromNow] = useState<string>(timeString())
-  setInterval(() => {
-    setFromNow(timeString())
-  }, 1000)
-
-  return <time suppressHydrationWarning>{fromNow}</time>
+  return (
+    <time dateTime={time.toISOString()} title={absoluteTime.format(time)} suppressHydrationWarning>
+      {fromNow}
+    </time>
+  )
 }
 export default TimeFromNow
