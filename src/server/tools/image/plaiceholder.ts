@@ -39,7 +39,7 @@ function toRGBAString({ r, g, b, a }: ToRGBAStringOptions) {
 
 interface GetPixelsOptions {
   data: Buffer
-  info: sharp.OutputInfo
+  info: OutputInfo
 }
 
 type GetPixelsReturn = ReturnType<typeof getPixels>
